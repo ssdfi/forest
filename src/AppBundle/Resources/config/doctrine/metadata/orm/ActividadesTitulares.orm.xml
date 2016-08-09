@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="ActividadesTitulares" table="actividades_titulares">
+    <indexes>
+      <index name="index_actividades_titulares_on_especie_id" columns="especie_id"/>
+      <index name="index_actividades_titulares_on_titular_id" columns="titular_id"/>
+      <index name="index_actividades_titulares_on_tipo_plantacion_id" columns="tipo_plantacion_id"/>
+      <index name="index_actividades_titulares_on_actividad_id" columns="actividad_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="actividades_titulares_id_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <field name="superficiePresentada" type="decimal" column="superficie_presentada" precision="10" scale="0" nullable="true"/>
+    <field name="superficieCertificada" type="decimal" column="superficie_certificada" precision="10" scale="0" nullable="true"/>
+    <field name="superficieInspeccionada" type="decimal" column="superficie_inspeccionada" precision="10" scale="0" nullable="true"/>
+    <field name="observaciones" type="text" column="observaciones" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <many-to-one field="especie" target-entity="Especies" fetch="LAZY">
+      <join-columns>
+        <join-column name="especie_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="tipoPlantacion" target-entity="TiposPlantacion" fetch="LAZY">
+      <join-columns>
+        <join-column name="tipo_plantacion_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="titular" target-entity="Titulares" fetch="LAZY">
+      <join-columns>
+        <join-column name="titular_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="actividad" target-entity="Actividades" fetch="LAZY">
+      <join-columns>
+        <join-column name="actividad_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

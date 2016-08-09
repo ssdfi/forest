@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <div class="col-md-3 hidden-print">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Buscador</h3>
+      </div>
+    </div>
+    <div class="panel-body">
+    </div>
+  </div>
+  <div class="col-md-9">
+    {{ include('expedientes/show_list.html.twig', {'expedientes': expedientes}) }}
+  </div>
+
+{% endblock %}

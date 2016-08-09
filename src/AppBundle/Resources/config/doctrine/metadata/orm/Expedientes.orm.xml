@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Expedientes" table="expedientes">
+    <indexes>
+      <index name="index_expedientes_on_tecnico_id" columns="tecnico_id"/>
+      <index name="index_expedientes_on_zona_departamento_id" columns="zona_departamento_id"/>
+      <index name="index_expedientes_on_zona_id" columns="zona_id"/>
+      <index name="index_expedientes_on_numero_expediente" columns="numero_expediente"/>
+      <index name="index_expedientes_on_numero_interno" columns="numero_interno"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="expedientes_id_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <field name="numeroInterno" type="string" column="numero_interno" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="numeroExpediente" type="string" column="numero_expediente" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="agrupado" type="boolean" column="agrupado" nullable="true"/>
+    <field name="plurianual" type="boolean" column="plurianual" nullable="true"/>
+    <field name="activo" type="boolean" column="activo" nullable="true"/>
+    <field name="anio" type="integer" column="anio" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true"/>
+    <many-to-one field="zona" target-entity="Zonas" fetch="LAZY">
+      <join-columns>
+        <join-column name="zona_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="tecnico" target-entity="Tecnicos" fetch="LAZY">
+      <join-columns>
+        <join-column name="tecnico_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="zonaDepartamento" target-entity="ZonaDepartamentos" fetch="LAZY">
+      <join-columns>
+        <join-column name="zona_departamento_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

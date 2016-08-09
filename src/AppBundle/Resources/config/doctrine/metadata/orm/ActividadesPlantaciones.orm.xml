@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="ActividadesPlantaciones" table="actividades_plantaciones">
+    <indexes>
+      <index name="index_actividades_plantaciones_on_plantacion_id" columns="plantacion_id"/>
+      <index name="index_actividades_plantaciones_on_actividad_id" columns="actividad_id"/>
+      <index name="index_actividades_plantaciones_on_estado_aprobacion_id" columns="estado_aprobacion_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="actividades_plantaciones_id_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <field name="superficieRegistrada" type="decimal" column="superficie_registrada" precision="10" scale="0" nullable="true"/>
+    <field name="numeroPlantas" type="integer" column="numero_plantas" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fecha" type="date" column="fecha" nullable="true"/>
+    <field name="observaciones" type="text" column="observaciones" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true"/>
+    <many-to-one field="plantacion" target-entity="Plantaciones" fetch="LAZY">
+      <join-columns>
+        <join-column name="plantacion_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="estadoAprobacion" target-entity="EstadosAprobacion" fetch="LAZY">
+      <join-columns>
+        <join-column name="estado_aprobacion_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="actividad" target-entity="Actividades" fetch="LAZY">
+      <join-columns>
+        <join-column name="actividad_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

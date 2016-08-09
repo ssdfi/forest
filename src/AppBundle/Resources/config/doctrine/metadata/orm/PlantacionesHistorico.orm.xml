@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="PlantacionesHistorico" table="plantaciones_historico">
+    <indexes>
+      <index name="index_plantaciones_historico_on_plantacion_nueva_id" columns="plantacion_nueva_id"/>
+      <index name="index_plantaciones_historico_on_plantacion_anterior_id" columns="plantacion_anterior_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="plantaciones_historico_id_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <many-to-one field="plantacionNueva" target-entity="Plantaciones" fetch="LAZY">
+      <join-columns>
+        <join-column name="plantacion_nueva_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="plantacionAnterior" target-entity="Plantaciones" fetch="LAZY">
+      <join-columns>
+        <join-column name="plantacion_anterior_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>
