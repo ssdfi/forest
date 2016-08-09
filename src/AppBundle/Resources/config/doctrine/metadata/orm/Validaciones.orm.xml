@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Validaciones" table="validaciones">
+    <indexes>
+      <index name="index_validaciones_on_sistematizacion_id" columns="sistematizacion_id"/>
+      <index name="index_validaciones_on_responsable_id" columns="responsable_id"/>
+      <index name="index_validaciones_on_especie_2_id" columns="especie_2_id"/>
+      <index name="index_validaciones_on_plantacion_id" columns="plantacion_id"/>
+      <index name="index_validaciones_on_especie_3_id" columns="especie_3_id"/>
+      <index name="index_validaciones_on_especie_1_id" columns="especie_1_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="validaciones_id_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <field name="plantacionId" type="integer" column="plantacion_id" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="responsableId" type="integer" column="responsable_id" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="especie1Id" type="integer" column="especie_1_id" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="especie2Id" type="integer" column="especie_2_id" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="especie3Id" type="integer" column="especie_3_id" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="edadEstimada" type="integer" column="edad_estimada" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="densidadEstimada" type="decimal" column="densidad_estimada" precision="10" scale="0" nullable="true"/>
+    <field name="dapPromedio" type="integer" column="dap_promedio" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="alturaMediaDominante" type="integer" column="altura_media_dominante" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="numeroPoda" type="integer" column="numero_poda" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="numeroRaleo" type="integer" column="numero_raleo" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="cantidadPoda" type="integer" column="cantidad_poda" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="cantidadRaleo" type="integer" column="cantidad_raleo" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="sistematizacionId" type="integer" column="sistematizacion_id" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="distanciaFilas" type="decimal" column="distancia_filas" precision="10" scale="0" nullable="true"/>
+    <field name="distanciaPlantas" type="decimal" column="distancia_plantas" precision="10" scale="0" nullable="true"/>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true"/>
+  </entity>
+</doctrine-mapping>

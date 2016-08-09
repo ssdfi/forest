@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="TmpObservaciones" table="tmp_observaciones">
+    <indexes>
+      <index name="index_tmp_observaciones_on_productor" columns="productor"/>
+      <index name="index_tmp_observaciones_on_numero_productor" columns="numero_productor"/>
+      <index name="index_tmp_observaciones_on_dni" columns="dni"/>
+      <index name="index_tmp_observaciones_on_numero_interno" columns="numero_interno"/>
+      <index name="index_tmp_observaciones_on_cuit" columns="cuit"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="tmp_observaciones_id_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <field name="numeroInterno" type="string" column="numero_interno" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="numeroProductor" type="string" column="numero_productor" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="productor" type="string" column="productor" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="presentado" type="string" column="presentado" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="certificado" type="string" column="certificado" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="inspeccionado" type="string" column="inspeccionado" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="registrado" type="string" column="registrado" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="especie" type="string" column="especie" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="actividad" type="string" column="actividad" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipo" type="string" column="tipo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dni" type="string" column="dni" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="cuit" type="string" column="cuit" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

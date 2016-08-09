@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="TmpTitulares" table="tmp_titulares">
+    <indexes>
+      <index name="index_tmp_titulares_on_titular_mayusculas" columns="titular_mayusculas"/>
+      <index name="index_tmp_titulares_on_cuit" columns="cuit"/>
+      <index name="index_tmp_titulares_on_titular" columns="titular"/>
+      <index name="index_tmp_titulares_on_numero_interno" columns="numero_interno"/>
+      <index name="index_tmp_titulares_on_dni" columns="dni"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="tmp_titulares_id_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <field name="numeroInterno" type="string" column="numero_interno" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="numeroProductor" type="string" column="numero_productor" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="titular" type="string" column="titular" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dni" type="string" column="dni" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="cuit" type="string" column="cuit" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fuente" type="string" column="fuente" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="titularMayusculas" type="string" column="titular_mayusculas" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

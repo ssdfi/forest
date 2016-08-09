@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="ExpedientesTitulares" table="expedientes_titulares">
+    <indexes>
+      <index name="IDX_C92BD19B4BF37E4E" columns="expediente_id"/>
+      <index name="IDX_C92BD19BF9F0FF64" columns="titular_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="expedientes_titulares_id_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <many-to-one field="titular" target-entity="Titulares" fetch="LAZY">
+      <join-columns>
+        <join-column name="titular_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="expediente" target-entity="Expedientes" fetch="LAZY">
+      <join-columns>
+        <join-column name="expediente_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

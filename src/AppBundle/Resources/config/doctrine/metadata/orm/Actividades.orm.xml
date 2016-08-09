@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Actividades" table="actividades">
+    <indexes>
+      <index name="index_actividades_on_tipo_actividad_id" columns="tipo_actividad_id"/>
+      <index name="index_actividades_on_movimiento_id" columns="movimiento_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="actividades_id_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <field name="superficiePresentada" type="decimal" column="superficie_presentada" precision="10" scale="0" nullable="true"/>
+    <field name="superficieCertificada" type="decimal" column="superficie_certificada" precision="10" scale="0" nullable="true"/>
+    <field name="superficieInspeccionada" type="decimal" column="superficie_inspeccionada" precision="10" scale="0" nullable="true"/>
+    <field name="superficieRegistrada" type="decimal" column="superficie_registrada" precision="10" scale="0" nullable="true"/>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true"/>
+    <many-to-one field="tipoActividad" target-entity="TiposActividad" fetch="LAZY">
+      <join-columns>
+        <join-column name="tipo_actividad_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="movimiento" target-entity="Movimientos" fetch="LAZY">
+      <join-columns>
+        <join-column name="movimiento_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

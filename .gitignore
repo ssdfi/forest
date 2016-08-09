@@ -1,0 +1,3 @@
+#ignorar el siguiente archivo de config
+/app/config/config.yml
+/app/config/parameters.yml
