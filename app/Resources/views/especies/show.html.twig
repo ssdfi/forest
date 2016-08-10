@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Especies</h1>
+
+    <table id="especies" class="table table-hover table-grid">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ especy.id }}</td>
+            </tr>
+            <tr>
+                <th>Codigosp</th>
+                <td>{{ especy.codigoSp }}</td>
+            </tr>
+            <tr>
+                <th>Codigo</th>
+                <td>{{ especy.codigo }}</td>
+            </tr>
+            <tr>
+                <th>Nombrecientifico</th>
+                <td>{{ especy.nombreCientifico }}</td>
+            </tr>
+            <tr>
+                <th>Nombrecomun</th>
+                <td>{{ especy.nombreComun }}</td>
+            </tr>
+            <tr>
+                <th>Inscripcioninase</th>
+                <td>{{ especy.inscripcionInase }}</td>
+            </tr>
+            <tr>
+                <th>Createdat</th>
+                <td>{% if especy.createdAt %}{{ especy.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Updatedat</th>
+                <td>{% if especy.updatedAt %}{{ especy.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('especies_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('especies_edit', { 'id': especy.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Especies list</h1>
+
+    <table id="especies" class="table table-hover table-grid">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Codigosp</th>
+                <th>Codigo</th>
+                <th>Nombrecientifico</th>
+                <th>Nombrecomun</th>
+                <th>Inscripcioninase</th>
+                <th>Createdat</th>
+                <th>Updatedat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for especy in especies %}
+            <tr>
+                <td><a href="{{ path('especies_show', { 'id': especy.id }) }}">{{ especy.id }}</a></td>
+                <td>{{ especy.codigoSp }}</td>
+                <td>{{ especy.codigo }}</td>
+                <td>{{ especy.nombreCientifico }}</td>
+                <td>{{ especy.nombreComun }}</td>
+                <td>{{ especy.inscripcionInase }}</td>
+                <td>{% if especy.createdAt %}{{ especy.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if especy.updatedAt %}{{ especy.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('especies_show', { 'id': especy.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('especies_edit', { 'id': especy.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('especies_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}
