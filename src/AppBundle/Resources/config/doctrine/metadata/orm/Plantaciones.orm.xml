@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Plantaciones" table="plantaciones">
+    <indexes>
+      <index name="index_plantaciones_on_tipo_plantacion_id" columns="tipo_plantacion_id"/>
+      <index name="index_plantaciones_on_provincia_id" columns="provincia_id"/>
+      <index name="index_plantaciones_on_estado_plantacion_id" columns="estado_plantacion_id"/>
+      <index name="index_plantaciones_on_titular_id" columns="titular_id"/>
+      <index name="index_plantaciones_on_departamento_id" columns="departamento_id"/>
+      <index name="index_plantaciones_on_uso_anterior_id" columns="uso_anterior_id"/>
+      <index name="index_plantaciones_on_estrato_desarrollo_id" columns="estrato_desarrollo_id"/>
+      <index name="index_plantaciones_on_objetivo_plantacion_id" columns="objetivo_plantacion_id"/>
+      <index name="index_plantaciones_on_activo" columns="activo"/>
+      <index name="index_plantaciones_on_uso_forestal_id" columns="uso_forestal_id"/>
+      <index name="index_plantaciones_on_base_geometrica_id" columns="base_geometrica_id"/>
+      <index name="index_plantaciones_on_fuente_informacion_id" columns="fuente_informacion_id"/>
+      <index name="index_plantaciones_on_geom" columns="geom"/>
+      <index name="index_plantaciones_on_error_id" columns="error_id"/>
+      <index name="index_plantaciones_on_fuente_imagen_id" columns="fuente_imagen_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="plantaciones_id_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <field name="anioPlantacion" type="string" column="anio_plantacion" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="nomenclaturaCatastral" type="string" column="nomenclatura_catastral" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="distanciaPlantas" type="decimal" column="distancia_plantas" precision="10" scale="0" nullable="true"/>
+    <field name="cantidadFilas" type="integer" column="cantidad_filas" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="distanciaFilas" type="decimal" column="distancia_filas" precision="10" scale="0" nullable="true"/>
+    <field name="densidad" type="string" column="densidad" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="anioInformacion" type="integer" column="anio_informacion" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fechaImagen" type="date" column="fecha_imagen" nullable="true"/>
+    <field name="activo" type="boolean" column="activo" nullable="true"/>
+    <field name="comentarios" type="text" column="comentarios" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="mpfId" type="integer" column="mpf_id" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="unificadoId" type="integer" column="unificado_id" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true"/>
+    <field name="geom" type="geometry" column="geom" nullable="true"/>
+    <field name="baseGeometricaId" type="integer" column="base_geometrica_id" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <many-to-one field="usoAnterior" target-entity="UsosAnteriores" fetch="LAZY">
+      <join-columns>
+        <join-column name="uso_anterior_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="titular" target-entity="Titulares" fetch="LAZY">
+      <join-columns>
+        <join-column name="titular_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="usoForestal" target-entity="UsosForestales" fetch="LAZY">
+      <join-columns>
+        <join-column name="uso_forestal_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="provincia" target-entity="Provincias" fetch="LAZY">
+      <join-columns>
+        <join-column name="provincia_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="departamento" target-entity="Departamentos" fetch="LAZY">
+      <join-columns>
+        <join-column name="departamento_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="tipoPlantacion" target-entity="TiposPlantacion" fetch="LAZY">
+      <join-columns>
+        <join-column name="tipo_plantacion_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="objetivoPlantacion" target-entity="ObjetivosPlantacion" fetch="LAZY">
+      <join-columns>
+        <join-column name="objetivo_plantacion_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="estadoPlantacion" target-entity="EstadosPlantacion" fetch="LAZY">
+      <join-columns>
+        <join-column name="estado_plantacion_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="estratoDesarrollo" target-entity="EstratosDesarrollo" fetch="LAZY">
+      <join-columns>
+        <join-column name="estrato_desarrollo_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="fuenteImagen" target-entity="FuentesImagen" fetch="LAZY">
+      <join-columns>
+        <join-column name="fuente_imagen_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="fuenteInformacion" target-entity="FuentesInformacion" fetch="LAZY">
+      <join-columns>
+        <join-column name="fuente_informacion_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="error" target-entity="Errores" fetch="LAZY">
+      <join-columns>
+        <join-column name="error_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

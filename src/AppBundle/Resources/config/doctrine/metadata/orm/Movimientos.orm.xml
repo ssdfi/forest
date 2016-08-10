@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Movimientos" table="movimientos">
+    <indexes>
+      <index name="index_movimientos_on_reinspector_id" columns="reinspector_id"/>
+      <index name="index_movimientos_on_destino_id" columns="destino_id"/>
+      <index name="index_movimientos_on_expediente_id" columns="expediente_id"/>
+      <index name="index_movimientos_on_responsable_id" columns="responsable_id"/>
+      <index name="index_movimientos_on_inspector_id" columns="inspector_id"/>
+      <index name="index_movimientos_on_validador_id" columns="validador_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+      <sequence-generator sequence-name="movimientos_id_seq" allocation-size="1" initial-value="1"/>
+    </id>
+    <field name="numeroFicha" type="integer" column="numero_ficha" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="anioInspeccion" type="string" column="anio_inspeccion" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaEntrada" type="date" column="fecha_entrada" nullable="true"/>
+    <field name="fechaSalida" type="date" column="fecha_salida" nullable="true"/>
+    <field name="etapa" type="integer" column="etapa" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="estabilidadFiscal" type="boolean" column="estabilidad_fiscal" nullable="true"/>
+    <field name="observacion" type="text" column="observacion" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="observacionInterna" type="text" column="observacion_interna" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="auditar" type="boolean" column="auditar" nullable="true"/>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true"/>
+    <many-to-one field="responsable" target-entity="Responsables" fetch="LAZY">
+      <join-columns>
+        <join-column name="responsable_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="validador" target-entity="Responsables" fetch="LAZY">
+      <join-columns>
+        <join-column name="validador_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="reinspector" target-entity="Inspectores" fetch="LAZY">
+      <join-columns>
+        <join-column name="reinspector_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="inspector" target-entity="Inspectores" fetch="LAZY">
+      <join-columns>
+        <join-column name="inspector_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="expediente" target-entity="Expedientes" fetch="LAZY">
+      <join-columns>
+        <join-column name="expediente_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="destino" target-entity="Destinos" fetch="LAZY">
+      <join-columns>
+        <join-column name="destino_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

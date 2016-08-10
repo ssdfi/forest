@@ -1,0 +1,41 @@
+<table id="expedientes" class="table table-hover table-grid">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th nowrap>Número interno</th>
+      <th nowrap>Número expediente</th>
+      <th>Titular</th>
+      <th>Última Entrada</th>
+      <th>Última Salida</th>
+      <th>Técnico</th>
+      <th class="icon">Activo</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for expediente in expedientes %}
+      {# dump(expediente) #}
+
+      <tr data-link="expediente_path">
+        <td>{{ expediente.id }}</td>
+        <td nowrap>{{ expediente.numeroInterno }}</td>
+        <td nowrap>{{ expediente.numeroExpediente }}</td>
+        <td>
+          <abbr title="expediente titulares map" data-length="20">sio</abbr>
+        </td>
+        <td>20/10/2016</td>
+        <td>22/10/2016</td>
+        <td>
+          {% if expediente.tecnico.nombre is defined %}
+           <abbr title="{{ expediente.tecnico.nombre }}" data-length="20">
+             {{ expediente.tecnico.nombre }}
+           </abbr>
+           {% endif %}
+
+        <td class="icon">
+          <!--Si es activo, poner un logo de activo common/boolean_value-->
+          X
+        </td>
+      </tr>
+      {% endfor %}
+  </tbody>
+</table>
