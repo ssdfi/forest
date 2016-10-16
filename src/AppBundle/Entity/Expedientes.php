@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use AppBundle\Entity\Expedientes;
+use Doctrine\ORM\Mapping\ManyToMany;
 /**
  * Expedientes
  *
@@ -108,6 +110,16 @@ class Expedientes
      */
     private $zona;
 
+    /**
+        * @var ArrayCollection $titulares
+        * @ORM\ManyToMany(targetEntity="Titulares",  cascade={"all"}, fetch="LAZY")
+        * @ORM\JoinTable(
+        *      name="expedientes_titulares",
+        *      joinColumns={@ORM\JoinColumn(name="expediente_id", referencedColumnName="id")},
+        *      inverseJoinColumns={@ORM\JoinColumn(name="titular_id", referencedColumnName="id")}
+        * )
+        */
+     private $titular;
 
 
     /**
@@ -383,9 +395,19 @@ class Expedientes
     {
         return $this->zona;
     }
-
+    /**
+     * Get titulares
+     *
+     * @return \AppBundle\Entity\Tecnicos
+     */
+    public function getTitular()
+    {
+        return $this->titular;
+    }
 
     public function __construct() {
         $this->tecnico = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->titulares = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->zonaDepartamento = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }

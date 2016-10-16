@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+          <div class="panel panel-primary">
+              <div class="panel-heading">
+                  <h3 class="panel-title">Buscador</h3>
+              </div>
+              <div class="panel-body">
+              </div>
+          </div>
+        </div>
+          <div class="col-md-9">
+          <table id="tecnicos" class="table table-hover table-grid">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>DNI</th>
+                <th>CUIT</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for titular in titulares %}
+              <tr data-link='/titulares/{{titular.id}}'>
+                <td>{{ titular.id }}</td>
+                <td>{{ titular.nombre }}</td>
+                <td>{{ titular.dni }}</td>
+                <td>{{ titular.cuit }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
+{% endblock %}

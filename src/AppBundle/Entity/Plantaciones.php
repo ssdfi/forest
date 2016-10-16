@@ -1,7 +1,8 @@
 <?php
 
 namespace AppBundle\Entity;
-
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -237,7 +238,7 @@ class Plantaciones
     /**
      * @var \Provincias
      *
-     * @ORM\ManyToOne(targetEntity="Provincias")
+     * @ORM\ManyToOne(targetEntity="Provincias", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="provincia_id", referencedColumnName="id")
      * })
@@ -247,14 +248,23 @@ class Plantaciones
     /**
      * @var \Departamentos
      *
-     * @ORM\ManyToOne(targetEntity="Departamentos")
+     * @ORM\ManyToOne(targetEntity="Departamentos", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="departamento_id", referencedColumnName="id")
      * })
      */
     private $departamento;
 
-
+    /**
+        * @var \Especies
+        * @ORM\ManyToMany(targetEntity="Especies", cascade={"all"}, fetch="LAZY")
+        * @ORM\JoinTable(
+        *      name="especies_plantaciones",
+        *      joinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")},
+        *      inverseJoinColumns={@ORM\JoinColumn(name="especie_id", referencedColumnName="id")}
+        * )
+        */
+     private $especie;
 
     /**
      * Get id
@@ -937,4 +947,20 @@ class Plantaciones
     {
         return $this->departamento;
     }
+    /**
+     * Get especie
+     *
+     * @return \AppBundle\Entity\Especies
+     */
+    public function getEspecie(){
+        return $this->especie;
+    }
+
+
+    public function __construct() {
+        $this->especie = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+
+
 }

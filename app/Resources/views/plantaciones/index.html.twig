@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+      <div class="col-md-3">
+        <div class="panel-primary">
+          <div class="panel-heading">
+              <h3 class="panel-title">Buscador</h3>
+          </div>
+          <div class="panel-body">
+            <form id="new_plantacion" class="form-horizontal" role="form" method="get" action="/plantaciones" accept-charset="UTF-8">
+              <div class="form-group">
+                <label class="control-label col-sm-3" for="plantacion_ids">IDs</label>
+                <div class="col-sm-9">
+                  <textarea id="plantacion_ids" class="form-control" rows="10" name="plantacion[ids]"></textarea>
+                </div>
+              </div>
+              <hr>
+              <input id="search" class="btn btn-primary pull-right" type="submit" value="Buscar" name="commit" data-url="/plantaciones">
+              <input id="edit" class="btn btn-primary" type="submit" value="Editar" name="commit" data-url="/plantaciones/editar">
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <table id="plantaciones" class="table table-hover table-grid">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Titular</th>
+              <th>Especie</th>
+              <th>Tipo</th>
+              <th>Superficie</th>
+              <th>Activo</th>
+              <th class="icon">Mapa</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for plantacion in plantaciones %}
+            <tr data-link="/plantaciones/{{ plantacion.id }}">
+              <td>{{ plantacion.id }}</td>
+              <td>{% if plantacion.titular %}{{ plantacion.titular.nombre }}{% else %} {% endif %} </td>
+              <td>{% if plantacion.especie %}{{ plantacion.especie.first.nombreCientifico }}{% else %} {% endif %} </td>
+              <td>{% if plantacion.tipoPlantacion %}{{ plantacion.tipoPlantacion.descripcion }}{% else %} {% endif %} </td>
+
+              <td>{% if plantacion.activo %}Yes{% else %}No{% endif %}</td>
+              <td class="icon icon-lg"></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+{% endblock %}

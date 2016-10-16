@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="col-md-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Expediente</h3>
+        </div>
+        <div class="panel-body">
+          <dl class="dl-horizontal">
+            <dt>ID expediente:</dt>
+            <dd>{{ expediente.id }}</dd>
+            <dt>Número interno:</dt>
+            <dd>{{ expediente.numeroInterno }}</dd>
+            <dt>Número expediente:</dt>
+            <dd>{{ expediente.numeroExpediente }}</dd>
+            <dt>Titular/es:</dt>
+            <dd>
+              <ul class="list-unstyled">
+                <li>
+                  {% if expediente.titular is defined %}
+                    {% for titular in expediente.titular %}
+                      <a href="/titulares/{{titular.id}}" title="{{titular.nombre}}" data-length="10">
+                        {{ titular.nombre }}
+                      </a>
+                    {% endfor %}
+                  {% endif %}
+                </li>
+              </ul>
+            </dd>
+            <dt>Técnico:</dt>
+            {% if expediente.tecnico.nombre is defined %}
+              <dd title="{{ expediente.tecnico.nombre }}" data-length="20">
+                {{ expediente.tecnico.nombre }}
+              </dd>
+            {% else %}
+              <dd> </dd>
+            {% endif %}
+            <dt>Zona:</dt>
+            {% if expediente.zona.provincia is defined %}
+              <dd>
+                {{ expediente.zona.provincia }}
+              </dd>
+            {% else %}
+              <dd> </dd>
+            {% endif %}
+            <dt>Departamento:</dt>
+            {% if expediente.zonaDepartamento.descripcion is defined %}
+              <dd>
+                {{ expediente.zonaDepartamento.descripcion }}
+              </dd>
+            {% else %}
+              <dd> </dd>
+            {% endif %}
+            <dt>Año:</dt>
+            <dd>{{ expediente.anio }}</dd>
+            <dt>Plurianual:</dt>
+            <dd>
+              <span class="glyphicon glyphicon-remove"></span>
+            </dd>
+            <dt>Agrupado:</dt>
+            <dd>
+              <span class="glyphicon glyphicon-remove"></span>
+            </dd>
+            <dt>Última Entrada:</dt>
+            <dd></dd>
+            <dt>Última Salida:</dt>
+            <dd></dd>
+          </dl>
+        </div>
+        <div class="panel-footer">
+          {% if expediente.activo %}
+            <span class="label label-success">Activo</span>
+          {% else %}
+            <span class="label label-danger">Inactivo</span>
+          {% endif %}
+        </div>
+    </div>
+</div>
+<div class="col-md-9">
+
+</div>
+
+
+{% endblock %}

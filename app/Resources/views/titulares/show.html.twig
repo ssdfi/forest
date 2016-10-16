@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-3">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Titular</h3>
+      </div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+          <dt>Nombre:</dt>
+          <dd>{{ titular.nombre }}</dd>
+          <dt>DNI:</dt>
+          <dd>{{ titular.dni }}</dd>
+          <dt>CUIT:</dt>
+          <dd>{{ titular.cuit }}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <h4>Expedientes</h4>
+    {{ include('expedientes/show_list.html.twig', {'expedientes': titular.expediente}) }}
+  </div>
+</div>
+{% endblock %}

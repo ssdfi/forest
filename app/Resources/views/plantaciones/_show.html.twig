@@ -1,0 +1,132 @@
+<ul class="nav nav-tabs" role="tablist">
+  <li class="active" role="presentation">
+    <a data-toggle="tab" href="#expedientes-tab">Expedientes</a>
+  </li>
+  <li class="" role="presentation">
+    <a data-toggle="tab" href="#historial-tab">Historial</a>
+    {# include('plantaciones/_show.html.twig', {'plantacione': plantacione}) #}
+  </li>
+</ul>
+<div class="tab-content">
+  <div id="expedientes-tab" class="tab-pane fade in active">
+    <table id="expedientes" class="table table-hover table-grid">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th nowrap="">Número interno</th>
+          <th nowrap="">Número expediente</th>
+          <th>Titular</th>
+          <th>Última Entrada</th>
+          <th>Última Salida</th>
+          <th>Técnico</th>
+          <th class="icon">Activo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for expediente in expedientes %}
+        <tr>
+          <td>{{expediente.id}}</td>
+          <td nowrap="">{{expediente.numeroInterno}}</td>
+          <td nowrap="">{{expediente.numeroExpediente}}</td>
+          {% if expediente.titular is defined %}
+          <td title="{% for titular in expediente.titular %} {{titular.nombre}} {% endfor %}">
+            {{ expediente.titular.first.nombre }}</td>
+          {% endif %}
+          <td></td>
+          <td></td>
+          <td>{{expediente.tecnico.nombre}}</td>
+          <td class="icon">
+            {% if expediente.activo %}
+              <span class="glyphicon glyphicon-ok"></span>
+            {% else %}
+              <span class="glyphicon glyphicon-remove"></span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <h4>Movimientos</h4>
+    <table id="movimientos" class="table table-hover table-grid">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th nowrap="">Expediente</th>
+          <th nowrap="">Ficha</th>
+          <th>Etapa</th>
+          <th>Entrada</th>
+          <th>Salida</th>
+          <th class="icon">E.Fiscal</th>
+          <th class="icon">Auditar</th>
+          <th class="icon">Validado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for movimiento in movimientos %}
+        <tr>
+          <td>{{movimiento.id}}</td>
+          <td>{{movimiento.expediente.id}}</td>
+          <td>{{movimiento.numeroFicha}}</td>
+          <td>{{movimiento.etapa}}</td>
+          <td>{{movimiento.fechaEntrada|date('d-m-Y')}}</td>
+          <td>{{movimiento.fechaSalida|date('d-m-Y')}}</td>
+          <td class="icon">
+            {% if movimiento.estabilidadFiscal %}
+              <span class="glyphicon glyphicon-ok"></span>
+            {% else %}
+              <span class="glyphicon glyphicon-remove"></span>
+            {% endif %}
+          </td>
+          <td class="icon">
+            {% if movimiento.auditar %}
+              <span class="glyphicon glyphicon-ok"></span>
+            {% else %}
+              <span class="glyphicon glyphicon-remove"></span>
+            {% endif %}
+          </td>
+          <td class="icon">
+            {% if movimiento.validador %}
+              <span class="glyphicon glyphicon-ok"></span>
+            {% else %}
+              <span class="glyphicon glyphicon-remove"></span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <h4>Actividades</h4>
+    <table id="actividades" class="table table-hover table-grid">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th nowrap="">Movimiento</th>
+          <th nowrap="">Expediente</th>
+          <th>Tipo actividad</th>
+          <th>Presentado</th>
+          <th>Certificado</th>
+          <th>Inspeccionado</th>
+          <th>Registrado</th>
+          <th class="icon">Mapa</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for actividad in actividades %}
+        <tr>
+          <td>{{actividad.id}}</td>
+          <td>{{actividad.movimiento.id}}</td>
+          <td>{{actividad.movimiento.expediente.id}}</td>
+          <td>{{actividad.tipoActividad.descripcion}}</td>
+          <td>{{actividad.superficiePresentada}}</td>
+          <td>{{actividad.superficieCertificada}}</td>
+          <td>{{actividad.superficieInspeccionada}}</td>
+          <td>{{actividad.superficieRegistrada}}</td>
+          <td class="icon icon-lg hidden-print"><span class="glyphicon glyphicon-globe"></span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div id="historial-tab" class="tab-pane fade"></div>
+  <div id="validaciones-tab" class="tab-pane fade"> </div>
+</div>

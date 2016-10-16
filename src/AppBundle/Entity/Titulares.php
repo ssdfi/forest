@@ -3,7 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use AppBundle\Entity\Expedientes;
+use Doctrine\ORM\Mapping\ManyToMany;
 /**
  * Titulares
  *
@@ -57,6 +58,16 @@ class Titulares
      */
     private $updatedAt;
 
+    /**
+    * @var ArrayCollection $expedientes
+    * @ORM\ManyToMany(targetEntity="Expedientes", cascade={"all"}, fetch="EAGER")
+    * @ORM\JoinTable(
+    *      name="expedientes_titulares",
+    *      joinColumns={@ORM\JoinColumn(name="titular_id", referencedColumnName="id")},
+    *      inverseJoinColumns={@ORM\JoinColumn(name="expediente_id", referencedColumnName="id")}
+    * )
+    */
+    private $expediente;
 
 
     /**
@@ -187,5 +198,17 @@ class Titulares
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+    /**
+     * Get expedientes
+     *
+     * @return \Expedientes
+     */
+    public function getExpediente(){
+        return $this->expediente;
+    }
+
+    public function __construct() {
+        $this->expediente = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }

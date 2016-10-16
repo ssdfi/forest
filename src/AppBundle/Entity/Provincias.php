@@ -126,4 +126,8 @@ class Provincias
     {
         return $this->geom;
     }
+    
+    public function __toString(){
+        return $this->nombre;
+    }
 }

@@ -219,4 +219,7 @@ class Tecnicos
     {
         return $this->cuit;
     }
+    public function __toString(){
+        return $this->nombre;
+    }
 }

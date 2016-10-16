@@ -13,17 +13,23 @@
   </thead>
   <tbody>
       {% for expediente in expedientes %}
-      {# dump(expediente) #}
 
-      <tr data-link="expediente_path">
+      <tr data-link="/expedientes/{{expediente.id}}">
         <td>{{ expediente.id }}</td>
         <td nowrap>{{ expediente.numeroInterno }}</td>
         <td nowrap>{{ expediente.numeroExpediente }}</td>
         <td>
-          <abbr title="expediente titulares map" data-length="20">sio</abbr>
+          {% if expediente.titular is defined %}
+          <abbr title="{% for titular in expediente.titular %} {{titular.nombre}} {% endfor %}" data-length="10">
+            {{ expediente.titular.first.nombre }}</abbr>
+          {% endif %}
         </td>
-        <td>20/10/2016</td>
-        <td>22/10/2016</td>
+        <td>{{expediente.createdAt|date('d-m-Y')}}</td>
+        {% if (expediente.createdAt == expediente.updatedAt )%}
+          <td>{{expediente.updatedAt|date('d-m-Y')}}</td>
+        {% else %}
+          <td></td>
+        {% endif %}
         <td>
           {% if expediente.tecnico.nombre is defined %}
            <abbr title="{{ expediente.tecnico.nombre }}" data-length="20">
@@ -33,9 +39,27 @@
 
         <td class="icon">
           <!--Si es activo, poner un logo de activo common/boolean_value-->
-          X
-        </td>
+          {% if expediente.activo %}
+            <span class="glyphicon glyphicon-ok"></span>
+          {% else %}
+            <span class="glyphicon glyphicon-remove"></span>
+          {% endif %}
+          </td>
       </tr>
       {% endfor %}
   </tbody>
 </table>
+{% if expedientes|length >14 %}
+<div class="well well-sm clearfix">
+  <div class="pagination-info pull-left">
+    Mostrando <b>
+      {{(expedientes.getItemNumberPerPage * expedientes.getCurrentPageNumber) - (expedientes.getItemNumberPerPage -1) }} -
+      {{expedientes.getItemNumberPerPage * expedientes.getCurrentPageNumber }}</b>
+    de
+      <b> {{ expedientes.getTotalItemCount }} </b>
+  </div>
+    <ul class="pagination pull-right">
+      {{ knp_pagination_render(expedientes) }}
+    </ul>
+</div>
+{% endif %}

@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Expedientes list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Numerointerno</th>
+                <th>Numeroexpediente</th>
+                <th>Agrupado</th>
+                <th>Plurianual</th>
+                <th>Activo</th>
+                <th>Anio</th>
+                <th>Createdat</th>
+                <th>Updatedat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for expediente in expedientes %}
+            <tr>
+                <td><a href="{{ path('expedientes_show', { 'id': expediente.id }) }}">{{ expediente.id }}</a></td>
+                <td>{{ expediente.numeroInterno }}</td>
+                <td>{{ expediente.numeroExpediente }}</td>
+                <td>{% if expediente.agrupado %}Yes{% else %}No{% endif %}</td>
+                <td>{% if expediente.plurianual %}Yes{% else %}No{% endif %}</td>
+                <td>{% if expediente.activo %}Yes{% else %}No{% endif %}</td>
+                <td>{{ expediente.anio }}</td>
+                <td>{% if expediente.createdAt %}{{ expediente.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if expediente.updatedAt %}{{ expediente.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('expedientes_show', { 'id': expediente.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('expedientes_edit', { 'id': expediente.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('expedientes_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

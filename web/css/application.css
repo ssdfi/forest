@@ -1,0 +1,6 @@
+.panel-body {
+    overflow: scroll;
+}
+.table-grid tr[data-link] {
+    cursor: pointer;
+}

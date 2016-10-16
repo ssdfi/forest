@@ -2,41 +2,139 @@
 
 namespace AppBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\Tecnico;
-use AppBundle\Entity\Titulares;
-use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use AppBundle\Entity\Expedientes;
+use AppBundle\Form\ExpedientesType;
 
-class ExpedientesController extends Controller{
+class ExpedientesController extends Controller
+{
     /**
+     * Lists all Expedientes entities.
+     *
      * @Route("/", name="list_expedientes")
+     * @Method("GET")
      */
-    public function listExpedientes(Request $request){
-        $expedientes=$this->getDoctrine()->getRepository('AppBundle:Expedientes')->findAll();
+    public function listExpedientes(Request $request)
+    {
+      $em    = $this->get('doctrine.orm.entity_manager');
+      $dql   = "SELECT a FROM AppBundle:Expedientes a";
+      $query = $em->createQuery($dql);
+      $paginator = $this->get('knp_paginator');
+      $expedientes = $paginator->paginate(
+              $query,
+              $request->query->getInt('page', 1),
+              15,
+              array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'desc')
+          );
+      return $this->render('expedientes/list.html.twig',array('expedientes' => $expedientes));
+    }
 
-        //$tecnico=$expedientes->getTecnico();
-        //print_r($expedientes->getTecnico());
-        return $this->render('expedientes/list.html.twig',
-              array('expedientes'=>$expedientes));
-    }
     /**
-     * @Route("/expedientes/create", name="create_expedientes")
+     * Creates a new Expedientes entity.
+     *
+     * @Route("/expedientes/new", name="expedientes_new")
+     * @Method({"GET", "POST"})
      */
-    public function createExpedientes(Request $request){
-        return $this->render('expedientes/create.html.twig');
+    public function newAction(Request $request)
+    {
+        $expediente = new Expedientes();
+        $form = $this->createForm('AppBundle\Form\ExpedientesType', $expediente);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($expediente);
+            $em->flush();
+
+            return $this->redirectToRoute('expedientes_show', array('id' => $expediente->getId()));
+        }
+
+        return $this->render('expedientes/new.html.twig', array(
+            'expediente' => $expediente,
+            'form' => $form->createView(),
+        ));
     }
+
     /**
-     * @Route("/expedientes/edit/{id}", name="edit_expedientes")
+     * Finds and displays a Expedientes entity.
+     *
+     * @Route("/expedientes/{id}", name="expedientes_show")
+     * @Method("GET")
      */
-    public function editExpedientes($id,Request $request){
-        return $this->render('expedientes/edit.html.twig');
+    public function showAction(Expedientes $expediente)
+    {
+        $deleteForm = $this->createDeleteForm($expediente);
+
+        return $this->render('expedientes/show.html.twig', array(
+            'expediente' => $expediente,
+            'delete_form' => $deleteForm->createView(),
+        ));
     }
+
     /**
-     * @Route("/expedientes/view/{id}", name="view_expedientes")
+     * Displays a form to edit an existing Expedientes entity.
+     *
+     * @Route("/expedientes/{id}/edit", name="expedientes_edit")
+     * @Method({"GET", "POST"})
      */
-    public function viewExpedientes($id){
-        return $this->render('expedientes/view.html.twig');
+    public function editAction(Request $request, Expedientes $expediente)
+    {
+        $deleteForm = $this->createDeleteForm($expediente);
+        $editForm = $this->createForm('AppBundle\Form\ExpedientesType', $expediente);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($expediente);
+            $em->flush();
+
+            return $this->redirectToRoute('expedientes_edit', array('id' => $expediente->getId()));
+        }
+
+        return $this->render('expedientes/edit.html.twig', array(
+            'expediente' => $expediente,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Deletes a Expedientes entity.
+     *
+     * @Route("/{id}", name="expedientes_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, Expedientes $expediente)
+    {
+        $form = $this->createDeleteForm($expediente);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($expediente);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('expedientes_index');
+    }
+
+    /**
+     * Creates a form to delete a Expedientes entity.
+     *
+     * @param Expedientes $expediente The Expedientes entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Expedientes $expediente)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('expedientes_delete', array('id' => $expediente->getId())))
+            ->setMethod('DELETE')
+            ->getForm()
+        ;
     }
 }
