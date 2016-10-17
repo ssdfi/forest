@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Tecnicos
@@ -26,6 +27,7 @@ class Tecnicos
      * @var string
      *
      * @ORM\Column(name="nombre", type="string", length=255, nullable=true)
+     * @Assert\NotBlank(message="El campo no puede estar vacío")
      */
     private $nombre;
 
@@ -54,6 +56,9 @@ class Tecnicos
      * @var string
      *
      * @ORM\Column(name="dni", type="string", length=255, nullable=true)
+     * @Assert\Type(type="numeric", message="El valor debe que ser numérico")
+     * @Assert\NotBlank(message="El campo no puede estar vacío")
+     * @Assert\Length(min = 8, max=8 ,exactMessage="El DNI debe tener {{ limit }} dígitos.")
      */
     private $dni;
 
@@ -61,6 +66,9 @@ class Tecnicos
      * @var string
      *
      * @ORM\Column(name="cuit", type="string", length=255, nullable=true)
+     * @Assert\Type(type="numeric", message="El valor debe que ser numérico")
+     * @Assert\NotBlank(message="El campo no puede estar vacío")
+     * @Assert\Length(min = 11, max=11 ,exactMessage="El CUIT debe tener {{ limit }} dígitos.")
      */
     private $cuit;
 
