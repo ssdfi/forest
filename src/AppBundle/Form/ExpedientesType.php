@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
@@ -21,10 +22,10 @@ class ExpedientesType extends AbstractType
     {
 
         $builder
-            ->add('numeroInterno')
+            ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group")))
             ->add('numeroExpediente')
             ->add('tecnico',EntityType::class, array('class'=>'AppBundle\Entity\Tecnicos', 'placeholder' => "Seleccione una opción" ))
-            ->add('plurianual',CheckboxType::class,array("attr"=> array("class"=>"checkbox bootstrap-switch-container")))
+            ->add('plurianual',CheckboxType::class, array("attr"=> array("class"=>"checkbox bootstrap-switch-container")))
             ->add('agrupado')
             ->add('activo')
             //->add('zonaDepartamento')

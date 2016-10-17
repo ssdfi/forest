@@ -5,7 +5,8 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 class TitularesType extends AbstractType
 {
     /**
@@ -15,15 +16,11 @@ class TitularesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre')
-            ->add('dni')
-            ->add('cuit')
-            ->add('createdAt', 'datetime')
-            ->add('updatedAt', 'datetime')
-            ->add('expedientes')
-        ;
+            ->add('nombre',TextType::class,array('label'=>'Nombre'))
+            ->add('dni',NumberType::class,array('label'=>'DNI'))
+            ->add('cuit',TextType::class,array('label'=>'CUIT'));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

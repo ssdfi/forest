@@ -43,3 +43,6 @@
 
 # Backup entities generated with doctrine:generate:entities command
 */Entity/*~
+
+# NPM Debug
+npm-debug.log

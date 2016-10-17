@@ -1,16 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Titulares creation</h1>
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+<div class="row">
+  <div class="col-md-5">
+    <h2>Nuevo Titular</h2>
 
     {{ form_start(form) }}
         {{ form_widget(form) }}
-        <input type="submit" value="Create" />
+        <a id="cancel-titular" class="btn btn-default" onClick="history.go(-1);return true;">Cancelar</a>
+        <input id="save-titular" class="btn btn-primary pull-right" type="submit" value="Guardar" />
     {{ form_end(form) }}
-
-    <ul>
-        <li>
-            <a href="{{ path('titulares_index') }}">Back to the list</a>
-        </li>
-    </ul>
+    </div>
+  </div>
+  
 {% endblock %}
