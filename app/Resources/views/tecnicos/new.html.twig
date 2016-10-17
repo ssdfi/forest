@@ -1,16 +1,42 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Tecnicos creation</h1>
-
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+<div class="row">
+  <div class="col-md-4">
+    <h2>Nuevo Técnico</h2>
     {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
-    {{ form_end(form) }}
+          <div class="form-group">
+              <label class="control-label col-sm-3"> {{"Nombre"}} </label>
+              <div class="col-sm-9">{{ form_widget(form.nombre) }}</div>
+              {{form_errors(form.nombre)}}
+          </div>
 
-    <ul>
-        <li>
-            <a href="{{ path('tecnicos_index') }}">Back to the list</a>
-        </li>
-    </ul>
+          <div class="form-group">
+            <label class="control-label col-sm-3">{{"DNI"}}</label>
+            <div class="col-sm-9">{{ form_widget(form.dni) }}</div>
+            {{form_errors(form.dni)}}
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3">{{"CUIT"}}</label>
+            <div class="col-sm-9">{{ form_widget(form.cuit) }}</div>
+            {{form_errors(form.cuit)}}
+          </div>
+        {{form_widget(form.cuit)}}
+
+        {{form_errors(form.activo)}}
+          <div class="form-group">
+            <div class="col-sm-9 col-sm-offset-3">
+              {{ form_widget(form.activo) }}
+            </div>
+          </div>
+        {{form_widget(form.activo)}}
+        <hr>
+
+        <a id="cancel-expediente" class="btn btn-default" onClick="history.go(-1);return true;">Cancelar</a>
+        <input id="save-tecnico" class="btn btn-primary pull-right" type="submit" value="Guardar" />
+    {{ form_end(form) }}
+  </div>
+</div>
 {% endblock %}
