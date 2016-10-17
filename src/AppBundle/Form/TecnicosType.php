@@ -17,13 +17,10 @@ class TecnicosType extends AbstractType
         $builder
             ->add('nombre')
             ->add('activo')
-            ->add('createdAt', 'datetime')
-            ->add('updatedAt', 'datetime')
             ->add('dni')
-            ->add('cuit')
-        ;
+            ->add('cuit');
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
