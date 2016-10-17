@@ -30,7 +30,7 @@ class Titulares
      *
      * @ORM\Column(name="nombre", type="string", length=255, nullable=true)
      * @Assert\NotBlank(message="El campo no puede estar vacío")
-     * @Assert\Length(min = 4)
+     *
      */
     private $nombre;
 
