@@ -1,52 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Tecnicos</h1>
-
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ tecnico.id }}</td>
-            </tr>
-            <tr>
-                <th>Nombre</th>
-                <td>{{ tecnico.nombre }}</td>
-            </tr>
-            <tr>
-                <th>Activo</th>
-                <td>{% if tecnico.activo %}Yes{% else %}No{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Createdat</th>
-                <td>{% if tecnico.createdAt %}{{ tecnico.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Updatedat</th>
-                <td>{% if tecnico.updatedAt %}{{ tecnico.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Dni</th>
-                <td>{{ tecnico.dni }}</td>
-            </tr>
-            <tr>
-                <th>Cuit</th>
-                <td>{{ tecnico.cuit }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('tecnicos_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('tecnicos_edit', { 'id': tecnico.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+<div class="row">
+  <div class="col-md-3">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Técnico</h3>
+      </div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+          <dt>Nombre:</dt>
+          <dd>{{ tecnico.nombre }}</dd>
+          <dt>DNI:</dt>
+          <dd>{{ tecnico.dni }}</dd>
+          <dt>CUIT:</dt>
+          <dd>{{ tecnico.cuit }}</dd>
+          <dt>Activo:</dt>
+          <dd>
+            {% if tecnico.activo %}
+              <span class="glyphicon glyphicon-ok"></span>
+            {% else %}
+              <span class="glyphicon glyphicon-remove"></span>
+            {% endif %}
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <h4>Expedientes</h4>
+    {# include('expedientes/show_list.html.twig', {'expedientes': tecnico.expediente}) #}
+  </div>
+</div>
 {% endblock %}
