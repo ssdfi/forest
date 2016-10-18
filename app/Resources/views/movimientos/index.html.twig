@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Movimientos list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Numeroficha</th>
+                <th>Anioinspeccion</th>
+                <th>Fechaentrada</th>
+                <th>Fechasalida</th>
+                <th>Etapa</th>
+                <th>Estabilidadfiscal</th>
+                <th>Observacion</th>
+                <th>Observacioninterna</th>
+                <th>Auditar</th>
+                <th>Createdat</th>
+                <th>Updatedat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for movimiento in movimientos %}
+            <tr>
+                <td><a href="{{ path('movimientos_show', { 'id': movimiento.id }) }}">{{ movimiento.id }}</a></td>
+                <td>{{ movimiento.numeroFicha }}</td>
+                <td>{{ movimiento.anioInspeccion }}</td>
+                <td>{% if movimiento.fechaEntrada %}{{ movimiento.fechaEntrada|date('Y-m-d') }}{% endif %}</td>
+                <td>{% if movimiento.fechaSalida %}{{ movimiento.fechaSalida|date('Y-m-d') }}{% endif %}</td>
+                <td>{{ movimiento.etapa }}</td>
+                <td>{% if movimiento.estabilidadFiscal %}Yes{% else %}No{% endif %}</td>
+                <td>{{ movimiento.observacion }}</td>
+                <td>{{ movimiento.observacionInterna }}</td>
+                <td>{% if movimiento.auditar %}Yes{% else %}No{% endif %}</td>
+                <td>{% if movimiento.createdAt %}{{ movimiento.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if movimiento.updatedAt %}{{ movimiento.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('movimientos_show', { 'id': movimiento.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('movimientos_edit', { 'id': movimiento.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('movimientos_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

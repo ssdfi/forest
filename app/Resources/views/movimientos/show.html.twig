@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Movimientos</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ movimiento.id }}</td>
+            </tr>
+            <tr>
+                <th>Numeroficha</th>
+                <td>{{ movimiento.numeroFicha }}</td>
+            </tr>
+            <tr>
+                <th>Anioinspeccion</th>
+                <td>{{ movimiento.anioInspeccion }}</td>
+            </tr>
+            <tr>
+                <th>Fechaentrada</th>
+                <td>{% if movimiento.fechaEntrada %}{{ movimiento.fechaEntrada|date('Y-m-d') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Fechasalida</th>
+                <td>{% if movimiento.fechaSalida %}{{ movimiento.fechaSalida|date('Y-m-d') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Etapa</th>
+                <td>{{ movimiento.etapa }}</td>
+            </tr>
+            <tr>
+                <th>Estabilidadfiscal</th>
+                <td>{% if movimiento.estabilidadFiscal %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Observacion</th>
+                <td>{{ movimiento.observacion }}</td>
+            </tr>
+            <tr>
+                <th>Observacioninterna</th>
+                <td>{{ movimiento.observacionInterna }}</td>
+            </tr>
+            <tr>
+                <th>Auditar</th>
+                <td>{% if movimiento.auditar %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Createdat</th>
+                <td>{% if movimiento.createdAt %}{{ movimiento.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Updatedat</th>
+                <td>{% if movimiento.updatedAt %}{{ movimiento.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('movimientos_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('movimientos_edit', { 'id': movimiento.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}
