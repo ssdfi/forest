@@ -22,7 +22,7 @@ class TecnicosController extends Controller
      * @Route("/", name="tecnicos_index")
      * @Method("GET")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request,$id)
     {
         $em    = $this->get('doctrine.orm.entity_manager');
         $dql   = "SELECT a FROM AppBundle:Tecnicos a";
@@ -34,8 +34,9 @@ class TecnicosController extends Controller
                 15,
                 array('defaultSortFieldName' => 'a.nombre', 'defaultSortDirection' => 'asc')
             );
-        return $this->render('tecnicos/index.html.twig',array('tecnicos' => $tecnicos));
-        
+
+        return $this->render('tecnicos/index.html.twig',array('tecnicos' => $tecnico));
+
     }
 
     /**
@@ -72,6 +73,7 @@ class TecnicosController extends Controller
      */
     public function showAction(Tecnicos $tecnico)
     {
+        $expedientes =
         $deleteForm = $this->createDeleteForm($tecnico);
 
         return $this->render('tecnicos/show.html.twig', array(

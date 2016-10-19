@@ -36,7 +36,7 @@ class MovimientosController extends Controller
     /**
      * Creates a new Movimientos entity.
      *
-     * @Route("/new", name="movimientos_new")
+     * @Route("/movimientos/new", name="movimientos_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -62,7 +62,7 @@ class MovimientosController extends Controller
     /**
      * Finds and displays a Movimientos entity.
      *
-     * @Route("/{id}", name="movimientos_show")
+     * @Route("/movimientos/{id}", name="movimientos_show")
      * @Method("GET")
      */
     public function showAction(Movimientos $movimiento)
@@ -78,7 +78,7 @@ class MovimientosController extends Controller
     /**
      * Displays a form to edit an existing Movimientos entity.
      *
-     * @Route("/{id}/edit", name="movimientos_edit")
+     * @Route("/movimientos/{id}/edit", name="movimientos_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Movimientos $movimiento)
@@ -105,7 +105,7 @@ class MovimientosController extends Controller
     /**
      * Deletes a Movimientos entity.
      *
-     * @Route("/{id}", name="movimientos_delete")
+     * @Route("/movimientos/{id}", name="movimientos_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Movimientos $movimiento)

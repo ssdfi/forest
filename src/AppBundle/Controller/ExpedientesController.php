@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Expedientes;
 use AppBundle\Form\ExpedientesType;
+use Doctrine\ORM\Query;
 
 class ExpedientesController extends Controller
 {
@@ -65,14 +66,24 @@ class ExpedientesController extends Controller
      * @Route("/expedientes/{id}", name="expedientes_show")
      * @Method("GET")
      */
-    public function showAction(Expedientes $expediente)
+    public function showAction(Expedientes $expediente, $id)
     {
-        $deleteForm = $this->createDeleteForm($expediente);
+      $em = $this->getDoctrine()->getManager();
+      $dql_m   = "SELECT m
+                FROM AppBundle:Plantaciones p
+                JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
+                JOIN AppBundle:Actividades a WITH a.id=ap.actividad
+                JOIN AppBundle:Movimientos m WITH m.id=a.movimiento
+                JOIN AppBundle:Expedientes e WITH e.id=m.expediente
+                WHERE p.id=:id";
+      $movimientos=$em->createQuery($dql_m)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+      $deleteForm = $this->createDeleteForm($expediente);
 
-        return $this->render('expedientes/show.html.twig', array(
-            'expediente' => $expediente,
-            'delete_form' => $deleteForm->createView(),
-        ));
+      return $this->render('expedientes/show.html.twig', array(
+          'expediente' => $expediente,
+          'movimientos' => $movimientos,
+          'delete_form' => $deleteForm->createView(),
+      ));
     }
 
     /**
