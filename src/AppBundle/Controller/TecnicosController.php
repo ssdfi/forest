@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Tecnicos;
 use AppBundle\Form\TecnicosType;
 
+use Doctrine\ORM\Query;
+
 /**
  * Tecnicos controller.
  *
@@ -22,7 +24,7 @@ class TecnicosController extends Controller
      * @Route("/", name="tecnicos_index")
      * @Method("GET")
      */
-    public function indexAction(Request $request,$id)
+    public function indexAction(Request $request)
     {
         $em    = $this->get('doctrine.orm.entity_manager');
         $dql   = "SELECT a FROM AppBundle:Tecnicos a";
@@ -35,7 +37,7 @@ class TecnicosController extends Controller
                 array('defaultSortFieldName' => 'a.nombre', 'defaultSortDirection' => 'asc')
             );
 
-        return $this->render('tecnicos/index.html.twig',array('tecnicos' => $tecnico));
+        return $this->render('tecnicos/index.html.twig',array('tecnicos' => $tecnicos));
 
     }
 
@@ -71,15 +73,28 @@ class TecnicosController extends Controller
      * @Route("/{id}", name="tecnicos_show")
      * @Method("GET")
      */
-    public function showAction(Tecnicos $tecnico)
-    {
-        $expedientes =
-        $deleteForm = $this->createDeleteForm($tecnico);
+    public function showAction(Tecnicos $tecnico, $id, Request $request){
+      $paginator = $this->get('knp_paginator');
 
+      $em = $this->getDoctrine()->getManager();
+      $dql_e   = "SELECT e
+                FROM AppBundle:Tecnicos t
+                JOIN AppBundle:Expedientes e WITH e.tecnico=t.id
+                WHERE e.tecnico=:id";
+      $query=$em->createQuery($dql_e)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+
+      $expedientes = $paginator->paginate(
+              $query,
+              $request->query->getInt('page', 1),
+              15,
+              array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'desc')
+          );
+      $deleteForm = $this->createDeleteForm($tecnico);
         return $this->render('tecnicos/show.html.twig', array(
             'tecnico' => $tecnico,
+            'expedientes' => $expedientes,
             'delete_form' => $deleteForm->createView(),
-        ));
+          ));
     }
 
     /**

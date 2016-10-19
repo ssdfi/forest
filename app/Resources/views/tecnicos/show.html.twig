@@ -29,7 +29,7 @@
   </div>
   <div class="col-md-9">
     <h4>Expedientes</h4>
-    {# include('expedientes/show_list.html.twig', {'expedientes': tecnico.expediente}) #}
+    {{ include('expedientes/show_list.html.twig', {'expedientes': expedientes}) }}
   </div>
 </div>
 {% endblock %}
