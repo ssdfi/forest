@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use AppBundle\Entity\Expedientes;
 use Doctrine\ORM\Mapping\ManyToMany;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Expedientes
  *
@@ -28,6 +29,12 @@ class Expedientes
      * @var string
      *
      * @ORM\Column(name="numero_interno", type="string", length=255, nullable=true)
+     * @Assert\Regex(
+     *     pattern     = "/[0-9]{2}-[0-9]{3}-[0-9]{3}\/[0-9]{2}/",
+     *     message ="El formato debe ser ##-###-###/##"
+     * )
+     * @Assert\Length(min = 13, max=13, exactMessage="El campo debe tener {{ limit }} digitos, ##-###-###/##")
+     * @Assert\NotBlank(message="El campo no puede estar vacío")
      */
     private $numeroInterno;
 
@@ -35,6 +42,12 @@ class Expedientes
      * @var string
      *
      * @ORM\Column(name="numero_expediente", type="string", length=255, nullable=true)
+     * @Assert\Regex(
+     *     pattern     = "/EXP-S05:[0-9]{7}\/[0-9]{4}/",
+     *     message     = "El formato debe ser EXP-S05:#######/####"
+     * )
+     * @Assert\Length(min = 20, max=20, exactMessage="El campo debe tener {{ limit }} digitos, EXP-S05:#######/####")
+     * @Assert\NotBlank(message="El campo no puede estar vacío")
      */
     private $numeroExpediente;
 
@@ -85,7 +98,7 @@ class Expedientes
      *
      * @ORM\ManyToOne(targetEntity="ZonaDepartamentos")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="zona_departamento_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="zona_departamento_id", referencedColumnName="id", nullable=FALSE)
      * })
      */
     private $zonaDepartamento;
