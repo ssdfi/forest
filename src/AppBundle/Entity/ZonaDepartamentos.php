@@ -222,4 +222,7 @@ class ZonaDepartamentos
     {
         return $this->zona;
     }
+    public function __toString(){
+        return $this->descripcion;
+    }
 }
