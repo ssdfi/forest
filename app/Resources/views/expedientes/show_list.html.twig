@@ -19,9 +19,10 @@
         <td nowrap>{{ expediente.numeroInterno }}</td>
         <td nowrap>{{ expediente.numeroExpediente }}</td>
         <td>
-          {% if expediente.titular is defined %}
+          {% if expediente.titular.first.nombre is defined %}
           <abbr title="{% for titular in expediente.titular %} {{titular.nombre}} {% endfor %}" data-length="10">
             {{ expediente.titular.first.nombre }}</abbr>
+
           {% endif %}
         </td>
         <td>{{expediente.createdAt|date('d-m-Y')}}</td>
