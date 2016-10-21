@@ -25,13 +25,9 @@ class ExpedientesType extends AbstractType
             ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group")))
             ->add('numeroExpediente')
             ->add('tecnico',EntityType::class, array('class'=>'AppBundle\Entity\Tecnicos', 'placeholder' => "Seleccione una opción" ))
-            ->add('plurianual',CheckboxType::class, array("attr"=> array("class"=>"checkbox bootstrap-switch-container")))
+            ->add('plurianual')
             ->add('agrupado')
-            ->add('activo')
-            //->add('zonaDepartamento')
-            //->add('zona')
-            //->add('titular')
-        ;
+            ->add('activo');
     }
 
     /**
