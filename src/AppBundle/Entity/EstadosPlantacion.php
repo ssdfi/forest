@@ -157,4 +157,8 @@ class EstadosPlantacion
     {
         return $this->updatedAt;
     }
+    
+    public function __toString(){
+        return $this->descripcion;
+    }
 }

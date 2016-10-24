@@ -98,7 +98,7 @@ class Expedientes
      *
      * @ORM\ManyToOne(targetEntity="ZonaDepartamentos")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="zona_departamento_id", referencedColumnName="id", nullable=FALSE)
+     *   @ORM\JoinColumn(name="zona_departamento_id", referencedColumnName="id", nullable=true)
      * })
      */
     private $zonaDepartamento;
