@@ -24,8 +24,6 @@ class MovimientosType extends AbstractType
             ->add('observacion')
             ->add('observacionInterna')
             ->add('auditar')
-            ->add('createdAt', 'datetime')
-            ->add('updatedAt', 'datetime')
             ->add('destino')
             ->add('expediente')
             ->add('inspector')
@@ -34,7 +32,7 @@ class MovimientosType extends AbstractType
             ->add('validador')
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
