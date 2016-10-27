@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Expedientes;
+use AppBundle\Entity\ZonaDepartamentos;
 use AppBundle\Form\ExpedientesType;
 use Doctrine\ORM\Query;
 
@@ -42,11 +43,27 @@ class ExpedientesController extends Controller
      */
     public function newAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
         $expediente = new Expedientes();
         $form = $this->createForm('AppBundle\Form\ExpedientesType', $expediente);
+
+
+        //$cortar=$expediente['numeroInterno'];
+        //print_r($expediente);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            print_r($expediente->getNumeroInterno());
+            print_r($expediente->getZonaSplit());
+            print_r($expediente->getZonaDeptoSplit());
+            $zona_depto= $em->getRepository('AppBundle:ZonaDepartamentos')->findOneById($expediente->getZonaDeptoSplit());
+            if($zona_depto==null){
+              $expediente->setZonaDepartamento();
+            }else {
+              $expediente->setZonaDepartamento($zona_depto);
+            }
+            
             $em = $this->getDoctrine()->getManager();
             $em->persist($expediente);
             $em->flush();
