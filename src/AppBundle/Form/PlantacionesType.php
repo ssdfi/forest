@@ -18,6 +18,7 @@ class PlantacionesType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $nombre='';
         $builder
             //->add('titular')
             ->add('anioPlantacion',TextType::class,array('label'=>'Año Plantación'))
@@ -33,7 +34,7 @@ class PlantacionesType extends AbstractType
             ->add('fuenteImagen',EntityType::class, array('class'=>'AppBundle\Entity\FuentesImagen', 'placeholder' => "Seleccione una opción" ))
             ->add('fechaImagen', DateType::class, array('widget' => 'single_text','attr' => ['class' => 'js-datepicker']))
             ->add('baseGeometricaId',EntityType::class, array('class'=>'AppBundle\Entity\BasesGeometricas', 'placeholder' => "Seleccione una opción" ))
-            //->add('provincia',EntityType::class, array('class'=>'AppBundle\Entity\Provincias', 'placeholder' => "Seleccione una opción" ))
+            //->add('provincia',EntityType::class, array('class'=>'AppBundle\Entity\Provincias','placeholder' => "Seleccione una opción"))
             //->add('departamento',EntityType::class, array('class'=>'AppBundle\Entity\Departamentos', 'placeholder' => "Seleccione una opción" ))
             ->add('estratoDesarrollo',EntityType::class, array('class'=>'AppBundle\Entity\EstratosDesarrollo', 'placeholder' => "Seleccione una opción" ))
             ->add('usoForestal')
