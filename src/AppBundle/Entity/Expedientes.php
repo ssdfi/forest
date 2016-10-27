@@ -418,6 +418,26 @@ class Expedientes
         return $this->titular;
     }
 
+    /**
+     * Get zonaSplit
+     *
+     * @return string
+     */
+    public function getZonaSplit()
+    {
+        return substr( $this->numeroInterno, 0, 2);
+    }
+
+    /**
+     * Get zonaDeptoSplit
+     *
+     * @return string
+     */
+    public function getZonaDeptoSplit()
+    {
+        return substr( $this->numeroInterno, 3, 3);
+    }
+
     public function __construct() {
         $this->tecnico = new \Doctrine\Common\Collections\ArrayCollection();
         $this->titulares = new \Doctrine\Common\Collections\ArrayCollection();
