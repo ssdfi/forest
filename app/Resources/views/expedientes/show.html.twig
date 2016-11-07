@@ -37,9 +37,9 @@
               <dd> </dd>
             {% endif %}
             <dt>Zona:</dt>
-            {% if expediente.zona.provincia is defined %}
+            {% if expediente.zona.descripcion is defined %}
               <dd>
-                {{ expediente.zona.provincia }}
+                {{ expediente.zona.descripcion }}
               </dd>
             {% else %}
               <dd> </dd>
