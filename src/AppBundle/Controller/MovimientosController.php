@@ -12,14 +12,14 @@ use AppBundle\Form\MovimientosType;
 /**
  * Movimientos controller.
  *
- * @Route("/movimientos")
+ * @Route("expedientes/{id}/movimientos")
  */
 class MovimientosController extends Controller
 {
     /**
      * Lists all Movimientos entities.
      *
-     * @Route("/", name="movimientos_index")
+     * @Route("movimientos/", name="movimientos_index")
      * @Method("GET")
      */
     public function indexAction()
@@ -62,7 +62,7 @@ class MovimientosController extends Controller
     /**
      * Finds and displays a Movimientos entity.
      *
-     * @Route("/movimientos/{id}", name="movimientos_show")
+     * @Route("/movimientos/{id_mov}", name="movimientos_show")
      * @Method("GET")
      */
     public function showAction(Movimientos $movimiento)
@@ -78,7 +78,7 @@ class MovimientosController extends Controller
     /**
      * Displays a form to edit an existing Movimientos entity.
      *
-     * @Route("/movimientos/{id}/edit", name="movimientos_edit")
+     * @Route("/movimientos/{id_mov}/edit", name="movimientos_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Movimientos $movimiento)
@@ -105,7 +105,7 @@ class MovimientosController extends Controller
     /**
      * Deletes a Movimientos entity.
      *
-     * @Route("/movimientos/{id}", name="movimientos_delete")
+     * @Route("/movimientos/{id_mov}", name="movimientos_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Movimientos $movimiento)
