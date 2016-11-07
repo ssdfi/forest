@@ -11,6 +11,7 @@ use AppBundle\Entity\Expedientes;
 use AppBundle\Entity\ZonaDepartamentos;
 use AppBundle\Form\ExpedientesType;
 use Doctrine\ORM\Query;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class ExpedientesController extends Controller
 {
@@ -47,23 +48,26 @@ class ExpedientesController extends Controller
 
         $expediente = new Expedientes();
         $form = $this->createForm('AppBundle\Form\ExpedientesType', $expediente);
-
-
-        //$cortar=$expediente['numeroInterno'];
-        //print_r($expediente);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            print_r($expediente->getNumeroInterno());
-            print_r($expediente->getZonaSplit());
-            print_r($expediente->getZonaDeptoSplit());
-            $zona_depto= $em->getRepository('AppBundle:ZonaDepartamentos')->findOneById($expediente->getZonaDeptoSplit());
-            if($zona_depto==null){
-              $expediente->setZonaDepartamento();
-            }else {
-              $expediente->setZonaDepartamento($zona_depto);
+            $zona= $em->getRepository('AppBundle:Zonas')->findOneBy(array('codigo'=>$expediente->getZonaSplit()));
+            if($zona != null){
+                $expediente->setZona($zona);
+                //print_r($expediente->getZonaSplit());
+                //print_r('-'.$expediente->getZonaDeptoSplit());
+                $zona_depto= $em->getRepository('AppBundle:ZonaDepartamentos')->findOneBy(array('zona'=>$expediente->getZonaSplit(),'codigo'=>$expediente->getZonaDeptoSplit()));
+                if($zona_depto==null){
+                }else {
+                  $expediente->setZonaDepartamento($zona_depto);
+                }
+            }else{
+
             }
-            
+            $expediente->setCreatedAt(new DateTime());
+            $expediente->setUpdatedAt(new DateTime());
+            $expediente->setAnio($expediente->getAnioSplit());
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($expediente);
             $em->flush();
@@ -116,6 +120,9 @@ class ExpedientesController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            $expediente->setUpdatedAt(new DateTime());
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($expediente);
             $em->flush();
