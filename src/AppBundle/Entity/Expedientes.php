@@ -7,12 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\Expedientes;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Expedientes
  *
  * @ORM\Table(name="expedientes", indexes={@ORM\Index(name="index_expedientes_on_tecnico_id", columns={"tecnico_id"}), @ORM\Index(name="index_expedientes_on_zona_departamento_id", columns={"zona_departamento_id"}), @ORM\Index(name="index_expedientes_on_zona_id", columns={"zona_id"}), @ORM\Index(name="index_expedientes_on_numero_expediente", columns={"numero_expediente"}), @ORM\Index(name="index_expedientes_on_numero_interno", columns={"numero_interno"})})
  * @ORM\Entity
  */
+ // @UniqueEntity(fields="numeroInterno",message="Este valor ya existe y no puede repetirse") @UniqueEntity(fields="numeroExpediente",message="Este valor ya existe y no puede repetirse")
 class Expedientes
 {
     /**
@@ -298,7 +300,10 @@ class Expedientes
      */
     public function setCreatedAt($createdAt)
     {
-        $this->createdAt = $createdAt;
+      if(!$this->createdAt){
+          $this->createdAt = new \DateTime();
+      }
+      //$this->createdAt = $createdAt;
 
         return $this;
     }
@@ -322,8 +327,7 @@ class Expedientes
      */
     public function setUpdatedAt($updatedAt)
     {
-        $this->updatedAt = $updatedAt;
-
+        $this->updatedAt = new \DateTime();
         return $this;
     }
 
@@ -340,11 +344,11 @@ class Expedientes
     /**
      * Set zonaDepartamento
      *
-     * @param \AppBundle\Entity\ZonaDepartamentos $zonaDepartamento
+     * @param integer $zonaDepartamento
      *
-     * @return Expedientes
+     * @return integer
      */
-    public function setZonaDepartamento(\AppBundle\Entity\ZonaDepartamentos $zonaDepartamento = null)
+    public function setZonaDepartamento($zonaDepartamento = null)
     {
         $this->zonaDepartamento = $zonaDepartamento;
 
@@ -388,11 +392,11 @@ class Expedientes
     /**
      * Set zona
      *
-     * @param \AppBundle\Entity\Zonas $zona
+     * @param integer $zona
      *
-     * @return Expedientes
+     * @return integer
      */
-    public function setZona(\AppBundle\Entity\Zonas $zona = null)
+    public function setZona($zona = null)
     {
         $this->zona = $zona;
 
@@ -436,6 +440,22 @@ class Expedientes
     public function getZonaDeptoSplit()
     {
         return substr( $this->numeroInterno, 3, 3);
+    }
+
+    /**
+     * Get anioSplit
+     *
+     * @return integer
+     */
+    public function getAnioSplit()
+    {
+        $anio = (int)substr( $this->numeroInterno, 11, 2);
+        if ($anio < 80){
+          $anio = $anio + 2000;
+        }else{
+          $anio = $anio + 1900;
+        }
+        return $anio;
     }
 
     public function __construct() {
