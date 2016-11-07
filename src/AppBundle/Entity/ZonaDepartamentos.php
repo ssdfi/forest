@@ -202,7 +202,7 @@ class ZonaDepartamentos
     /**
      * Set zona
      *
-     * @param \AppBundle\Entity\Zonas $zona
+     * @param integer $zona
      *
      * @return ZonaDepartamentos
      */
