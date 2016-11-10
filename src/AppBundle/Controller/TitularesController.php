@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Titulares;
 use AppBundle\Form\TitularesType;
+use Doctrine\ORM\Query;
 
 /**
  * Titulares controller.
@@ -70,11 +71,36 @@ class TitularesController extends Controller
      * @Route("/{id}", name="titulares_show")
      * @Method("GET")
      */
-    public function showAction(Titulares $titular)
+    public function showAction(Titulares $titular, $id)
     {
         $deleteForm = $this->createDeleteForm($titular);
 
+        $em    = $this->get('doctrine.orm.entity_manager');
+
+        $dql_b   = "SELECT e
+                  FROM AppBundle:Plantaciones p
+                  JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
+                  JOIN AppBundle:Actividades act WITH act.id=ap.actividad
+                  JOIN AppBundle:Movimientos mov WITH mov.id=act.movimiento
+                  JOIN AppBundle:Expedientes e WITH e.id=mov.expediente
+                  WHERE p.titular=:id
+                  AND e.agrupado=true";
+
+        $productor_con_plantacion = $em->createQuery($dql_b)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+
+
+        $dql_c   = "SELECT e
+                  FROM AppBundle:ActividadesTitulares actt
+                  JOIN AppBundle:Actividades act WITH act.id=actt.actividad
+                  JOIN AppBundle:Movimientos mov WITH mov.id=act.movimiento
+                  JOIN AppBundle:Expedientes e WITH e.id=mov.expediente
+                  LEFT JOIN AppBundle:ActividadesPlantaciones ap WITH ap.actividad = actt.actividad
+                  WHERE actt.titular=:id";
+        $productor_sin_plantacion = $em->createQuery($dql_c)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+
         return $this->render('titulares/show.html.twig', array(
+            'productor_con_plantacion' => $productor_con_plantacion,
+            'productor_sin_plantacion' => $productor_sin_plantacion,
             'titular' => $titular,
             'delete_form' => $deleteForm->createView(),
         ));
