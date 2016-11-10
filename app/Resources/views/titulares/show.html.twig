@@ -20,8 +20,20 @@
     </div>
   </div>
   <div class="col-md-9">
-    <h4>Expedientes</h4>
+    <h4>Titulares de Expedientes</h4>
     {{ include('expedientes/show_list.html.twig', {'expedientes': titular.expediente}) }}
+  </div>
+  <div class="col-md-3">
+  </div>
+  <div class="col-md-9">
+    <h4>Productor Agrupado con Plantación</h4>
+    {{ include('expedientes/show_list.html.twig', {'expedientes': productor_con_plantacion}) }}
+  </div>
+  <div class="col-md-3">
+  </div>
+  <div class="col-md-9">
+    <h4>Productor Agrupado sin Plantación</h4>
+    {{ include('expedientes/show_list.html.twig', {'expedientes': productor_sin_plantacion}) }}
   </div>
 </div>
 {% endblock %}
