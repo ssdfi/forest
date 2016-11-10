@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class PlantacionesType extends AbstractType
 {
@@ -21,20 +22,20 @@ class PlantacionesType extends AbstractType
         $nombre='';
         $builder
             //->add('titular')
-            ->add('anioPlantacion',TextType::class,array('label'=>'Año Plantación'))
+            ->add('anioPlantacion',TextType::class,array('label'=>'Año de Plantación'))
             ->add('tipoPlantacion',EntityType::class, array('class'=>'AppBundle\Entity\TiposPlantacion', 'placeholder' => "Seleccione una opción" ))
-            ->add('nomenclaturaCatastral')
-            ->add('estadoPlantacion',EntityType::class, array('class'=>'AppBundle\Entity\EstadosPlantacion', 'placeholder' => "Seleccione una opción" ))
-            ->add('distanciaPlantas')
-            ->add('cantidadFilas')
-            ->add('distanciaFilas')
+            ->add('nomenclaturaCatastral',TextType::class,array('label'=>'Nomenclatura Catrastal'))
+            ->add('estadoPlantacion',EntityType::class, array('class'=>'AppBundle\Entity\EstadosPlantacion', 'placeholder' => "Seleccione una opción" , 'label'=> "Estado de Plantación"))
+            ->add('distanciaPlantas',TextType::class,array('label'=>'Distancia entre Plantas'))
+            ->add('cantidadFilas',IntegerType::class,array('label'=>'Cantidad de Filas'))
+            ->add('distanciaFilas',TextType::class,array('label'=>'Distancia entre Filas'))
             ->add('densidad')
-            ->add('fuenteInformacion',EntityType::class, array('class'=>'AppBundle\Entity\FuentesInformacion', 'placeholder' => "Seleccione una opción" ))
-            ->add('anioInformacion',TextType::class,array('label'=>'Año Información'))
-            ->add('fuenteImagen',EntityType::class, array('class'=>'AppBundle\Entity\FuentesImagen', 'placeholder' => "Seleccione una opción" ))
-            ->add('fechaImagen', DateType::class, array('widget' => 'single_text','attr' => ['class' => 'js-datepicker']))
-            ->add('baseGeometricaId',EntityType::class, array('class'=>'AppBundle\Entity\BasesGeometricas', 'placeholder' => "Seleccione una opción" ))
-            //->add('provincia',EntityType::class, array('class'=>'AppBundle\Entity\Provincias','placeholder' => "Seleccione una opción"))
+            ->add('fuenteInformacion',EntityType::class, array('class'=>'AppBundle\Entity\FuentesInformacion', 'placeholder' => "Seleccione una opción", 'label'=>'Fuende de Información' ))
+            ->add('anioInformacion',IntegerType::class,array('label'=>'Año de Información'))
+            ->add('fuenteImagen',EntityType::class, array('class'=>'AppBundle\Entity\FuentesImagen', 'placeholder' => "Seleccione una opción" , 'label'=>'Fuente de Imagen'))
+            ->add('fechaImagen', DateType::class, array('widget' => 'single_text','attr' => ['class' => 'js-datepicker'], 'label'=>'Fecha de Imagen'))
+            ->add('baseGeometricaId',EntityType::class, array('class'=>'AppBundle\Entity\BasesGeometricas', 'placeholder' => "Seleccione una opción" , 'label'=>'Base Geométrica' ))
+            //->add('provincia',EntityType::class, array('class'=>'AppBundle\Entity\Provincias','choice_label' => 'nombre','placeholder' => "Seleccione una opción"))
             //->add('departamento',EntityType::class, array('class'=>'AppBundle\Entity\Departamentos', 'placeholder' => "Seleccione una opción" ))
             ->add('estratoDesarrollo',EntityType::class, array('class'=>'AppBundle\Entity\EstratosDesarrollo', 'placeholder' => "Seleccione una opción" ))
             ->add('usoForestal')
