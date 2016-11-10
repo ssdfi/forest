@@ -12,14 +12,14 @@ use AppBundle\Form\MovimientosType;
 /**
  * Movimientos controller.
  *
- * @Route("expedientes/{id}/movimientos")
+ * @Route("/movimientos")
  */
 class MovimientosController extends Controller
 {
     /**
      * Lists all Movimientos entities.
      *
-     * @Route("movimientos/", name="movimientos_index")
+     * @Route("/", name="movimientos_index")
      * @Method("GET")
      */
     public function indexAction()
