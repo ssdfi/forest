@@ -172,4 +172,28 @@ class ExpedientesController extends Controller
             ->getForm()
         ;
     }
+
+    /**
+     * Lists all Expedientes entities.
+     *
+     * @Route("/expedientes/{id}/movimientos/{tuma}", name="list_movimientos")
+     * @Method("GET")
+     */
+    public function listMovimientos(Request $request)
+    {
+      print_r('tu ma netna');
+      /*$em    = $this->get('doctrine.orm.entity_manager');
+      $dql   = "SELECT a FROM AppBundle:Expedientes a";
+      $query = $em->createQuery($dql);
+      $paginator = $this->get('knp_paginator');
+      $expedientes = $paginator->paginate(
+              $query,
+              $request->query->getInt('page', 1),
+              15,
+              array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'desc')
+          );
+      return $this->render('expedientes/list.html.twig',array('expedientes' => $expedientes));*/
+      print_r('hola');
+    }
+
 }
