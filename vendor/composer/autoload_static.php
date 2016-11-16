@@ -41,6 +41,10 @@ class ComposerStaticInitfea8aa9793852496a5399216ff495951
             'Sensio\\Bundle\\FrameworkExtraBundle\\' => 35,
             'Sensio\\Bundle\\DistributionBundle\\' => 33,
         ),
+        'P' => 
+        array (
+            'Psr\\Log\\' => 8,
+        ),
         'M' => 
         array (
             'Monolog\\' => 8,
@@ -57,6 +61,7 @@ class ComposerStaticInitfea8aa9793852496a5399216ff495951
         array (
             'Doctrine\\Instantiator\\' => 22,
             'Doctrine\\Common\\Cache\\' => 22,
+            'Doctrine\\Common\\Annotations\\' => 28,
             'Doctrine\\Common\\' => 16,
             'Doctrine\\Bundle\\DoctrineCacheBundle\\' => 36,
             'Doctrine\\Bundle\\DoctrineBundle\\' => 31,
@@ -136,6 +141,10 @@ class ComposerStaticInitfea8aa9793852496a5399216ff495951
         array (
             0 => __DIR__ . '/..' . '/sensio/distribution-bundle',
         ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
@@ -155,6 +164,10 @@ class ComposerStaticInitfea8aa9793852496a5399216ff495951
         'Doctrine\\Common\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
+        ),
+        'Doctrine\\Common\\Annotations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
         ),
         'Doctrine\\Common\\' => 
         array (
@@ -189,13 +202,6 @@ class ComposerStaticInitfea8aa9793852496a5399216ff495951
                 0 => __DIR__ . '/..' . '/sensiolabs/security-checker',
             ),
         ),
-        'P' => 
-        array (
-            'Psr\\Log\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/psr/log',
-            ),
-        ),
         'K' => 
         array (
             'Knp\\Component' => 
@@ -224,10 +230,6 @@ class ComposerStaticInitfea8aa9793852496a5399216ff495951
             'Doctrine\\Common\\Collections\\' => 
             array (
                 0 => __DIR__ . '/..' . '/doctrine/collections/lib',
-            ),
-            'Doctrine\\Common\\Annotations\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/annotations/lib',
             ),
         ),
         'C' => 
