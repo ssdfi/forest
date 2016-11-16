@@ -6,40 +6,44 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Movimientos;
+use AppBundle\Entity\Expedientes;
 use AppBundle\Form\MovimientosType;
-
+use Doctrine;
 /**
  * Movimientos controller.
  *
- * @Route("/movimientos")
+ *
  */
 class MovimientosController extends Controller
 {
     /**
      * Lists all Movimientos entities.
      *
-     * @Route("/", name="movimientos_index")
+     *
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction($id, $idMov)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $movimientos = $em->getRepository('AppBundle:Movimientos')->findAll();
-
+        $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
+        $actividades = $em->getRepository('AppBundle:Actividades')->findByMovimiento($idMov);
         return $this->render('movimientos/index.html.twig', array(
-            'movimientos' => $movimientos,
+            'expediente' => $id,
+            'movimiento' => $movimiento,
+            'actividades'=>$actividades
         ));
     }
 
     /**
      * Creates a new Movimientos entity.
      *
-     * @Route("/movimientos/new", name="movimientos_new")
+     * @Route("/new", name="movimientos_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, $id)
     {
         $movimiento = new Movimientos();
         $form = $this->createForm('AppBundle\Form\MovimientosType', $movimiento);
@@ -62,10 +66,10 @@ class MovimientosController extends Controller
     /**
      * Finds and displays a Movimientos entity.
      *
-     * @Route("/movimientos/{id_mov}", name="movimientos_show")
+     * @Route("/{id_mov}", name="movimientos_show")
      * @Method("GET")
      */
-    public function showAction(Movimientos $movimiento)
+    public function showAction(Expedientes $expediente, Movimientos $movimiento)
     {
         $deleteForm = $this->createDeleteForm($movimiento);
 
@@ -78,7 +82,7 @@ class MovimientosController extends Controller
     /**
      * Displays a form to edit an existing Movimientos entity.
      *
-     * @Route("/movimientos/{id_mov}/edit", name="movimientos_edit")
+     * @Route("{id_mov}/edit", name="movimientos_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Movimientos $movimiento)
@@ -105,7 +109,7 @@ class MovimientosController extends Controller
     /**
      * Deletes a Movimientos entity.
      *
-     * @Route("/movimientos/{id_mov}", name="movimientos_delete")
+     * @Route("/{id_mov}", name="movimientos_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Movimientos $movimiento)
