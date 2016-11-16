@@ -6,8 +6,9 @@
       <div class="panel-heading">
         <h3 class="panel-title">Buscador</h3>
       </div>
-    </div>
-    <div class="panel-body">
+      <div class="panel-body">
+          {{ include('expedientes/search.html.twig', {'expedientes': expedientes}) }}
+      </div>
     </div>
   </div>
   <div class="col-md-9">
