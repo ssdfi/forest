@@ -13,6 +13,10 @@ use AppBundle\Form\ExpedientesType;
 use Doctrine\ORM\Query;
 use Symfony\Component\Validator\Constraints\DateTime;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 class ExpedientesController extends Controller
 {
     /**
@@ -23,6 +27,26 @@ class ExpedientesController extends Controller
      */
     public function listExpedientes(Request $request)
     {
+
+      $expedientes = new Expedientes();
+
+      $search_form = $this->createFormBuilder($expedientes)
+            ->add('_numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
+            ->add('_numeroExpediente', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
+            ->add('_zona',EntityType::class, array('class'=>'AppBundle\Entity\Zonas', 'required'=>false))
+            ->add('_tecnico',EntityType::class, array('class'=>'AppBundle\Entity\Tecnicos', 'required'=>false))
+            ->add('_activo',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
+            ->add('_agrupado',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
+            ->add('_plurianual',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
+            //->add('_pendiente',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
+            //->add('_validado',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
+            //->add('_estabilidad_fiscal',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
+            //->add('_incompleto',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
+
+          ->getForm()->createView();
+
+      //$search_form->handleRequest($request);
+
       $em    = $this->get('doctrine.orm.entity_manager');
       $dql   = "SELECT a FROM AppBundle:Expedientes a";
       $query = $em->createQuery($dql);
@@ -33,7 +57,7 @@ class ExpedientesController extends Controller
               15,
               array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'desc')
           );
-      return $this->render('expedientes/list.html.twig',array('expedientes' => $expedientes));
+      return $this->render('expedientes/list.html.twig',array('expedientes' => $expedientes, 'search_form'=>$search_form));
     }
 
     /**
@@ -54,8 +78,6 @@ class ExpedientesController extends Controller
             $zona= $em->getRepository('AppBundle:Zonas')->findOneBy(array('codigo'=>$expediente->getZonaSplit()));
             if($zona != null){
                 $expediente->setZona($zona);
-                //print_r($expediente->getZonaSplit());
-                //print_r('-'.$expediente->getZonaDeptoSplit());
                 $zona_depto= $em->getRepository('AppBundle:ZonaDepartamentos')->findOneBy(array('zona'=>$expediente->getZonaSplit(),'codigo'=>$expediente->getZonaDeptoSplit()));
                 if($zona_depto==null){
                 }else {
@@ -174,26 +196,17 @@ class ExpedientesController extends Controller
     }
 
     /**
-     * Lists all Expedientes entities.
+     * Finds and displays a Movimientos entity.
      *
-     * @Route("/expedientes/{id}/movimientos/{tuma}", name="list_movimientos")
+     * @Route("/expedientes/{id}/movimientos/{idMov}", name="list_movimientos")
      * @Method("GET")
      */
-    public function listMovimientos(Request $request)
+    public function listMovimientos(Request $request,$id, $idMov)
     {
-      print_r('tu ma netna');
-      /*$em    = $this->get('doctrine.orm.entity_manager');
-      $dql   = "SELECT a FROM AppBundle:Expedientes a";
-      $query = $em->createQuery($dql);
-      $paginator = $this->get('knp_paginator');
-      $expedientes = $paginator->paginate(
-              $query,
-              $request->query->getInt('page', 1),
-              15,
-              array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'desc')
-          );
-      return $this->render('expedientes/list.html.twig',array('expedientes' => $expedientes));*/
-      print_r('hola');
+        $movimiento = new MovimientosController();
+        $movimiento->setContainer($this->container);
+        return $movimiento->indexAction($id, $idMov);
+
     }
 
 }
