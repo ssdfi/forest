@@ -8,3 +8,22 @@ input[type="date"], input[type="time"], input[type="datetime-local"], input[type
     line-height: 34px;
     line-height: 1.428571429 \0;
 }
+
+.panel-primary {
+    border-color: #428bca!important;
+}
+
+.panel {
+    background-color: white;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+* {
+    box-sizing: border-box;
+}
+*::before, *::after {
+    box-sizing: border-box;
+}
