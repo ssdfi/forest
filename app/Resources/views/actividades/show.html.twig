@@ -1,0 +1,36 @@
+<table id="movimientos" class="table table-hover table-grid">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th nowrap="">Tipo actividad</th>
+      <th nowrap="">Presentado</th>
+      <th>Certificado</th>
+      <th>Inspeccionado</th>
+      <th>Registrado</th>
+      <th class="icon">Mapa</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for actividad in actividades %}
+    <tr data-link="">
+      <td>{{actividad.id}}</td>
+      <td>
+        {% if actividad.tipoActividad %}
+          {{actividad.tipoActividad.descripcion}}
+        {% endif %}
+      </td>
+      <td>{{actividad.superficiePresentada}}</td>
+      <td>{{actividad.superficieCertificada}}</td>
+      <td>{{actividad.superficieInspeccionada}}</td>
+      <td>
+        {% if actividad.superficieRegistrada %}
+          {{actividad.superficieRegistrada}}
+        {% else %}
+          0.0
+        {% endif %}
+      </td>
+      <td></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

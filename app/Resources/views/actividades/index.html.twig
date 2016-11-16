@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Actividades list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Superficiepresentada</th>
+                <th>Superficiecertificada</th>
+                <th>Superficieinspeccionada</th>
+                <th>Superficieregistrada</th>
+                <th>Createdat</th>
+                <th>Updatedat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for actividade in actividades %}
+            <tr>
+                <td><a href="{{ path('actividades_show', { 'id': actividade.id }) }}">{{ actividade.id }}</a></td>
+                <td>{{ actividade.superficiePresentada }}</td>
+                <td>{{ actividade.superficieCertificada }}</td>
+                <td>{{ actividade.superficieInspeccionada }}</td>
+                <td>{{ actividade.superficieRegistrada }}</td>
+                <td>{% if actividade.createdAt %}{{ actividade.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if actividade.updatedAt %}{{ actividade.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('actividades_show', { 'id': actividade.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('actividades_edit', { 'id': actividade.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('actividades_new') }}">Create a new actividade</a>
+        </li>
+    </ul>
+{% endblock %}
