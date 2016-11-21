@@ -1,0 +1,46 @@
+<div role="tabpanel">
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="active" role="presentation">
+      <a href="#plantaciones-tab" aria-controls="plantaciones-tab" role="tab" data-toggle="tab">Plantaciones</a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div id="plantaciones-tab" class="tab-pane active" role="tabpanel">
+      <table id="plantaciones" class="table table-hover table-grid">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Titular</th>
+            <th>Especie</th>
+            <th>Tipo</th>
+            <th>Superficie Registrada</th>
+            <th>Superficie</th>
+            <th>Estado</th>
+            <th>Observaciones</th>
+            <th class="icon hidden-print">Mapa</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for plantacion in plantaciones %}
+          {{dump(plantacion)}}
+            <tr data-link="/plantaciones/8">
+              <td>{{plantacion.id}}</td>
+              <td>{{plantacion.titular.nombre}}</td>
+              <td>{{plantacion.tipoPlantacion.descripcion}}</td>
+              <td>{{plantacion.tipoPlantacion.descripcion}}</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="icon icon-lg hidden-print">
+                <a href="/plantaciones/8/mapa" onclick="event.stopPropagation()" target="_blank">
+                  <span class="glyphicon glyphicon-globe"></span>
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
