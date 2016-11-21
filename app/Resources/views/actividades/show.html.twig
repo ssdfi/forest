@@ -12,7 +12,7 @@
   </thead>
   <tbody>
     {% for actividad in actividades %}
-    <tr data-link="">
+    <tr data-link="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{actividad.id}}">
       <td>{{actividad.id}}</td>
       <td>
         {% if actividad.tipoActividad %}
@@ -29,7 +29,6 @@
           0.0
         {% endif %}
       </td>
-      <td></td>
     </tr>
     {% endfor %}
   </tbody>
