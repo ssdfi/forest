@@ -257,7 +257,7 @@ class Plantaciones
 
     /**
         * @var \Especies
-        * @ORM\ManyToMany(targetEntity="Especies", cascade={"all"}, fetch="LAZY")
+        * @ORM\ManyToMany(targetEntity="Especies", fetch="LAZY")
         * @ORM\JoinTable(
         *      name="especies_plantaciones",
         *      joinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")},
