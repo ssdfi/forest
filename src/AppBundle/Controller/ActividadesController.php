@@ -6,7 +6,7 @@ use AppBundle\Entity\Actividades;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
-
+use Doctrine\ORM\Query;
 /**
  * Actividade controller.
  *
@@ -20,14 +20,22 @@ class ActividadesController extends Controller
      * @Route("/", name="actividades_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction($id, $idMov,$idAct)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $actividades = $em->getRepository('AppBundle:Actividades')->findAll();
+        $actividades = $em->getRepository('AppBundle:Actividades')->findOneById($idAct);
+
+        $dql_p   = "SELECT p
+                    FROM AppBundle:Actividades a
+                    JOIN AppBundle:ActividadesPlantaciones ap WITH a.id = ap.actividad
+                    JOIN AppBundle:Plantaciones p WITH p.id = ap.plantacion
+                    WHERE a.id=:id";
+        $plantaciones = $em->createQuery($dql_p)->setParameters(array('id' => $idAct))->getResult(Query::HYDRATE_OBJECT);
 
         return $this->render('actividades/index.html.twig', array(
-            'actividades' => $actividades,
+            'actividad' => $actividades,
+            'plantaciones' => $plantaciones
         ));
     }
 
