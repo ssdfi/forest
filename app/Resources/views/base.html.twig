@@ -38,20 +38,14 @@
             <li><a href="/plantaciones/">Plantaciones</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <!--NUEVO EXPEDIENTE -->
-            <li >
-              <a id="nav-new-expediente" href="/expedientes/new">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                Nuevo Expediente
-              </a>
+            {{ include('navbar_right.html.twig') }}
+            <li class="navbar-danger">
+              <!--logout -->
+                <a id="nav-logout" href="/logout" data-confirm="¿Está seguro que desea cerrar la sesión?">
+                  <span class="glyphicon glyphicon glyphicon-log-out" aria-hidden="true"></span> Salir
+                </a>
             </li>
-          <li class="navbar-danger">
-            <!--logout -->
-              <a id="nav-logout" href="/logout" data-confirm="¿Está seguro que desea cerrar la sesión?">
-                <span class="glyphicon glyphicon glyphicon-log-out" aria-hidden="true"></span> Salir
-              </a>
-          </li>
-        </ul>
+          </ul>
         </div>
       </div>
     </nav>
