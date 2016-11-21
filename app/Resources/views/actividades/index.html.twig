@@ -1,49 +1,60 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Actividades list</h1>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Superficiepresentada</th>
-                <th>Superficiecertificada</th>
-                <th>Superficieinspeccionada</th>
-                <th>Superficieregistrada</th>
-                <th>Createdat</th>
-                <th>Updatedat</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for actividade in actividades %}
-            <tr>
-                <td><a href="{{ path('actividades_show', { 'id': actividade.id }) }}">{{ actividade.id }}</a></td>
-                <td>{{ actividade.superficiePresentada }}</td>
-                <td>{{ actividade.superficieCertificada }}</td>
-                <td>{{ actividade.superficieInspeccionada }}</td>
-                <td>{{ actividade.superficieRegistrada }}</td>
-                <td>{% if actividade.createdAt %}{{ actividade.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if actividade.updatedAt %}{{ actividade.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('actividades_show', { 'id': actividade.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('actividades_edit', { 'id': actividade.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('actividades_new') }}">Create a new actividade</a>
-        </li>
-    </ul>
+        <div class="col-md-3">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h3 class="panel-title">Actividad</h3>
+            </div>
+            <div class="panel-body">
+              <dl class="dl-horizontal">
+                <dt>ID Movimiento:</dt>
+                <dd><a href="/expedientes/{{actividad.movimiento.expediente.id}}/movimientos/{{actividad.movimiento.id}}">{{actividad.movimiento.id}}</a></dd>
+                <dt>ID Actividad:</dt>
+                <dd>{{actividad.id}}</dd>
+                <dt>Tipo de Actividad:</dt>
+                <dd>{% if actividad.tipoActividad %}
+                  {{actividad.tipoActividad.descripcion}}
+                {% endif %}
+                </dd>
+                <dt>Sup. Presentada:</dt>
+                <dd>{% if actividad.superficiePresentada %}
+                  {{actividad.superficiePresentada}}
+                {% else %}
+                    0.0
+                {% endif %}
+                </dd>
+                <dt>Sup. Certificada:</dt>
+                <dd>
+                  {% if actividad.superficieCertificada %}
+                    {{actividad.superficieCertificada}}
+                  {% else %}
+                      0.0
+                  {% endif %}
+                </dd>
+                <dt>Sup. Inspeccionada:</dt>
+                <dd>
+                  {% if actividad.superficieInspeccionada %}
+                    {{actividad.superficieInspeccionada}}
+                  {% else %}
+                      0.0
+                  {% endif %}
+                </dd>
+                <dt>Sup. Registrada:</dt>
+                <dd>
+                  {% if actividad.superficieRegistrada %}
+                    {{actividad.superficieRegistrada}}
+                  {% else %}
+                      0.0
+                  {% endif %}
+                </dd>
+              </dl>
+            </div>
+            <div class="panel-footer">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+      {{ include('actividades/show_plantacion.html.twig', { 'plantaciones': plantaciones }) }}
+    </div>
 {% endblock %}
