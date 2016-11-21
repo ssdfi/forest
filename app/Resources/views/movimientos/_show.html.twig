@@ -2,7 +2,6 @@
   <thead>
     <tr>
       <th>ID</th>
-      <th nowrap="">Expediente</th>
       <th nowrap="">Ficha</th>
       <th>Etapa</th>
       <th>Entrada</th>
@@ -16,11 +15,18 @@
     {% for movimiento in movimientos %}
     <tr data-link="/expedientes/{{expediente.id}}/movimientos/{{movimiento.id}}">
       <td>{{movimiento.id}}</td>
-      <td>{{movimiento.expediente.id}}</td>
       <td>{{movimiento.numeroFicha}}</td>
       <td>{{movimiento.etapa}}</td>
-      <td>{{movimiento.fechaEntrada|date('d-m-Y')}}</td>
-      <td>{{movimiento.fechaSalida|date('d-m-Y')}}</td>
+      <td>
+        {% if movimiento.fechaEntrada %}
+          {{movimiento.fechaEntrada|date('d-m-Y')}}
+        {% endif %}
+      </td>
+      <td>
+        {% if movimiento.fechaSalida %}
+          {{movimiento.fechaSalida|date('d-m-Y')}}
+        {% endif %}
+      </td>
       <td class="icon">
         {% if movimiento.estabilidadFiscal %}
           <span class="glyphicon glyphicon-ok"></span>
