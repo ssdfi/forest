@@ -113,12 +113,8 @@ class ExpedientesController extends Controller
     {
       $em = $this->getDoctrine()->getManager();
       $dql_m   = "SELECT m
-                FROM AppBundle:Plantaciones p
-                JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
-                JOIN AppBundle:Actividades a WITH a.id=ap.actividad
-                JOIN AppBundle:Movimientos m WITH m.id=a.movimiento
-                JOIN AppBundle:Expedientes e WITH e.id=m.expediente
-                WHERE p.id=:id";
+                  FROM AppBundle:Movimientos m
+                  WHERE m.expediente=:id";
       $movimientos=$em->createQuery($dql_m)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
       $deleteForm = $this->createDeleteForm($expediente);
 
@@ -206,6 +202,20 @@ class ExpedientesController extends Controller
         $movimiento = new MovimientosController();
         $movimiento->setContainer($this->container);
         return $movimiento->indexAction($id, $idMov);
+
+    }
+
+    /**
+     * Finds and displays a Actividades entity.
+     *
+     * @Route("/expedientes/{id}/movimientos/{idMov}/actividades/{idAct}", name="list_actividades")
+     * @Method("GET")
+     */
+    public function listActividades(Request $request,$id, $idMov, $idAct)
+    {
+        $actividad = new ActividadesController();
+        $actividad->setContainer($this->container);
+        return $actividad->indexAction($id, $idMov,$idAct);
 
     }
 
