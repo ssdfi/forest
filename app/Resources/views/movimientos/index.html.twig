@@ -77,9 +77,7 @@
                 <dt>Validador:</dt>
                 <dd>
                   {% if movimiento.validador %}
-                    {{movimiento.validador}}
-                  {% else %}
-                    <span class="glyphicon glyphicon-remove"></span>
+                    {{movimiento.validador.nombre}}
                   {% endif %}
                 </dd>
                 <dt>Observación:</dt>
@@ -89,7 +87,11 @@
               </dl>
             </div>
             <div class="panel-footer">
-
+              {% if movimiento.validador %}
+                <span class="label label-success">Validado</span>
+              {% else %}
+                <span class="label label-danger">Sin validar</span>
+              {% endif %}
             </div>
         </div>
     </div>
