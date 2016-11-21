@@ -1,21 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Titulares edit</h1>
+  {% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+  <div class="row">
+    <div class="col-md-4">
+      <h1>Editar Titular</h1>
 
-    {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
+      {{ form_start(edit_form) }}
+          {{ form_widget(edit_form) }}
+          <a id="cancel-titular" class="btn btn-default" onClick="history.go(-1);return true;">Cancelar</a>
+          <input id="save-titular" class="btn btn-primary pull-right" type="submit" value="Guardar" />
+      {{ form_end(edit_form) }}
 
-    <ul>
-        <li>
-            <a href="{{ path('titulares_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+    </div>
+  </div>
 {% endblock %}
