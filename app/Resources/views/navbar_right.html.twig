@@ -1,0 +1,122 @@
+{% set route = app.request.attributes.get('_route') %}
+
+{# ----------------------------EXPEDIENTES---------------------------- #}
+{% if route == "list_expedientes" %}
+  <li>
+    <a id="nav-new-expediente" href="/expedientes/new">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      Nuevo Expediente
+    </a>
+  </li>
+{% endif %}
+
+{% if route == "expedientes_show" %}
+  <li>
+    <a id="nav-new-expediente" href="/expedientes/{{expediente.id}}/edit">
+      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+      Editar Expediente
+    </a>
+  </li>
+  <li>
+    <a id="nav-new-expediente" href="/expedientes/new">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      Nuevo Movimiento
+    </a>
+  </li>
+  <li>
+    <a id="nav-delete-expediente" data-confirm="¿Está seguro que desea elminar el Expediente?" value="Delete" href="/expedientes/{{expediente.id}}" rel="nofollow">
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        Eliminar Expediente
+    </a>
+  </li>
+  <li class="navbar-primary">
+    <a id="nav_expediente" href="/expedientes/{{expediente.id}}">{{expediente.numeroInterno}}</a>
+  </li>
+{% endif %}
+
+{% if route == "expedientes_edit" %}
+  <li class="navbar-primary">
+    <a id="nav_expediente" href="/expedientes/{{expediente.id}}">{{expediente.numeroInterno}}</a>
+  </li>
+{% endif %}
+
+{#  -------------------------TITULARES---------------------------- #}
+{% if route == "titulares_index" %}
+  <li class="navbar-primary">
+    <a id="nav-new-titular" href="/titulares/new">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      Nuevo Titular
+    </a>
+  </li>
+{% endif %}
+
+{% if route == "titulares_show" %}
+  <li>
+    <a id="nav-edit-titular" href="/titulares/{{titular.id}}/edit">
+      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+      Editar Titular
+    </a>
+  </li>
+  <li>
+    <a id="nav-delete-titular" data-confirm="¿Está seguro que desea elminar el Titular?" value="Delete" href="/titulares/{{titular.id}}" rel="nofollow">
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        Eliminar Titular
+    </a>
+  </li>
+  {% endif %}
+
+  {#  -------------------------TECNICOS---------------------------- #}
+{% if route == "tecnicos_index" %}
+  <li class="navbar-primary">
+    <a id="nav-new-tecnico" href="/tecnicos/new">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      Nuevo Tecnico
+    </a>
+  </li>
+{% endif %}
+
+{% if route == "tecnicos_show" %}
+  <li>
+    <a id="nav-new-expediente" href="/tecnicos/{{tecnico.id}}/edit">
+      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+      Editar Tecnico
+    </a>
+  </li>
+  <li>
+    <a id="nav-delete-expediente" data-confirm="¿Está seguro que desea elminar el Tecnico?" value="Delete" href="/tecnicos/{{tecnico.id}}" rel="nofollow">
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        Eliminar Tecnico
+    </a>
+  </li>
+  {% endif %}
+
+  {#  -------------------------PLANTACIONES---------------------------- #}
+  {% if route == "plantaciones_index" %}
+    <li class="navbar-primary">
+      <a id="nav-new-plantacion" href="/plantaciones/new">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        Nueva Plantacion
+      </a>
+    </li>
+  {% endif %}
+
+  {% if route == "plantaciones_show" %}
+    <li>
+      <a id="nav-edit-plantacion" href="/plantaciones/{{plantacione.id}}/edit">
+        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+        Editar
+      </a>
+    </li>
+    <li>
+      <a id="nav-map-plantacion" href="/plantaciones/{{plantacione.id}}/mapa" target="_blank">
+        <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+          Mapa
+      </a>
+    </li>
+    <li>
+      <a id="nav-delete-expediente" data-confirm="¿Está seguro que desea eliminar la Plantacion?" value="Delete" href="/plantaciones/{{plantacione.id}}" rel="nofollow">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          Eliminar
+      </a>
+    </li>
+    {% endif %}
