@@ -88,35 +88,56 @@
         Eliminar Tecnico
     </a>
   </li>
-  {% endif %}
+{% endif %}
 
   {#  -------------------------PLANTACIONES---------------------------- #}
-  {% if route == "plantaciones_index" %}
-    <li class="navbar-primary">
-      <a id="nav-new-plantacion" href="/plantaciones/new">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        Nueva Plantacion
-      </a>
-    </li>
-  {% endif %}
+{% if route == "plantaciones_index" %}
+  <li class="navbar-primary">
+    <a id="nav-new-plantacion" href="/plantaciones/new">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      Nueva Plantacion
+    </a>
+  </li>
+{% endif %}
 
-  {% if route == "plantaciones_show" %}
-    <li>
-      <a id="nav-edit-plantacion" href="/plantaciones/{{plantacione.id}}/edit">
-        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-        Editar
-      </a>
-    </li>
-    <li>
-      <a id="nav-map-plantacion" href="/plantaciones/{{plantacione.id}}/mapa" target="_blank">
-        <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-          Mapa
-      </a>
-    </li>
-    <li>
-      <a id="nav-delete-expediente" data-confirm="¿Está seguro que desea eliminar la Plantacion?" value="Delete" href="/plantaciones/{{plantacione.id}}" rel="nofollow">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-          Eliminar
-      </a>
-    </li>
-    {% endif %}
+{% if route == "plantaciones_show" %}
+  <li>
+    <a id="nav-edit-plantacion" href="/plantaciones/{{plantacione.id}}/edit">
+      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+      Editar
+    </a>
+  </li>
+  <li>
+    <a id="nav-map-plantacion" href="/plantaciones/{{plantacione.id}}/mapa" target="_blank">
+      <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+        Mapa
+    </a>
+  </li>
+  <li>
+    <a id="nav-delete-expediente" data-confirm="¿Está seguro que desea eliminar la Plantacion?" value="Delete" href="/plantaciones/{{plantacione.id}}" rel="nofollow">
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        Eliminar
+    </a>
+  </li>
+{% endif %}
+    {#  -------------------------ACTIVIDADES---------------------------- #}
+{% if route == "list_actividades" %}
+  <li>
+    <a id="nav-edit-plantacion" href="/plantaciones//edit">
+      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+        Editar Actividad
+    </a>
+  </li>
+  <li>
+    <a id="nav-edit-plantacion" href="/plantaciones//edit">
+      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+        Editar Plantaciones
+    </a>
+  </li>
+  <li>
+    <a id="nav-delete-expediente" data-confirm="¿Está seguro que desea eliminar la Plantacion?" value="Delete" href="/plantaciones/" rel="nofollow">
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        Eliminar Actividad
+    </a>
+  </li>
+{% endif %}
