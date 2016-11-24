@@ -1,4 +1,5 @@
 {% set route = app.request.attributes.get('_route') %}
+{% set path = app.request.pathInfo %}
 
 {# ----------------------------EXPEDIENTES---------------------------- #}
 {% if route == "list_expedientes" %}
@@ -18,7 +19,7 @@
     </a>
   </li>
   <li>
-    <a id="nav-new-expediente" href="/expedientes/new">
+    <a id="nav-new-expediente" href="/expedientes/{{expediente.id}}/movimientos/new">
       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
       Nuevo Movimiento
     </a>
@@ -120,6 +121,37 @@
     </a>
   </li>
 {% endif %}
+{#  -------------------------MOVIMIENTOS---------------------------- #}
+{% if route == "list_movimientos" %}
+<li>
+<a id="nav-edit-plantacion" href="/plantaciones//edit">
+  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+    Editar
+</a>
+</li>
+<li>
+<a id="nav-edit-plantacion" href="/plantaciones//edit">
+  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    Nueva Actividad
+</a>
+</li>
+<li>
+<a id="nav-edit-plantacion" href="/plantaciones//edit">
+  <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+    Generar Reporte
+</a>
+</li>
+<li>
+<a id="nav-delete-expediente" data-confirm="¿Está seguro que desea eliminar la Plantacion?" value="Delete" href="/plantaciones/" rel="nofollow">
+  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+    Eliminar
+</a>
+</li>
+<li>
+<a id="nav_expediente" href="/expedientes/{#expediente.id#}">{#expediente.numeroInterno#}</a>
+</li>
+{% endif %}
+
     {#  -------------------------ACTIVIDADES---------------------------- #}
 {% if route == "list_actividades" %}
   <li>
@@ -139,5 +171,8 @@
       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         Eliminar Actividad
     </a>
+  </li>
+  <li>
+    <a id="nav_expediente" href="/expedientes/{#expediente.id#}">{#expediente.numeroInterno#}</a>
   </li>
 {% endif %}
