@@ -1,0 +1,30 @@
+<div id="titulares-tab" class="tab-pane" role="tabpanel">
+  <table id="titulares" class="table table-hover table-grid">
+    <thead>
+      <tr>
+        <th>Titular</th>
+        <th>Especie</th>
+        <th>Tipo de Plantación</th>
+        <th>Presentado</th>
+        <th>Certificado</th>
+        <th>Inspeccionado</th>
+        <th>Observaciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for plantacion in plantaciones %}
+      <tr>
+        <td>
+          <a href="/titulares/{{plantacion.titular.id}}">{{plantacion.titular.nombre}}</a>
+        </td>
+        <td>{{plantacion.especie.first.codigoSp}}</td>
+        <td>{{plantacion.tipoPlantacion.codigo}}</td>
+        <td>0.0</td>
+        <td>0.0</td>
+        <td>0.0</td>
+        <td>Ntv</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
