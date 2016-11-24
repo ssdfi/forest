@@ -47,7 +47,9 @@ input[type="date"], input[type="time"], input[type="datetime-local"], input[type
 .pull-right {
     float: right !important;
 }
-
+.well .pagination{
+  margin: 0;
+}
 .pagination {
     border-radius: 4px;
     display: inline-block;
