@@ -194,6 +194,20 @@ class ExpedientesController extends Controller
     /**
      * Finds and displays a Movimientos entity.
      *
+     * @Route("/expedientes/{id}/movimientos/new", name="nuevo_movimiento")
+     * @Method("GET")
+     */
+    public function newMovimientos(Request $request,$id)
+    {
+        $movimiento = new MovimientosController();
+        $movimiento->setContainer($this->container);
+        return $movimiento->newAction($request, $id);
+
+    }
+
+    /**
+     * Create new Movimientos entity.
+     *
      * @Route("/expedientes/{id}/movimientos/{idMov}", name="list_movimientos")
      * @Method("GET")
      */
