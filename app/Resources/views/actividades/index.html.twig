@@ -55,6 +55,19 @@
         </div>
     </div>
     <div class="col-md-9">
+      <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="active" role="presentation">
+            <a href="#plantaciones-tab" aria-controls="plantaciones-tab" role="tab" data-toggle="tab">Plantaciones</a>
+          </li>
+          <li role="presentation">
+            <a href="#titulares-tab" aria-controls="titulares-tab" role="tab" data-toggle="tab" aria-expanded="true">Detalle de Titulares</a>
+          </li>
+        </ul>
+      </div>
+    <div class="tab-content">
       {{ include('actividades/show_plantacion.html.twig', { 'plantaciones': plantaciones }) }}
+      {{ include('actividades/show_titulares.html.twig') }}
     </div>
+  </div>
 {% endblock %}
