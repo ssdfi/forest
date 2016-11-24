@@ -5,6 +5,10 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class MovimientosType extends AbstractType
 {
@@ -15,21 +19,21 @@ class MovimientosType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('numeroFicha')
-            ->add('anioInspeccion')
-            ->add('fechaEntrada', 'date')
-            ->add('fechaSalida', 'date')
+            ->add('numeroFicha',TextType::class, array('label'=>'Número de ficha'))
+            ->add('inspector',EntityType::class, array('class'=>'AppBundle\Entity\Inspectores', 'placeholder' => "Seleccione una opción"))
+            ->add('reinspector',EntityType::class, array('class'=>'AppBundle\Entity\Inspectores', 'placeholder' => "Seleccione una opción" ))
+            ->add('responsable',EntityType::class, array('class'=>'AppBundle\Entity\Responsables', 'placeholder' => "Seleccione una opción" ))
+            ->add('anioInspeccion',NumberType::class, array('label'=>'Año  de Inspección'))
+            ->add('destino',EntityType::class, array('class'=>'AppBundle\Entity\Destinos', 'placeholder' => "Seleccione una opción" ))
+            ->add('validador',EntityType::class, array('class'=>'AppBundle\Entity\Responsables', 'placeholder' => "Seleccione una opción" ))
+            ->add('fechaEntrada',TextType::class, array('label'=>'Fecha entrada'))
+            ->add('fechaSalida',TextType::class, array('label'=>'Fecha salida'))
             ->add('etapa')
             ->add('estabilidadFiscal')
             ->add('observacion')
             ->add('observacionInterna')
             ->add('auditar')
-            ->add('destino')
-            ->add('expediente')
-            ->add('inspector')
-            ->add('reinspector')
-            ->add('responsable')
-            ->add('validador')
+            // agregar expediente en controlador
         ;
     }
 
