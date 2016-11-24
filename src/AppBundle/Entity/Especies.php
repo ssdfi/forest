@@ -80,6 +80,16 @@ class Especies
      * })
      */
     private $genero;
+    /**
+      * @var ArrayCollection $plantaciones
+      * @ORM\ManyToMany(targetEntity="Plantaciones",  cascade={"all"}, fetch="LAZY")
+      * @ORM\JoinTable(
+      *      name="especies_plantaciones",
+      *      joinColumns={@ORM\JoinColumn(name="especie_id", referencedColumnName="id")},
+      *      inverseJoinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")}
+      * )
+      */
+    private $plantacion;
 
 
 
@@ -283,5 +293,10 @@ class Especies
     public function getGenero()
     {
         return $this->genero;
+    }
+
+    public function __toString()
+    {
+        return $this->codigoSp;
     }
 }

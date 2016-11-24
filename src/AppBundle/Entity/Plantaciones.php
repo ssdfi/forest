@@ -257,7 +257,7 @@ class Plantaciones
 
     /**
         * @var \Especies
-        * @ORM\ManyToMany(targetEntity="Especies", fetch="LAZY")
+        * @ORM\ManyToMany(targetEntity="Especies", fetch="EAGER")
         * @ORM\JoinTable(
         *      name="especies_plantaciones",
         *      joinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")},
@@ -266,6 +266,16 @@ class Plantaciones
         */
      private $especie;
 
+     /**
+         * @var \Actividades
+         * @ORM\ManyToMany(targetEntity="Actividades", fetch="EAGER")
+         * @ORM\JoinTable(
+         *      name="actividades_plantaciones",
+         *      joinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")},
+         *      inverseJoinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id")}
+         * )
+         */
+     private $actividad;
     /**
      * Get id
      *
@@ -956,6 +966,15 @@ class Plantaciones
         return $this->especie;
     }
 
+    /**
+     * Get actividades
+     *
+     * @return \AppBundle\Entity\Actividades
+     */
+    public function getActividad()
+    {
+        return $this->actividad;
+    }
 
     public function __construct() {
         $this->especie = new \Doctrine\Common\Collections\ArrayCollection();
