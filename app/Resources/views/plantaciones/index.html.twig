@@ -56,6 +56,20 @@
             {% endfor %}
           </tbody>
         </table>
+        {% if plantaciones|length >14 %}
+        <div class="well well-sm clearfix">
+          <div class="pagination-info pull-left">
+            Mostrando <b>
+              {{(plantaciones.getItemNumberPerPage * plantaciones.getCurrentPageNumber) - (plantaciones.getItemNumberPerPage -1) }} -
+              {{plantaciones.getItemNumberPerPage * plantaciones.getCurrentPageNumber }}</b>
+            de
+              <b> {{ plantaciones.getTotalItemCount }} </b>
+          </div>
+            <ul class="pagination pull-right">
+              {{ knp_pagination_render(plantaciones) }}
+            </ul>
+        </div>
+        {% endif %}
       </div>
     </div>
 

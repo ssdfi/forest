@@ -41,6 +41,20 @@
               {% endfor %}
             </tbody>
           </table>
+          {% if tecnicos|length >14 %}
+          <div class="well well-sm clearfix">
+            <div class="pagination-info pull-left">
+              Mostrando <b>
+                {{(tecnicos.getItemNumberPerPage * tecnicos.getCurrentPageNumber) - (tecnicos.getItemNumberPerPage -1) }} -
+                {{tecnicos.getItemNumberPerPage * tecnicos.getCurrentPageNumber }}</b>
+              de
+                <b> {{ tecnicos.getTotalItemCount }} </b>
+            </div>
+              <ul class="pagination pull-right">
+                {{ knp_pagination_render(tecnicos) }}
+              </ul>
+          </div>
+          {% endif %}
         </div>
     </div>
   </div>

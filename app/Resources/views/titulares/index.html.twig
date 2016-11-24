@@ -34,6 +34,20 @@
               {% endfor %}
             </tbody>
           </table>
+          {% if titulares|length >14 %}
+          <div class="well well-sm clearfix">
+            <div class="pagination-info pull-left">
+              Mostrando <b>
+                {{(titulares.getItemNumberPerPage * titulares.getCurrentPageNumber) - (titulares.getItemNumberPerPage -1) }} -
+                {{titulares.getItemNumberPerPage * titulares.getCurrentPageNumber }}</b>
+              de
+                <b> {{ titulares.getTotalItemCount }} </b>
+            </div>
+              <ul class="pagination pull-right">
+                {{ knp_pagination_render(titulares) }}
+              </ul>
+          </div>
+          {% endif %}
         </div>
     </div>
   </div>
