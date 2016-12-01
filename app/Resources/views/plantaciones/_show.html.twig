@@ -34,7 +34,10 @@
           {% endif %}
           <td></td>
           <td></td>
-          <td>{{expediente.tecnico.nombre}}</td>
+          <td>{% if expediente.tecnico %}
+                {{expediente.tecnico.nombre}}
+              {% endif %}
+          </td>
           <td class="icon">
             {% if expediente.activo %}
               <span class="glyphicon glyphicon-ok"></span>
