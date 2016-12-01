@@ -18,12 +18,41 @@ use Doctrine;
  */
 class MovimientosController extends Controller
 {
-    /**
-     * Lists all Movimientos entities.
-     *
-     *
-     * @Method("GET")
-     */
+
+  /**
+   * Creates a new Movimientos entity.
+   *
+   * @Route("/expedientes/{id}/movimientos/new", name="movimientos_new")
+   * @Method({"GET", "POST"})
+   */
+  public function newAction(Request $request, $id)
+  {
+      $movimiento = new Movimientos();
+      $form = $this->createForm('AppBundle\Form\MovimientosType', $movimiento);
+      $form->handleRequest($request);
+
+      if ($form->isSubmitted() && $form->isValid()) {
+          $em = $this->getDoctrine()->getManager();
+          $expediente = $em->getRepository('AppBundle:Expedientes')->findOneById($id);
+          $movimiento->setExpediente($expediente);
+          $em->persist($movimiento);
+          $em->flush();
+
+          return $this->redirectToRoute('list_movimientos', array('id'=>$id,'idMov' => $movimiento->getId()));
+      }
+
+      return $this->render('movimientos/new.html.twig', array(
+          'movimiento' => $movimiento,
+          'form' => $form->createView(),
+      ));
+  }
+  /**
+   * List Movimientos.
+   *
+   * @Route("/expedientes/{id}/movimientos/{idMov}", name="list_movimientos")
+   * @Method("GET")
+   */
+
     public function indexAction($id, $idMov)
     {
         $em = $this->getDoctrine()->getManager();
@@ -34,32 +63,6 @@ class MovimientosController extends Controller
             'expediente' => $id,
             'movimiento' => $movimiento,
             'actividades'=>$actividades
-        ));
-    }
-
-    /**
-     * Creates a new Movimientos entity.
-     *
-     * @Route("/new", name="movimientos_new")
-     * @Method({"GET", "POST"})
-     */
-    public function newAction(Request $request, $id)
-    {
-        $movimiento = new Movimientos();
-        $form = $this->createForm('AppBundle\Form\MovimientosType', $movimiento);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($movimiento);
-            $em->flush();
-
-            return $this->redirectToRoute('movimientos_show', array('id' => $movimiento->getId()));
-        }
-
-        return $this->render('movimientos/new.html.twig', array(
-            'movimiento' => $movimiento,
-            'form' => $form->createView(),
         ));
     }
 
@@ -82,27 +85,39 @@ class MovimientosController extends Controller
     /**
      * Displays a form to edit an existing Movimientos entity.
      *
-     * @Route("{id_mov}/edit", name="movimientos_edit")
+     * @Route("/expedientes/{idExp}/movimientos/{idMov}/edit", name="movimientos_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Movimientos $movimiento)
+    public function editAction(Request $request, $idExp, $idMov)
     {
-        $deleteForm = $this->createDeleteForm($movimiento);
+       /*
+       $movimiento = new MovimientosController();
+       $em = $this->getDoctrine()->getManager();
+       $dql_m   = "SELECT m
+                   FROM AppBundle:Movimientos m
+                   WHERE m.expediente=:id
+                   AND m.id=:idMov";
+       $movimientos=$em->createQuery($dql_m)->setParameters(array('id' => $id, 'idMov'=> $idMov))->getResult(Query::HYDRATE_OBJECT);
+       */
+
+        $em = $this->getDoctrine()->getManager();
+        $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
+        //$deleteForm = $this->createDeleteForm($movimiento);
         $editForm = $this->createForm('AppBundle\Form\MovimientosType', $movimiento);
-        $editForm->handleRequest($request);
+        //$editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($movimiento);
             $em->flush();
 
-            return $this->redirectToRoute('movimientos_edit', array('id' => $movimiento->getId()));
+            //return $this->redirectToRoute('movimientos_edit', array('id' => $movimiento->getId()));
         }
 
         return $this->render('movimientos/edit.html.twig', array(
             'movimiento' => $movimiento,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'edit_form' => $editForm->createView()
         ));
     }
 
