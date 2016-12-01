@@ -25,7 +25,7 @@
     </a>
   </li>
   <li>
-    <a id="nav-delete-expediente" data-confirm="¿Está seguro que desea elminar el Expediente?" value="Delete" href="/expedientes/{{expediente.id}}" rel="nofollow">
+    <a id="nav-delete-expediente" data-confirm="¿Está seguro que desea elminar el Expediente?" value="Delete" href="/expedientes/{{expediente.id}}/delete" rel="nofollow">
       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         Eliminar Expediente
     </a>
@@ -136,13 +136,13 @@
 </a>
 </li>
 <li>
-<a id="nav-edit-plantacion" href="/plantaciones//edit">
+<a id="nav-create-report" href="/plantaciones//edit">
   <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
     Generar Reporte
 </a>
 </li>
 <li>
-<a id="nav-delete-expediente" data-confirm="¿Está seguro que desea eliminar la Plantacion?" value="Delete" href="/plantaciones/" rel="nofollow">
+<a id="nav-delete-movimiento" data-confirm="¿Está seguro que desea eliminar el Movimiento?" value="Delete" href="{{path('movimientos_delete',{id_mov: movimiento.id, idExp: movimiento.expediente.id})}}" data-method="delete" rel="nofollow">
   <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
     Eliminar
 </a>
