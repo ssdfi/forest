@@ -18,16 +18,17 @@ class MovimientosType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+      //fecha de entrada + inspector + responsable + Si el expediente es plurianual entonces tiene que tener si o si: ETAPA
         $builder
-            ->add('numeroFicha',TextType::class, array('label'=>'Número de ficha'))
+            ->add('numeroFicha',TextType::class, array('label'=>'Número de ficha','required'=>false))
             ->add('inspector',EntityType::class, array('class'=>'AppBundle\Entity\Inspectores', 'placeholder' => "Seleccione una opción"))
-            ->add('reinspector',EntityType::class, array('class'=>'AppBundle\Entity\Inspectores', 'placeholder' => "Seleccione una opción" ))
+            ->add('reinspector',EntityType::class, array('class'=>'AppBundle\Entity\Inspectores', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('responsable',EntityType::class, array('class'=>'AppBundle\Entity\Responsables', 'placeholder' => "Seleccione una opción" ))
-            ->add('anioInspeccion',NumberType::class, array('label'=>'Año  de Inspección'))
-            ->add('destino',EntityType::class, array('class'=>'AppBundle\Entity\Destinos', 'placeholder' => "Seleccione una opción" ))
-            ->add('validador',EntityType::class, array('class'=>'AppBundle\Entity\Responsables', 'placeholder' => "Seleccione una opción" ))
-            ->add('fechaEntrada',TextType::class, array('label'=>'Fecha entrada'))
-            ->add('fechaSalida',TextType::class, array('label'=>'Fecha salida'))
+            ->add('anioInspeccion',TextType::class, array('label'=>'Año  de Inspección' ,'required'=>false))
+            ->add('destino',EntityType::class, array('class'=>'AppBundle\Entity\Destinos', 'placeholder' => "Seleccione una opción" ,'required'=>false))
+            ->add('validador',EntityType::class, array('class'=>'AppBundle\Entity\Responsables', 'placeholder' => "Seleccione una opción" ,'required'=>false))
+            ->add('fechaEntrada',DateType::class, array('label'=>'Fecha entrada', 'widget'=>'single_text'))
+            ->add('fechaSalida',DateType::class, array('label'=>'Fecha salida', 'widget'=>'single_text','required'=>false))
             ->add('etapa')
             ->add('estabilidadFiscal')
             ->add('observacion')
