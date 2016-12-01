@@ -124,7 +124,7 @@
 {#  -------------------------MOVIMIENTOS---------------------------- #}
 {% if route == "list_movimientos" %}
 <li>
-<a id="nav-edit-plantacion" href="/plantaciones//edit">
+<a id="nav-edit-plantacion" href="{{path}}/edit">
   <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
     Editar
 </a>
@@ -147,10 +147,22 @@
     Eliminar
 </a>
 </li>
-<li>
-<a id="nav_expediente" href="/expedientes/{#expediente.id#}">{#expediente.numeroInterno#}</a>
+<li class="navbar-primary">
+<a id="nav_expediente" href="/expedientes/{{movimiento.expediente.id}}">{{movimiento.expediente.numeroInterno}}</a>
 </li>
 {% endif %}
+{% if route == "nuevo_movimiento" %}
+  <li class="navbar-primary">
+    <a>EXPEDIENTE</a>
+  </li>
+{% endif %}
+
+{% if route == "edit_movimientos" %}
+  <li>
+    <a id="nav_expediente" href="/expedientes/{{movimiento.expediente.id}}">{{movimiento.expediente.numeroInterno}}</a>
+  </li>
+{% endif %}
+
 
     {#  -------------------------ACTIVIDADES---------------------------- #}
 {% if route == "list_actividades" %}
