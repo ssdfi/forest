@@ -60,3 +60,7 @@ ul, ol {
     margin-bottom: 10px;
     margin-top: 0;
 }
+.navbar-primary a{
+  color: white!important;
+  font-weight: bold;
+}
