@@ -67,6 +67,34 @@ class MovimientosController extends Controller
     }
 
     /**
+     * Displays a form to edit an existing Movimientos entity.
+     *
+     * @Route("/expedientes/{idExp}/movimientos/{idMov}/edit", name="movimientos_edit")
+     * @Method({"GET", "POST"})
+     */
+    public function editAction(Request $request, $idExp, $idMov)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
+        //$deleteForm = $this->createDeleteForm($movimiento);
+        $editForm = $this->createForm('AppBundle\Form\MovimientosType', $movimiento);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($movimiento);
+            $em->flush();
+
+            return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+        }
+
+        return $this->render('movimientos/edit.html.twig', array(
+            'movimiento' => $movimiento,
+            'edit_form' => $editForm->createView()
+        ));
+    }
+    /**
      * Finds and displays a Movimientos entity.
      *
      * @Route("/{id_mov}", name="movimientos_show")
@@ -83,51 +111,12 @@ class MovimientosController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Movimientos entity.
-     *
-     * @Route("/expedientes/{idExp}/movimientos/{idMov}/edit", name="movimientos_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editAction(Request $request, $idExp, $idMov)
-    {
-       /*
-       $movimiento = new MovimientosController();
-       $em = $this->getDoctrine()->getManager();
-       $dql_m   = "SELECT m
-                   FROM AppBundle:Movimientos m
-                   WHERE m.expediente=:id
-                   AND m.id=:idMov";
-       $movimientos=$em->createQuery($dql_m)->setParameters(array('id' => $id, 'idMov'=> $idMov))->getResult(Query::HYDRATE_OBJECT);
-       */
-
-        $em = $this->getDoctrine()->getManager();
-        $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
-        //$deleteForm = $this->createDeleteForm($movimiento);
-        $editForm = $this->createForm('AppBundle\Form\MovimientosType', $movimiento);
-        //$editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($movimiento);
-            $em->flush();
-
-            //return $this->redirectToRoute('movimientos_edit', array('id' => $movimiento->getId()));
-        }
-
-        return $this->render('movimientos/edit.html.twig', array(
-            'movimiento' => $movimiento,
-            'edit_form' => $editForm->createView()
-        ));
-    }
-
-    /**
      * Deletes a Movimientos entity.
      *
-     * @Route("/{id_mov}", name="movimientos_delete")
+     * @Route("/expedientes/{idExp}/movimientos/{id_mov}/delete", name="movimientos_delete")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request, Movimientos $movimiento)
+    public function deleteAction($id_mov, $idExp)
     {
         $form = $this->createDeleteForm($movimiento);
         $form->handleRequest($request);
