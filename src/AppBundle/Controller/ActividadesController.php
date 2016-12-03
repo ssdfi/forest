@@ -8,18 +8,43 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\Query;
 /**
- * Actividade controller.
+ * Actividades controller.
  *
- * @Route("actividades")
+ *
  */
 class ActividadesController extends Controller
 {
-    /**
-     * Lists all actividade entities.
-     *
-     * @Route("/", name="actividades_index")
-     * @Method("GET")
-     */
+  /**
+   * Creates a new Actividades entity.
+   *
+   * @Route("/expedientes/{idExp}/movimientos/{idMov}/actividades/new", name="actividades_new")
+   * @Method({"GET", "POST"})
+   */
+  public function newAction(Request $request,$idExp,$idMov)
+  {
+      $actividad = new Actividades();
+      $form = $this->createForm('AppBundle\Form\ActividadesType', $actividad);
+      $form->handleRequest($request);
+
+      if ($form->isSubmitted() && $form->isValid()) {
+          $em = $this->getDoctrine()->getManager();
+          $em->persist($actividad);
+          $em->flush($actividad);
+
+          return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividad->getId()));
+      }
+
+      return $this->render('actividades/new.html.twig', array(
+          'actividade' => $actividad,
+          'form' => $form->createView(),
+      ));
+  }
+  /**
+   * Finds and displays a Actividades entity.
+   *
+   * @Route("/expedientes/{id}/movimientos/{idMov}/actividades/{idAct}", name="list_actividades")
+   * @Method("GET")
+   */
     public function indexAction($id, $idMov,$idAct)
     {
         $em = $this->getDoctrine()->getManager();
@@ -40,32 +65,6 @@ class ActividadesController extends Controller
     }
 
     /**
-     * Creates a new actividade entity.
-     *
-     * @Route("/new", name="actividades_new")
-     * @Method({"GET", "POST"})
-     */
-    public function newAction(Request $request)
-    {
-        $actividade = new Actividade();
-        $form = $this->createForm('AppBundle\Form\ActividadesType', $actividade);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($actividade);
-            $em->flush($actividade);
-
-            return $this->redirectToRoute('actividades_show', array('id' => $actividade->getId()));
-        }
-
-        return $this->render('actividades/new.html.twig', array(
-            'actividade' => $actividade,
-            'form' => $form->createView(),
-        ));
-    }
-
-    /**
      * Finds and displays a actividade entity.
      *
      * @Route("/{id}", name="actividades_show")
@@ -82,10 +81,10 @@ class ActividadesController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing actividade entity.
+     * Finds and edit a Actividad entity.
      *
-     * @Route("/{id}/edit", name="actividades_edit")
-     * @Method({"GET", "POST"})
+     * @Route("/expedientes/{id}/movimientos/{idMov}/actividades/{idAct}/edit", name="edit_actividades")
+     * @Method("GET")
      */
     public function editAction(Request $request, Actividades $actividade)
     {
