@@ -192,12 +192,7 @@ class ExpedientesController extends Controller
     }
 
 
-    /**
-     * Finds and displays a Actividades entity.
-     *
-     * @Route("/expedientes/{id}/movimientos/{idMov}/actividades/{idAct}", name="list_actividades")
-     * @Method("GET")
-     */
+    
     public function listActividades(Request $request,$id, $idMov, $idAct)
     {
         $actividad = new ActividadesController();
