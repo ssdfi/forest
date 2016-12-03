@@ -1,16 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Actividade creation</h1>
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+<div class="row">
+  <div class="col-md-12">
+    <h2>Nueva Actividad</h2>
 
     {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
+        <div class="row">
+          <div class="col-md-5">
+            {{ form_widget(form) }}
+          </div>
+        </div>
+        <h3>Plantaciones</h3><hr>
+        <table id="plantaciones" class="table">
+          <thead>
+            <tr>
+              <th>Plantación ID</th>
+              <th>Fecha</th>
+              <th>Número de Plantas</th>
+              <th>Superficie Registrada</th>
+              <th>Estado Aprobación</th>
+              <th>Observaciones</th>
+              <th></th>
+            </tr>
+          </thead>
+        </table>
+        <a id="cancel-actividad" class="btn btn-default" onClick="history.go(-1);return true;">Cancelar</a>
+        <input id="save-actividad" class="btn btn-primary pull-right" type="submit" value="Guardar" />
     {{ form_end(form) }}
 
-    <ul>
-        <li>
-            <a href="{{ path('actividades_index') }}">Back to the list</a>
-        </li>
-    </ul>
+  </div>
+</div>
 {% endblock %}

@@ -9,7 +9,10 @@
             <div class="panel-body">
               <dl class="dl-horizontal">
                 <dt>ID Movimiento:</dt>
-                <dd><a href="/expedientes/{{actividad.movimiento.expediente.id}}/movimientos/{{actividad.movimiento.id}}">{{actividad.movimiento.id}}</a></dd>
+                <dd>
+                  {% if actividad.movimiento %}
+                    <a href="/expedientes/{{actividad.movimiento.expediente.id}}/movimientos/{{actividad.movimiento.id}}">{{actividad.movimiento.id}}</a></dd>
+                  {% endif %}
                 <dt>ID Actividad:</dt>
                 <dd>{{actividad.id}}</dd>
                 <dt>Tipo de Actividad:</dt>
