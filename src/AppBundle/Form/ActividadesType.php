@@ -21,7 +21,6 @@ class ActividadesType extends AbstractType
         ->add('superficieCertificada')
         ->add('superficieInspeccionada')
         ->add('superficieRegistrada',TextType::class, array('disabled'=>true,'required'=>false))
-        //->add('movimiento')
         ;
     }
 
