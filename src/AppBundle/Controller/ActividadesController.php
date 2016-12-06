@@ -28,6 +28,10 @@ class ActividadesController extends Controller
 
       if ($form->isSubmitted() && $form->isValid()) {
           $em = $this->getDoctrine()->getManager();
+          $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
+          $actividad->setMovimiento($movimiento);
+          $actividad->setCreatedAt(new DateTime());
+          $actividad->setUpdatedAt(new DateTime());
           $em->persist($actividad);
           $em->flush($actividad);
 
