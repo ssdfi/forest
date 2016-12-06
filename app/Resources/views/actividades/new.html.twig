@@ -13,19 +13,32 @@
           </div>
         </div>
         <h3>Plantaciones</h3><hr>
-        <table id="plantaciones" class="table">
-          <thead>
-            <tr>
-              <th>Plantación ID</th>
-              <th>Fecha</th>
-              <th>Número de Plantas</th>
-              <th>Superficie Registrada</th>
-              <th>Estado Aprobación</th>
-              <th>Observaciones</th>
-              <th></th>
-            </tr>
-          </thead>
-        </table>
+        <div class="row">
+          <div class="col-md-12">
+            <table id="plantaciones" class="table">
+              <thead>
+                <tr>
+                  <th>Plantación ID</th>
+                  <th>Fecha</th>
+                  <th>Número de Plantas</th>
+                  <th>Superficie Registrada</th>
+                  <th>Estado Aprobación</th>
+                  <th>Observaciones</th>
+                  <th></th>
+                </tr>
+              </thead>
+            </table>
+            <a id="add-plantacion" class="btn btn-primary btn-sm add_nested_fields" data-association="actividades_plantaciones" data-blueprint-id="actividades_plantaciones_fields_blueprint" data-target="#plantaciones" href="javascript:void(0)">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              Agregar Plantación
+            </a>
+            <button id="add-plantaciones" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#plantaciones-modal">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              Agregar Lista de Plantaciones
+            </button>
+          </div>
+        </div>
+        <hr>
         <a id="cancel-actividad" class="btn btn-default" onClick="history.go(-1);return true;">Cancelar</a>
         <input id="save-actividad" class="btn btn-primary pull-right" type="submit" value="Guardar" />
     {{ form_end(form) }}
