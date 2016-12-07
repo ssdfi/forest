@@ -191,14 +191,4 @@ class ExpedientesController extends Controller
         ;
     }
 
-
-    
-    public function listActividades(Request $request,$id, $idMov, $idAct)
-    {
-        $actividad = new ActividadesController();
-        $actividad->setContainer($this->container);
-        return $actividad->indexAction($id, $idMov,$idAct);
-
-    }
-
 }
