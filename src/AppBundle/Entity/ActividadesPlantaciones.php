@@ -321,4 +321,8 @@ class ActividadesPlantaciones
     {
         return $this->plantacion;
     }
+
+    public function __toString(){
+        return $this->id;
+    }
 }

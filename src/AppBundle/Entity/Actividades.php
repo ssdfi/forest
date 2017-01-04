@@ -84,7 +84,17 @@ class Actividades
      */
     private $tipoActividad;
 
+    /**
+     * Get id
+     *
+     * @return \AppBundle\Entity\ActividadesPlantaciones
+     */
+    protected $actividadesPlantaciones;
 
+    public function getActividadesPlantaciones()
+    {
+        return $this->actividadesPlantaciones;
+    }
 
     /**
      * Get id
