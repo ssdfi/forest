@@ -136,7 +136,12 @@ class Expedientes
         */
      private $titular;
 
-
+     /**
+      * @var \Movimiento
+      *
+      * @ORM\OneToMany(targetEntity="Movimientos",mappedBy="expediente")
+      */
+     private $movimientos;
     /**
      * Get id
      *
@@ -388,7 +393,29 @@ class Expedientes
     {
         return $this->tecnico;
     }
+    /**
+     * Set Movimiento
+     *
+     * @param \AppBundle\Entity\Movimientos $movimientos
+     *
+     * @return Expedientes
+     */
+    public function setMovimientos(\AppBundle\Entity\Movimientos $movimientos = null)
+    {
+        $this->movimientos = $movimientos;
 
+        return $this;
+    }
+
+    /**
+     * Get movimientos
+     *
+     * @return \AppBundle\Entity\Movimientos
+     */
+    public function getMovimientos()
+    {
+        return $this->movimientos;
+    }
     /**
      * Set zona
      *
@@ -458,9 +485,11 @@ class Expedientes
         return $anio;
     }
 
+
     public function __construct() {
         $this->tecnico = new \Doctrine\Common\Collections\ArrayCollection();
         $this->titulares = new \Doctrine\Common\Collections\ArrayCollection();
         $this->zonaDepartamento = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->movimientos = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }
