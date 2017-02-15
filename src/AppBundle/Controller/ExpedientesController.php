@@ -31,14 +31,21 @@ class ExpedientesController extends Controller
       $expedientes = new Expedientes();
 
       $search_form = $this->createFormBuilder($expedientes)
-            ->add('_numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
-            ->add('_numeroExpediente', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
-            ->add('_zona',EntityType::class, array('class'=>'AppBundle\Entity\Zonas', 'required'=>false))
-            ->add('_tecnico',EntityType::class, array('class'=>'AppBundle\Entity\Tecnicos', 'required'=>false))
-            ->add('_activo',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
-            ->add('_agrupado',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
-            ->add('_plurianual',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
-            //->add('_pendiente',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
+            ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
+            ->add('numeroExpediente', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
+            ->add('zona',EntityType::class, array('class'=>'AppBundle\Entity\Zonas', 'required'=>false))
+            // anio etapa
+            // fecha entrada desde
+            // fecha entrada hasta
+            // fecha salida desde
+            // fecha salida hasta
+            // responsable que es igual a validador
+            ->add('tecnico',EntityType::class, array('class'=>'AppBundle\Entity\Tecnicos', 'required'=>false))
+            //  validador que es igual a responsable
+            ->add('activo',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
+            ->add('plurianual',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
+            ->add('agrupado',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
+            // ->add('pendiente',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
             //->add('_validado',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
             //->add('_estabilidad_fiscal',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
             //->add('_incompleto',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
