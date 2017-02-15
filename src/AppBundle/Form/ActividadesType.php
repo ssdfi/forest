@@ -29,7 +29,7 @@ class ActividadesType extends AbstractType
             'allow_delete'  => true,
             'prototype'     => true,
             'label'         => false,
-            'by_reference'  => false))
+            'by_reference'  => false,))
         ;
     }
 
