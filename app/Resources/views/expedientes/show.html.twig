@@ -63,9 +63,17 @@
               <span class="glyphicon glyphicon-remove"></span>
             </dd>
             <dt>Última Entrada:</dt>
-            <dd></dd>
+            <dd>
+              {% if expediente.movimientos.last.fechaEntrada is not null %}
+                  {{ expediente.movimientos.last.fechaEntrada|date('d-m-Y') }}
+              {% endif %}
+            </dd>
             <dt>Última Salida:</dt>
-            <dd></dd>
+            <dd>
+              {% if expediente.movimientos.last.fechaSalida is not null %}
+                  {{ expediente.movimientos.last.fechaSalida|date('d-m-Y') }}
+              {% endif %}
+            </dd>
           </dl>
         </div>
         <div class="panel-footer">
