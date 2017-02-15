@@ -13,7 +13,6 @@
   </thead>
   <tbody>
       {% for expediente in expedientes %}
-
       <tr data-link="/expedientes/{{expediente.id}}">
         <td>{{ expediente.id }}</td>
         <td nowrap>{{ expediente.numeroInterno }}</td>
@@ -22,15 +21,22 @@
           {% if expediente.titular.first.nombre is defined %}
           <abbr title="{% for titular in expediente.titular %} {{titular.nombre}} {% endfor %}" data-length="10">
             {{ expediente.titular.first.nombre }}</abbr>
-
           {% endif %}
         </td>
-        <td>{{expediente.createdAt|date('d-m-Y')}}</td>
-        {% if (expediente.createdAt == expediente.updatedAt )%}
-          <td>{{expediente.updatedAt|date('d-m-Y')}}</td>
-        {% else %}
-          <td></td>
-        {% endif %}
+        <td>
+          {% if expediente.movimientos.last.fechaEntrada is defined %}
+            {% if expediente.movimientos.last.fechaEntrada is not null %}
+              {{ expediente.movimientos.last.fechaEntrada|date('d-m-Y') }}
+            {% endif %}
+          {% endif %}
+        </td>
+        <td>
+          {% if expediente.movimientos.last.fechaSalida is defined %}
+            {% if expediente.movimientos.last.fechaSalida is not null %}
+                {{ expediente.movimientos.last.fechaSalida|date('d-m-Y') }}
+            {% endif %}
+          {% endif %}
+        </td>
         <td>
           {% if expediente.tecnico.nombre is defined %}
            <abbr title="{{ expediente.tecnico.nombre }}" data-length="20">
