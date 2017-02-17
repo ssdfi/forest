@@ -113,7 +113,7 @@ class Movimientos
     /**
      * @var \Expedientes
      *
-     * @ORM\ManyToOne(targetEntity="Expedientes")
+     * @ORM\ManyToOne(targetEntity="Expedientes", inversedBy="movimientos")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="expediente_id", referencedColumnName="id")
      * })
