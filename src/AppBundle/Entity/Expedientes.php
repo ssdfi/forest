@@ -8,6 +8,7 @@ use AppBundle\Entity\Expedientes;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Expedientes
  *
@@ -134,7 +135,7 @@ class Expedientes
         *      inverseJoinColumns={@ORM\JoinColumn(name="titular_id", referencedColumnName="id")}
         * )
         */
-     private $titular;
+     public $titulares;
 
      /**
       * @var \Movimiento
@@ -393,6 +394,9 @@ class Expedientes
     {
         return $this->tecnico;
     }
+
+
+
     /**
      * Set Movimiento
      *
@@ -440,13 +444,29 @@ class Expedientes
         return $this->zona;
     }
     /**
-     * Get titulares
+     * Set titular
      *
-     * @return \AppBundle\Entity\Tecnicos
+     * @param \AppBundle\Entity\Titulares $titular
+     *
+     * @return Titulares
      */
-    public function getTitular()
+    public function setTitulares(\Doctrine\Common\Collections\ArrayCollection $titulares = null)
     {
-        return $this->titular;
+
+        $this->titulares = $titulares;
+
+        return $this;
+    }
+
+    public function getTitulares()
+    {
+        return $this->titulares;
+    }
+
+    public function addTitular(\AppBundle\Entity\Titulares $titular){
+      //dump($titular);$this->titular = $titular;
+      $titular->addExpediente($this);
+      $this->titulares[] = $titular;
     }
 
     /**
@@ -485,10 +505,13 @@ class Expedientes
         return $anio;
     }
 
+    public function getTitularesDisponibles(){
+      return "19177";
+    }
 
     public function __construct() {
         $this->tecnico = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->titulares = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->titulares = new ArrayCollection();
         $this->zonaDepartamento = new \Doctrine\Common\Collections\ArrayCollection();
         $this->movimientos = new \Doctrine\Common\Collections\ArrayCollection();
     }

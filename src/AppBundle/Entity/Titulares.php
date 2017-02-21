@@ -80,6 +80,10 @@ class Titulares
     private $expediente;
 
 
+    public function __toString(){
+      return $this->nombre;
+    }
+
     /**
      * Get id
      *
@@ -214,6 +218,9 @@ class Titulares
      *
      * @return \Expedientes
      */
+    public function addExpediente(\AppBundle\Entity\Expedientes $expediente){
+      $this->expediente[]=$expediente;
+    }
     public function getExpedientes(){
         return $this->expediente;
     }
