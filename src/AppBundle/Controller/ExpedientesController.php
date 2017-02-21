@@ -2,12 +2,13 @@
 
 namespace AppBundle\Controller;
 
-
+use AppBundle\ChoiceLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Expedientes;
+use AppBundle\Entity\Titulares;
 use AppBundle\Entity\ZonaDepartamentos;
 use AppBundle\Form\ExpedientesType;
 use Doctrine\ORM\Query;
@@ -16,6 +17,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class ExpedientesController extends Controller
 {
@@ -75,10 +77,14 @@ class ExpedientesController extends Controller
      */
     public function newAction(Request $request)
     {
+        //dump($request);
         $em = $this->getDoctrine()->getManager();
 
         $expediente = new Expedientes();
+
         $form = $this->createForm('AppBundle\Form\ExpedientesType', $expediente);
+
+        //dump($request);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -142,6 +148,7 @@ class ExpedientesController extends Controller
     {
         $deleteForm = $this->createDeleteForm($expediente);
         $editForm = $this->createForm('AppBundle\Form\ExpedientesType', $expediente);
+        //$editForm->add('titular');
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {

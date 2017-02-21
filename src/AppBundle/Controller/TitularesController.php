@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Titulares;
 use AppBundle\Form\TitularesType;
 use Doctrine\ORM\Query;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Titulares controller.
@@ -25,6 +26,10 @@ class TitularesController extends Controller
      */
     public function indexAction(Request $request)
     {
+      dump($this->getRequest());
+       /*if($this->get('request_stack')->getCurrentRequest()->query('titular[nombre]')){
+          dump($request);
+        }*/
         $titulare = new Titulares();
         $search_form = $this->createForm('AppBundle\Form\TitularesType', $titulare);
         $search_form->handleRequest($request);
@@ -44,6 +49,68 @@ class TitularesController extends Controller
     }
 
     /**
+     * Lists all Titulares entities.
+     *
+     * @Route("/json", name="titulares_search")
+     * @Method("GET")
+     */
+    public function jsonAction(Request $request)
+    {
+
+      $em = $this->getDoctrine()->getManager();
+        $param=$request->query->get('titular');
+        $wheres=array();
+
+       if($param['nombre']){
+          $nombre=$param['nombre'];
+          $wheres[]="a.nombre = $nombre";
+        }
+        if($param['dni']){
+           $dni=$param['dni'];
+           $wheres[]="a.dni = $dni";
+         }
+        $titulare = new Titulares();
+        //$search_form = $this->createForm('AppBundle\Form\TitularesType', $titulare);
+        //$search_form->handleRequest($request);
+
+        $titulares = $this->getDoctrine()->getRepository('AppBundle:Titulares');
+        $query = $titulares->createQueryBuilder('p')
+                ->where("p.nombre like :nombre")
+                ->setParameter('nombre', '%'.$param['nombre'].'%')
+                //->setParameter('partida', $partida)
+                ->getQuery();
+      $result=$query->getResult((\Doctrine\ORM\Query::HYDRATE_ARRAY));
+
+      //$dql   = "SELECT a FROM AppBundle:Titulares a where a.nombre like '%tincho%'";
+        if(!empty($wheres)){
+          //$dql=implode("and",$wheres);
+        }
+        //dump($dql);
+        //$query = $em->createQuery($dql);
+      /*  $paginator = $this->get('knp_paginator');
+        $titulares = $paginator->paginate(
+                $query,
+                $request->query->getInt('page', 1),
+                15,
+                array('defaultSortFieldName' => 'a.nombre', 'defaultSortDirection' => 'asc')
+            );
+      */
+      //dump($result);
+      //dump(json_encode($result));
+      $response = new Response();
+      $response->setContent(json_encode($result));
+      $response->headers->set('Content-Type', 'application/json');
+
+      return $response;
+        //return $this->render('titulares/index.html.twig',array('titulares' => $titulares, 'search_form'=>$search_form->createView()));
+
+    }
+
+    public function getRequest()
+    {
+        return $this->container->get('request_stack')->getCurrentRequest();
+    }
+    /**
      * Creates a new Titulares entity.
      *
      * @Route("/new", name="titulares_new")
@@ -53,6 +120,7 @@ class TitularesController extends Controller
     {
         $titulare = new Titulares();
         $form = $this->createForm('AppBundle\Form\TitularesType', $titulare);
+        dump(this);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
