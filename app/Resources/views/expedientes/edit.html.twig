@@ -7,6 +7,15 @@
     <h2>Nuevo Expediente </h2>
     {{ form_start(edit_form) }}
         {{ form_widget(edit_form) }}
+
+        <!--
+        <div class="form-group"><label class="control-label" for="expedientes_titular">Titular</label>
+
+          <select id="expedientes_titular" name="expedientes[titular][]" class="form-control" multiple="multiple">
+            <option value="1">Frontera Del Este S.R.L.</option>
+          </select>
+        </div>
+      -->
         <a id="cancel-expediente" class="btn btn-default" onClick="history.go(-1);return true;">Cancelar</a>
         <input id="save-expediente" class="btn btn-primary pull-right" type="submit" value="Guardar" />
     {{ form_end(edit_form) }}

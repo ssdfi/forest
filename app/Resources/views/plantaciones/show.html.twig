@@ -49,7 +49,9 @@
             <dt>Base Geométrica</dt>
             <dd></dd>
             <dt>Provincia</dt>
-            <dd>{% if (plantacione.provincia) %}{#plantacione.provincia.nombre #}{% else %} {% endif %}</dd>
+            <dd>{% if (plantacione.provincia) %}
+              {{ (plantacione.provincia) }}
+            {% else %} {% endif %}</dd>
             <dt>Departamento</dt>
             <dd>{% if (plantacione.departamento) %}{{ plantacione.departamento.nombre }}{% else %} {% endif %}</dd>
             <dt>Estrato de Desarrollo</dt>
@@ -68,7 +70,7 @@
         {% if plantacione.activo %}<span class="label label-success">Activo</span>{% else %}<span class="label label-danger">Inactivo</span>{% endif %}
       </div>
     </div>
-    
+
   </div>
   <div class="col-md-9">
     {{ include('plantaciones/_show.html.twig', {'plantacione': plantacione}) }}

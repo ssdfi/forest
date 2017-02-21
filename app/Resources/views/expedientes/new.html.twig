@@ -1,16 +1,106 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+<div class="modal fade" id="titulares-modal" tabindex="-1" role="dialog" aria-labelledby="titulares-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+        <h4 class="modal-title" id="titulares-modal-label">Asociar Titular a Expediente</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <form accept-charset="UTF-8" action="{{path('titulares_search')}}" class="form-inline" data-remote="true" method="get" role="form"><div style="display:none"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+              <div class="form-group"><label class="sr-only control-label" for="titular[nombre]">Titular[nombre]</label><input class="form-control" id="titular[nombre]" name="titular[nombre]" placeholder="Nombre" type="text" /></div>
+              <div class="form-group"><label class="sr-only control-label" for="titular[dni]">Titular[dni]</label><input class="form-control" id="titular[dni]" name="titular[dni]" placeholder="DNI" type="text" /></div>
+              <div class="form-group"><label class="sr-only control-label" for="titular[cuit]">Titular[cuit]</label><input class="form-control" id="titular[cuit]" name="titular[cuit]" placeholder="CUIT" type="text" /></div>
+              <input class="btn btn-default" id="titulares-modal-search" name="commit" type="submit" value="Buscar" />
+            </form>
+          </div>
+        </div>
+        <hr/>
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table" id="titulares-list">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Nombre</th>
+                  <th>DNI</th>
+                  <th>CUIT</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button id="titulares-modal-add" type="button" class="btn btn-primary">Asociar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {% form_theme form 'bootstrap_3_layout.html.twig' %}
 <div class="row">
   <div class="col-md-5">
     <h2>Nuevo Expediente </h2>
     {{ form_start(form) }}
         {{ form_widget(form) }}
+
+        <ul id="titulares-lista" data-prototype="{{ form_widget(form.titulares.vars.prototype)|e }}">
+
+          {% for t in form.titulares %}
+            <li>
+              {{ form_errors(t) }}
+              {{ form_widget(t) }}
+            </li>
+          {% endfor %}
+        </ul>
+
+        <a href="#" id="add">agregar </a>
+
+        <div class="form-group" style="margin-top: -10px;">
+          <div class="col-sm-9 col-sm-offset-3">
+            <div class="pull-right">
+              <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#titulares-modal" id="add-titular">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Asociar
+              </button>
+              <button type="button" class="btn btn-default btn-xs" id="remove-titular">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
         <a id="cancel-expediente" class="btn btn-default" onClick="history.go(-1);return true;">Cancelar</a>
         <input id="save-expediente" class="btn btn-primary pull-right" type="submit" value="Guardar" />
     {{ form_end(form) }}
   </div>
 </div>
+
+
+<script type="text/javascript">
+var cantidad='{{ form.titulares|length }}';
+
+
+
+    $("#add").click(function(e){
+      e.preventDefault();
+      var lista = $("#titulares-list");
+      var widget = lista.attr("data-prototype");
+      widget = widget.replace("/__name__/g",cantidad);
+      cantidad++;
+      var newLi = $("<li></li>").html(widget);
+      newLi.appendTo(lista);
+    });
+
+
+</script>
 
 {% endblock %}

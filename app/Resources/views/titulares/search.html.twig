@@ -1,5 +1,18 @@
-{% form_theme search_form 'bootstrap_3_layout.html.twig' %}
-{{ form_start(search_form) }}
-    {{ form_widget(search_form) }}
-    <input id="search" class="btn btn-primary pull-right" type="submit" value="Buscar" />
-{{ form_end(search_form) }}
+<form name="titulares" method="get">
+  <div id="titulares">
+    <div class="form-group">
+      <label class="control-label" for="titulares_nombre">Nombre</label>
+      <input id="titulares_nombre" class="form-control" name="titulares[nombre]" type="text">
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="titulares_dni">DNI</label>
+      <input id="titulares_dni" class="form-control" name="titulares[dni]" type="text">
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="titulares_cuit">CUIT</label>
+      <input id="titulares_cuit" class="form-control" name="titulares[cuit]" type="text">
+    </div>
+    </div>
+     <input type="hidden" name="_csrf_token" value="{{ csrf_token('titulares') }}">
+  <input id="search" class="btn btn-primary pull-right" value="Buscar" type="submit">
+</form>

@@ -64,14 +64,18 @@
             </dd>
             <dt>Última Entrada:</dt>
             <dd>
-              {% if expediente.movimientos.last.fechaEntrada is not null %}
-                  {{ expediente.movimientos.last.fechaEntrada|date('d-m-Y') }}
+              {% if expediente.movimientos.last.fechaEntrada is defined %}
+                {% if expediente.movimientos.last.fechaEntrada is not null %}
+                    {{ expediente.movimientos.last.fechaEntrada|date('d-m-Y') }}
+                {% endif %}
               {% endif %}
             </dd>
             <dt>Última Salida:</dt>
             <dd>
-              {% if expediente.movimientos.last.fechaSalida is not null %}
-                  {{ expediente.movimientos.last.fechaSalida|date('d-m-Y') }}
+              {% if expediente.movimientos.last.fechaSalida is defined %}
+                {% if expediente.movimientos.last.fechaSalida is not null %}
+                    {{ expediente.movimientos.last.fechaSalida|date('d-m-Y') }}
+                {% endif %}
               {% endif %}
             </dd>
           </dl>
