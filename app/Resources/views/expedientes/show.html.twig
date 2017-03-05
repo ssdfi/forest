@@ -18,11 +18,13 @@
             <dd>
               <ul class="list-unstyled">
                 <li>
-                  {% if expediente.titular is defined %}
-                    {% for titular in expediente.titular %}
-                      <a href="/titulares/{{titular.id}}" title="{{titular.nombre}}" data-length="10">
-                        {{ titular.nombre }}
-                      </a>
+                  {% if expediente.titulares is defined %}
+                    {% for titular in expediente.titulares %}
+                      {% for titu in titular %}
+                        <a href="/titulares/{{titu.id}}" title="{{titu.nombre}}" data-length="10">
+                          {{ titu.nombre }}
+                        </a>
+                      {% endfor %}
                     {% endfor %}
                   {% endif %}
                 </li>

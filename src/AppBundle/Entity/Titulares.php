@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Titulares
  *
- * @ORM\Table(name="titulares", indexes={@ORM\Index(name="index_titulares_on_dni", columns={"dni"}), @ORM\Index(name="index_titulares_on_cuit", columns={"cuit"}), @ORM\Index(name="index_titulares_on_nombre", columns={"nombre"})})
+ * @ORM\Table(name="titulares", indexes={@ORM\Index(name="index_titulares_on_dni", columns={"dni"}), @ORM\Index(name="index_titulares_on_cuit", columns={"cuit"}), @ORM\Index(name="index_titulares_on_nombre", columns={"id","nombre"})})
  * @ORM\Entity
  */
 class Titulares
@@ -69,13 +69,8 @@ class Titulares
     private $updatedAt;
 
     /**
-    * @var ArrayCollection $expedientes
-    * @ORM\ManyToMany(targetEntity="Expedientes", cascade={"all"}, fetch="EAGER")
-    * @ORM\JoinTable(
-    *      name="expedientes_titulares",
-    *      joinColumns={@ORM\JoinColumn(name="titular_id", referencedColumnName="id")},
-    *      inverseJoinColumns={@ORM\JoinColumn(name="expediente_id", referencedColumnName="id")}
-    * )
+    * @var \Doctrine\Common\Collections\ArrayCollection|Expedientes[]
+    * @ORM\ManyToMany(targetEntity="Expedientes",mappedBy="titulares",cascade={"persist"}, fetch="EAGER")
     */
     private $expediente;
 
@@ -214,20 +209,44 @@ class Titulares
         return $this->updatedAt;
     }
     /**
-     * Get expedientes
-     *
-     * @return \Expedientes
+     * @return \Doctrine\Common\Collections\ArrayCollection|Expedientes[]
      */
-    public function addExpediente(\AppBundle\Entity\Expedientes $expediente){
-      $this->expediente[]=$expediente;
-    }
     public function getExpedientes(){
         return $this->expediente;
     }
 
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection|Expedientes[]
+     */
     public function getExpediente(){
         return $this->expediente;
     }
+
+    /**
+    * @param Movie $movie
+    */
+   public function removeExpediente(\AppBundle\Entity\Expedientes $expediente)
+   {
+       if (false === $this->expediente->contains($expediente)) {
+           return;
+       }
+       $this->expediente->removeElement($expediente);
+       $expediente->removeCategory($this);
+   }
+
+   /**
+     * @param Expediente $expediente
+     */
+    public function addExpediente(\AppBundle\Entity\Expedientes $expediente)
+    {
+        if (true === $this->expediente->contains($expediente)) {
+            return;
+        }
+        dump($this);
+        $this->expediente->add($expediente);
+        $expediente->addCategory($this);
+    }
+
     public function __construct() {
         $this->expediente = new \Doctrine\Common\Collections\ArrayCollection();
     }

@@ -128,14 +128,14 @@ class Expedientes
 
     /**
         * @var ArrayCollection $titulares
-        * @ORM\ManyToMany(targetEntity="Titulares",  cascade={"all"}, fetch="LAZY")
+        * @ORM\ManyToMany(targetEntity="Titulares", inversedBy="expediente" ,cascade={"all","remove","persist"}, fetch="EAGER")
         * @ORM\JoinTable(
         *      name="expedientes_titulares",
-        *      joinColumns={@ORM\JoinColumn(name="expediente_id", referencedColumnName="id")},
+        *      joinColumns={@ORM\JoinColumn(name="expediente_id", referencedColumnName="id",onDelete="CASCADE")},
         *      inverseJoinColumns={@ORM\JoinColumn(name="titular_id", referencedColumnName="id")}
         * )
         */
-     public $titulares;
+     private $titulares;
 
      /**
       * @var \Movimiento
@@ -450,24 +450,54 @@ class Expedientes
      *
      * @return Titulares
      */
-    public function setTitulares(\Doctrine\Common\Collections\ArrayCollection $titulares = null)
+    public function setTitulares(array $titulares = null)
     {
-
-        $this->titulares = $titulares;
-
-        return $this;
+        //dump($titulares);
+        // dump($titulares);
+        $this->titulares[] = $titulares;
+        //$this->addTitular($this->titulares);
+        return $this->titulares;
     }
 
     public function getTitulares()
     {
-        return $this->titulares;
+        return array($this->titulares);
     }
 
+    /*
     public function addTitular(\AppBundle\Entity\Titulares $titular){
-      //dump($titular);$this->titular = $titular;
-      $titular->addExpediente($this);
-      $this->titulares[] = $titular;
-    }
+      dump($titular);
+
+      $this->titulares[]=$titular;
+      dump($this->titulares);
+      //$this->titular s= $titular;
+      //$titular->addExpediente($this);
+      //$this->titulares[] = $titular;
+      //dump($this->titulares);
+      return $this->titulares;
+    }*/
+
+    /**
+    * @param Titulares $titular
+    */
+   public function addTitular(\AppBundle\Entity\Titulares $titular)
+   {
+       if (true === $this->titulares->contains($titular)) {
+           return;
+       }
+       $this->titulares[] = $titular;
+
+   }
+
+   /*
+   public function removeTitular(Titulares $titular)
+   {
+       if (false === $this->titulares->contains($titular)) {
+           return;
+       }
+       $this->titulares->removeElement($titular);
+       $titular->removeExpediente($this);
+   }*/
 
     /**
      * Get zonaSplit
@@ -505,13 +535,23 @@ class Expedientes
         return $anio;
     }
 
-    public function getTitularesDisponibles(){
-      return "19177";
+    /**
+     * Get titularesId
+     *
+     * @return integer
+     */
+    public function getTitularesId()
+    {
+        if ($this->titulares) {
+            return $this->titulares->id;
+        }
+
+        return null;
     }
 
     public function __construct() {
         $this->tecnico = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->titulares = new ArrayCollection();
+        $this->titulares = new \Doctrine\Common\Collections\ArrayCollection();
         $this->zonaDepartamento = new \Doctrine\Common\Collections\ArrayCollection();
         $this->movimientos = new \Doctrine\Common\Collections\ArrayCollection();
     }

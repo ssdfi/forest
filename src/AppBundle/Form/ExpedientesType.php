@@ -32,42 +32,50 @@ class ExpedientesType extends AbstractType
             ->add('tecnico',EntityType::class, array('class'=>'AppBundle\Entity\Tecnicos', 'placeholder' => "Seleccione una opción" ))
             ->add('plurianual')
             ->add('agrupado')
-            ->add('activo')
-            ->add('titulares',CollectionType::class,array(
-              'entry_type'=>TitularesType::class,
-              'allow_add'=>true,
-              'prototype'=>true,
-              'entry_options'=>array(
-                'attr'=>array('class'=>'titular-box')
-              )
-            ));
+            ->add('activo');
 
-
-/*
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function(FormEvent $event){
               $form=$event->getForm();
               $data=$event->getData();
+              if($data->getTitulares()){
+                $titulares=$data->getTitulares()[0];
+              }else{
+                $titulares=[];
+              }
+              $form->add('titulares', ChoiceType::class, array(
+                            'multiple'=>true,
+                            'required'=>true,
+                            'choices'=> $titulares,
+                            'choice_label'=>function($value){
+                              if(get_class($value)=='AppBundle\Entity\Titulares'){
+                                dump($value->getNombre());
+                                return ($value != null) ? $value->getNombre() : "";
+                              }
+                            },
+                            'choice_value'=>function($value){
+                              if(get_class($value)=='AppBundle\Entity\Titulares'){
+                                return ($value != null) ? $value->getId() : "";
+                              }
+                            },
+                          ));
+          });
 
-              $expediente=$data->getTitulares();
-              $titulares = null === $expedinet ? array() : $titulares->getTitularesDisponibles();
-              dump($expediente);
-
-
-              if(!$expediente || null === $expediente->getId()){
-                //dump($expediente);
-                //$form->add('titulares',CollectionType::class);
-                /$form->add('titulares', EntityType::class, array(
-                              'class' => 'AppBundle:Titulares'
-                              //'multiple'=>true,
-                              // 'required'=>false,
-                              'choices'=> $titulares
+          $builder->addEventListener(
+              FormEvents::PRE_SUBMIT,
+              function(FormEvent $event){
+                $form=$event->getForm();
+                $data=$event->getData();
+                dump($data['titulares']);
+                $form->add('titulares', ChoiceType::class, array(
+                              'multiple'=>true,
+                              'required'=>true,
+                              'choices'=> $data['titulares']
                             ));
 
-              }
-          });
-      */
+            });
+
     }
 
     /**

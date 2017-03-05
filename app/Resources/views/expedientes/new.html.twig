@@ -53,19 +53,6 @@
     <h2>Nuevo Expediente </h2>
     {{ form_start(form) }}
         {{ form_widget(form) }}
-
-        <ul id="titulares-lista" data-prototype="{{ form_widget(form.titulares.vars.prototype)|e }}">
-
-          {% for t in form.titulares %}
-            <li>
-              {{ form_errors(t) }}
-              {{ form_widget(t) }}
-            </li>
-          {% endfor %}
-        </ul>
-
-        <a href="#" id="add">agregar </a>
-
         <div class="form-group" style="margin-top: -10px;">
           <div class="col-sm-9 col-sm-offset-3">
             <div class="pull-right">

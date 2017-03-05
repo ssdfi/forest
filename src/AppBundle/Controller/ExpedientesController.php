@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\ChoiceLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -84,10 +83,21 @@ class ExpedientesController extends Controller
 
         $form = $this->createForm('AppBundle\Form\ExpedientesType', $expediente);
 
-        //dump($request);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+          if($expediente->getTitulares()){
+              foreach ($expediente->getTitulares() as $key => $array) {
+                foreach ($array as $key => $titulares) {
+                  foreach ($titulares as $key => $value) {
+                    $titu= $em->getRepository('AppBundle:Titulares')->findOneBy(array('id'=>$value));
+                    $expediente->addTitular($titu);
+                  }
+                }
+              }
+              unset($expediente->getTitulares()[0][0]);
+            }
+
             $zona= $em->getRepository('AppBundle:Zonas')->findOneBy(array('codigo'=>$expediente->getZonaSplit()));
             if($zona != null){
                 $expediente->setZona($zona);
@@ -148,11 +158,22 @@ class ExpedientesController extends Controller
     {
         $deleteForm = $this->createDeleteForm($expediente);
         $editForm = $this->createForm('AppBundle\Form\ExpedientesType', $expediente);
-        //$editForm->add('titular');
-        $editForm->handleRequest($request);
-
+        dump($request);
+        //$editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-
+          dump($this);
+          dump($expediente);
+          if($expediente->getTitulares()){
+              foreach ($expediente->getTitulares() as $key => $array) {
+                foreach ($array as $key => $titulares) {
+                  foreach ($titulares as $key => $value) {
+                    $titu= $em->getRepository('AppBundle:Titulares')->findOneBy(array('id'=>$value));
+                    $expediente->addTitular($titu);
+                  }
+                }
+              }
+              unset($expediente->getTitulares()[0][0]);
+            }
             $expediente->setUpdatedAt(new DateTime());
 
             $em = $this->getDoctrine()->getManager();

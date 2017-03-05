@@ -25,9 +25,9 @@ class ExpedientesTitulares
     /**
      * @var \Expedientes
      *
-     * @ORM\ManyToOne(targetEntity="Expedientes", inversedBy="expedientestitulares")
+     * @ORM\ManyToOne(targetEntity="Expedientes", inversedBy="expedientes_titulares")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="expediente_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="expediente_id", referencedColumnName="id",nullable=false)
      * })
      */
     private $expediente;
@@ -35,14 +35,12 @@ class ExpedientesTitulares
     /**
      * @var \Titulares
      *
-     * @ORM\ManyToOne(targetEntity="Titulares")
+     * @ORM\ManyToOne(targetEntity="Titulares", inversedBy="expedientes_titulares")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="titular_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="titular_id", referencedColumnName="id",nullable=false)
      * })
      */
     private $titular;
-
-
 
     /**
      * Get id
@@ -63,6 +61,7 @@ class ExpedientesTitulares
      */
     public function setExpediente(\AppBundle\Entity\Expedientes $expediente = null)
     {
+        dump($expediente);
         $this->expediente = $expediente;
 
         return $this;
@@ -87,6 +86,7 @@ class ExpedientesTitulares
      */
     public function setTitular(\AppBundle\Entity\Titulares $titular = null)
     {
+        dump($titular);
         $this->titular = $titular;
 
         return $this;

@@ -120,7 +120,6 @@ class TitularesController extends Controller
     {
         $titulare = new Titulares();
         $form = $this->createForm('AppBundle\Form\TitularesType', $titulare);
-        dump(this);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
