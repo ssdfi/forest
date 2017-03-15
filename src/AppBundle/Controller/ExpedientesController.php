@@ -76,7 +76,6 @@ class ExpedientesController extends Controller
      */
     public function newAction(Request $request)
     {
-        //dump($request);
         $em = $this->getDoctrine()->getManager();
 
         $expediente = new Expedientes();
@@ -154,25 +153,28 @@ class ExpedientesController extends Controller
      * @Route("/expedientes/{id}/edit", name="expedientes_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Expedientes $expediente)
+    public function editAction(Request $request, Expedientes $expediente_edit)
     {
-        $deleteForm = $this->createDeleteForm($expediente);
+        //$deleteForm = $this->createDeleteForm($expediente);
+        $em = $this->getDoctrine()->getManager();
+        $expediente = $em->getRepository('AppBundle:Expedientes')->findOneBy(array('id'=>$expediente_edit->getId()));
+
         $editForm = $this->createForm('AppBundle\Form\ExpedientesType', $expediente);
-        dump($request);
-        //$editForm->handleRequest($request);
+
+        $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-          dump($this);
-          dump($expediente);
           if($expediente->getTitulares()){
               foreach ($expediente->getTitulares() as $key => $array) {
                 foreach ($array as $key => $titulares) {
-                  foreach ($titulares as $key => $value) {
-                    $titu= $em->getRepository('AppBundle:Titulares')->findOneBy(array('id'=>$value));
-                    $expediente->addTitular($titu);
-                  }
+                  $titu= $em->getRepository('AppBundle:Titulares')->findOneBy(array('id'=>$titulares));
+                  $expediente->addTitular($titu);
                 }
               }
-              unset($expediente->getTitulares()[0][0]);
+              foreach ($expediente->getTitulares()[0] as $key => $value) {
+                if (gettype($value) != "object"){
+                  unset($expediente->getTitulares()[0][$key]);
+                }
+              }
             }
             $expediente->setUpdatedAt(new DateTime());
 
@@ -186,7 +188,7 @@ class ExpedientesController extends Controller
         return $this->render('expedientes/edit.html.twig', array(
             'expediente' => $expediente,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            //'delete_form' => $deleteForm->createView(),
         ));
     }
 

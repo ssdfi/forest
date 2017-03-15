@@ -18,7 +18,7 @@
     /* Elimina los titulares seleccionados */
     $("#remove-titular").click(function() {
       var titular, _i, _len, _ref, _results;
-      _ref = $("#expediente_titular_ids option:selected");
+      _ref = $("#expedientes_titulares option:selected");
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         titular = _ref[_i];

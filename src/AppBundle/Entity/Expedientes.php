@@ -14,8 +14,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="expedientes", indexes={@ORM\Index(name="index_expedientes_on_tecnico_id", columns={"tecnico_id"}), @ORM\Index(name="index_expedientes_on_zona_departamento_id", columns={"zona_departamento_id"}), @ORM\Index(name="index_expedientes_on_zona_id", columns={"zona_id"}), @ORM\Index(name="index_expedientes_on_numero_expediente", columns={"numero_expediente"}), @ORM\Index(name="index_expedientes_on_numero_interno", columns={"numero_interno"})})
  * @ORM\Entity
+ * @UniqueEntity(fields="numeroInterno",message="Este valor ya existe y no puede repetirse") @UniqueEntity(fields="numeroExpediente",message="Este valor ya existe y no puede repetirse")
  */
- // @UniqueEntity(fields="numeroInterno",message="Este valor ya existe y no puede repetirse") @UniqueEntity(fields="numeroExpediente",message="Este valor ya existe y no puede repetirse")
 class Expedientes
 {
     /**
@@ -128,13 +128,14 @@ class Expedientes
 
     /**
         * @var ArrayCollection $titulares
-        * @ORM\ManyToMany(targetEntity="Titulares", inversedBy="expediente" ,cascade={"all","remove","persist"}, fetch="EAGER")
+        * @ORM\ManyToMany(targetEntity="Titulares", inversedBy="expediente" ,cascade={"all","remove","persist"}, fetch="LAZY")
         * @ORM\JoinTable(
         *      name="expedientes_titulares",
         *      joinColumns={@ORM\JoinColumn(name="expediente_id", referencedColumnName="id",onDelete="CASCADE")},
         *      inverseJoinColumns={@ORM\JoinColumn(name="titular_id", referencedColumnName="id")}
         * )
         */
+        // orphanRemoval=true
      private $titulares;
 
      /**
@@ -452,10 +453,7 @@ class Expedientes
      */
     public function setTitulares(array $titulares = null)
     {
-        //dump($titulares);
-        // dump($titulares);
         $this->titulares[] = $titulares;
-        //$this->addTitular($this->titulares);
         return $this->titulares;
     }
 
@@ -464,23 +462,10 @@ class Expedientes
         return array($this->titulares);
     }
 
-    /*
-    public function addTitular(\AppBundle\Entity\Titulares $titular){
-      dump($titular);
-
-      $this->titulares[]=$titular;
-      dump($this->titulares);
-      //$this->titular s= $titular;
-      //$titular->addExpediente($this);
-      //$this->titulares[] = $titular;
-      //dump($this->titulares);
-      return $this->titulares;
-    }*/
-
     /**
     * @param Titulares $titular
     */
-   public function addTitular(\AppBundle\Entity\Titulares $titular)
+   public function addTitular($titular)
    {
        if (true === $this->titulares->contains($titular)) {
            return;
@@ -489,15 +474,16 @@ class Expedientes
 
    }
 
-   /*
-   public function removeTitular(Titulares $titular)
+   public function removeTitular($titular)
    {
-       if (false === $this->titulares->contains($titular)) {
-           return;
+       foreach ($titular as $key => $value) {
+         $titu = $value;
+         if (false === $this->titulares->contains($titu)) {
+             return;
+         }
+         $this->titulares->removeElement($titu);
        }
-       $this->titulares->removeElement($titular);
-       $titular->removeExpediente($this);
-   }*/
+   }
 
     /**
      * Get zonaSplit

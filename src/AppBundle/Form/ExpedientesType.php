@@ -19,7 +19,6 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 class ExpedientesType extends AbstractType
 {
 
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -48,12 +47,7 @@ class ExpedientesType extends AbstractType
                             'multiple'=>true,
                             'required'=>true,
                             'choices'=> $titulares,
-                            'choice_label'=>function($value){
-                              if(get_class($value)=='AppBundle\Entity\Titulares'){
-                                dump($value->getNombre());
-                                return ($value != null) ? $value->getNombre() : "";
-                              }
-                            },
+                            'choice_label'=> 'nombre',
                             'choice_value'=>function($value){
                               if(get_class($value)=='AppBundle\Entity\Titulares'){
                                 return ($value != null) ? $value->getId() : "";
@@ -67,11 +61,16 @@ class ExpedientesType extends AbstractType
               function(FormEvent $event){
                 $form=$event->getForm();
                 $data=$event->getData();
-                dump($data['titulares']);
+
                 $form->add('titulares', ChoiceType::class, array(
                               'multiple'=>true,
                               'required'=>true,
-                              'choices'=> $data['titulares']
+                              'choices'=> $data['titulares'],
+                              'choice_value'=>function($value){
+                                if((gettype($value)=="string")){
+                                  return $value;
+                                }
+                              },
                             ));
 
             });

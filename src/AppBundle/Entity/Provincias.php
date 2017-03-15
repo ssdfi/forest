@@ -35,15 +35,15 @@ class Provincias
      * @ORM\Column(name="codigo", type="string", length=255, nullable=true)
      */
     private $codigo;
-
+/*
     /**
      * @var geometry
      *
      * @ORM\Column(name="geom", type="geometry", nullable=true)
-     */
+     *
     private $geom;
 
-
+*/
 
     /**
      * Get id
@@ -125,9 +125,5 @@ class Provincias
     public function getGeom()
     {
         return $this->geom;
-    }
-    
-    public function __toString(){
-        return $this->nombre;
     }
 }

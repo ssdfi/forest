@@ -50,7 +50,7 @@
             <dd></dd>
             <dt>Provincia</dt>
             <dd>{% if (plantacione.provincia) %}
-              {{ (plantacione.provincia) }}
+              {{ (plantacione.provincia.nombre) }}
             {% else %} {% endif %}</dd>
             <dt>Departamento</dt>
             <dd>{% if (plantacione.departamento) %}{{ plantacione.departamento.nombre }}{% else %} {% endif %}</dd>

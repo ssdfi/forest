@@ -1,5 +1,4 @@
 <?php
-
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -28,8 +27,8 @@ class ActividadesType extends AbstractType
             'allow_add'     => true,
             'allow_delete'  => true,
             'prototype'     => true,
-            'label'         => false,
-            'by_reference'  => false,))
+            'required'      => true,
+          ))
         ;
     }
 
