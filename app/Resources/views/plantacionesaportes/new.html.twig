@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+<div class="row">
+  <div class="col-md-5">
+    <h2>Nueva Plantación</h2>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <input type="submit" value="Create" />
+    {{ form_end(form) }}
+
+  </div>
+</div>
+{% endblock %}

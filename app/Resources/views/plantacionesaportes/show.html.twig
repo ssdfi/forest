@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <div class="col-md-3 hidden-print">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Plantación</h3>
+      </div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>Id Plantación</dt>
+            <dd>{{ plantacione.id }}</dd>
+            <dt>Titular</dt>
+            <dd>{{ plantacione.titular.nombre }}</dd>
+            <dt>Superficie</dt>
+            <dd></dd>
+            <dt>Año de Plantación</dt>
+            <dd>{{ plantacione.anioPlantacion }}</dd>
+            <dt>Tipo de Plantación</dt>
+            <dd>{% if (plantacione.tipoPlantacion) %}{{ plantacione.tipoPlantacion.descripcion }}{% else %} {% endif %}</dd>
+            <dt>Nomenclatura Catrastal</dt>
+            <dd>{{ plantacione.nomenclaturaCatastral }}</dd>
+            <dt>Estado de Plantación</dt>
+            <dd></dd>
+            <dt>Distancia entre Plantas</dt>
+            <dd>{{ plantacione.distanciaPlantas }}</dd>
+            <dt>Cantidad de Filas</dt>
+            <dd>{{ plantacione.cantidadFilas }}</dd>
+            <dt>Distancia entre Filas</dt>
+            <dd>{{ plantacione.distanciaFilas }}</dd>
+            <dt>Densidad</dt>
+            <dd>{{ plantacione.densidad }}</dd>
+            <dt>Fuente de Información</dt>
+            <dd></dd>
+            <dt>Año de Información</dt>
+            <dd>{{ plantacione.anioInformacion }}</dd>
+            <dt>Fuente de Imagen</dt>
+            <dd></dd>
+            <dt>Fecha de Imagen</dt>
+            <dd>{# if plantacione.fechaImagen // plantacione.fechaImagen|date('Y-m-d') }} endif #}</dd>
+            <dt>Base Geométrica</dt>
+            <dd></dd>
+            <dt>Provincia</dt>
+            <dd>{% if (plantacione.provincia) %}
+              {{ (plantacione.provincia.nombre) }}
+            {% else %} {% endif %}</dd>
+            <dt>Departamento</dt>
+            <dd>{% if (plantacione.departamento) %}{{ plantacione.departamento.nombre }}{% else %} {% endif %}</dd>
+            <dt>Estrato de Desarrollo</dt>
+            <dd>{% if (plantacione.estratoDesarrollo) %}{{ plantacione.estratoDesarrollo }}{% else %} {% endif %}</dd>
+            <dt>Uso Forestal</dt>
+            <dd>{{ plantacione.usoForestal }}</dd>
+            <dt>Uso Anterior</dt>
+            <dd>{{ plantacione.usoAnterior }}</dd>
+            <dt>Objetivo de Plantación</dt>
+            <dd>{{ plantacione.objetivoPlantacion }}</dd>
+            <dt>Comentarios</dt>
+            <dd>{{ plantacione.comentarios }}</dd>
+        </dl>
+      </div>
+      <div class="panel-footer">
+        {% if plantacione.activo %}<span class="label label-success">Activo</span>{% else %}<span class="label label-danger">Inactivo</span>{% endif %}
+      </div>
+    </div>
+
+  </div>
+  <div class="col-md-3 hidden-print">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Plantación Aporte</h3>
+      </div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>Id Plantación</dt>
+            <dd>{{ aporte.id }}</dd>
+            <dt>Titular</dt>
+            <dd>{{ aporte.titular.nombre }}</dd>
+            <dt>Superficie</dt>
+            <dd></dd>
+            <dt>Año de Plantación</dt>
+            <dd>{{ aporte.anioPlantacion }}</dd>
+            <dt>Tipo de Plantación</dt>
+            <dd>{% if (aporte.tipoPlantacion) %}{{ aporte.tipoPlantacion.descripcion }}{% else %} {% endif %}</dd>
+            <dt>Nomenclatura Catrastal</dt>
+            <dd>{{ aporte.nomenclaturaCatastral }}</dd>
+            <dt>Estado de Plantación</dt>
+            <dd></dd>
+            <dt>Distancia entre Plantas</dt>
+            <dd>{{ aporte.distanciaPlantas }}</dd>
+            <dt>Cantidad de Filas</dt>
+            <dd>{{ aporte.cantidadFilas }}</dd>
+            <dt>Distancia entre Filas</dt>
+            <dd>{{ aporte.distanciaFilas }}</dd>
+            <dt>Densidad</dt>
+            <dd>{{ aporte.densidad }}</dd>
+            <dt>Fuente de Información</dt>
+            <dd></dd>
+            <dt>Año de Información</dt>
+            <dd>{{ aporte.anioInformacion }}</dd>
+            <dt>Fuente de Imagen</dt>
+            <dd></dd>
+            <dt>Fecha de Imagen</dt>
+            <dd>{# if aporte.fechaImagen // aporte.fechaImagen|date('Y-m-d') }} endif #}</dd>
+            <dt>Base Geométrica</dt>
+            <dd></dd>
+            <dt>Provincia</dt>
+            <dd>{% if (aporte.provincia) %}
+              {{ (aporte.provincia.nombre) }}
+            {% else %} {% endif %}</dd>
+            <dt>Departamento</dt>
+            <dd>{% if (aporte.departamento) %}{{ aporte.departamento.nombre }}{% else %} {% endif %}</dd>
+            <dt>Estrato de Desarrollo</dt>
+            <dd>{% if (aporte.estratoDesarrollo) %}{{ aporte.estratoDesarrollo }}{% else %} {% endif %}</dd>
+            <dt>Uso Forestal</dt>
+            <dd>{{ aporte.usoForestal }}</dd>
+            <dt>Uso Anterior</dt>
+            <dd>{{ aporte.usoAnterior }}</dd>
+            <dt>Objetivo de Plantación</dt>
+            <dd>{{ aporte.objetivoPlantacion }}</dd>
+            <dt>Comentarios</dt>
+            <dd>{{ aporte.comentarios }}</dd>
+        </dl>
+      </div>
+      <div class="panel-footer">
+        {% if aporte.activo %}<span class="label label-success">Activo</span>{% else %}<span class="label label-danger">Inactivo</span>{% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 hidden-print">
+    {{ include('plantacionesaportes/map.html.twig', {'plantacione': plantacione}) }}
+  </div>
+
+{% endblock %}

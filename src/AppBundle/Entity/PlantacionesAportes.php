@@ -1,17 +1,16 @@
 <?php
 
 namespace AppBundle\Entity;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\EntityManager;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Plantaciones
+ * PlantacionesAportes
  *
- * @ORM\Table(name="plantaciones", indexes={@ORM\Index(name="index_plantaciones_on_tipo_plantacion_id", columns={"tipo_plantacion_id"}), @ORM\Index(name="index_plantaciones_on_provincia_id", columns={"provincia_id"}), @ORM\Index(name="index_plantaciones_on_estado_plantacion_id", columns={"estado_plantacion_id"}), @ORM\Index(name="index_plantaciones_on_titular_id", columns={"titular_id"}), @ORM\Index(name="index_plantaciones_on_departamento_id", columns={"departamento_id"}), @ORM\Index(name="index_plantaciones_on_uso_anterior_id", columns={"uso_anterior_id"}), @ORM\Index(name="index_plantaciones_on_estrato_desarrollo_id", columns={"estrato_desarrollo_id"}), @ORM\Index(name="index_plantaciones_on_objetivo_plantacion_id", columns={"objetivo_plantacion_id"}), @ORM\Index(name="index_plantaciones_on_activo", columns={"activo"}), @ORM\Index(name="index_plantaciones_on_uso_forestal_id", columns={"uso_forestal_id"}), @ORM\Index(name="index_plantaciones_on_base_geometrica_id", columns={"base_geometrica_id"}), @ORM\Index(name="index_plantaciones_on_fuente_informacion_id", columns={"fuente_informacion_id"}), @ORM\Index(name="index_plantaciones_on_geom", columns={"geom"}), @ORM\Index(name="index_plantaciones_on_error_id", columns={"error_id"}), @ORM\Index(name="index_plantaciones_on_fuente_imagen_id", columns={"fuente_imagen_id"})})
+ * @ORM\Table(name="plantaciones_aportes", indexes={@ORM\Index(name="index_plantaciones_aportes_on_objetivo_plantacion_id", columns={"objetivo_plantacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_estrato_desarrollo_id", columns={"estrato_desarrollo_id"}), @ORM\Index(name="index_plantaciones_aportes_on_fuente_imagen_id", columns={"fuente_imagen_id"}), @ORM\Index(name="index_plantaciones_aportes_on_departamento_id", columns={"departamento_id"}), @ORM\Index(name="index_plantaciones_aportes_on_provincia_id", columns={"provincia_id"}), @ORM\Index(name="index_plantaciones_aportes_on_fuente_informacion_id", columns={"fuente_informacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_uso_anterior_id", columns={"uso_anterior_id"}), @ORM\Index(name="index_plantaciones_aportes_on_tipo_plantacion_id", columns={"tipo_plantacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_base_geometrica_id", columns={"base_geometrica_id"}), @ORM\Index(name="index_plantaciones_aportes_on_uso_forestal_id", columns={"uso_forestal_id"}), @ORM\Index(name="index_plantaciones_aportes_on_titular_id", columns={"titular_id"}), @ORM\Index(name="index_plantaciones_aportes_on_estado_plantacion_id", columns={"estado_plantacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_error_id", columns={"error_id"}), @ORM\Index(name="index_plantaciones_aportes_on_activo", columns={"activo"})})
  * @ORM\Entity
  */
-class Plantaciones
+class PlantacionesAportes
 {
     /**
      * @var integer
@@ -19,9 +18,16 @@ class Plantaciones
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="plantaciones_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="plantaciones_aportes_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_orig", type="integer", nullable=true)
+     */
+    private $idOrig;
 
     /**
      * @var string
@@ -136,54 +142,25 @@ class Plantaciones
     private $baseGeometricaId;
 
     /**
-     * @var \Errores
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Errores")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="error_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="usuario", type="text", nullable=true)
      */
-    private $error;
+    private $usuario;
 
     /**
-     * @var \EstadosPlantacion
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="EstadosPlantacion")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="estado_plantacion_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="accion", type="text", nullable=true)
      */
-    private $estadoPlantacion;
+    private $accion;
 
     /**
-     * @var \EstratosDesarrollo
+     * @var \DateTime
      *
-     * @ORM\ManyToOne(targetEntity="EstratosDesarrollo")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="estrato_desarrollo_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="modificacion", type="datetime", nullable=true)
      */
-    private $estratoDesarrollo;
-
-    /**
-     * @var \FuentesImagen
-     *
-     * @ORM\ManyToOne(targetEntity="FuentesImagen")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="fuente_imagen_id", referencedColumnName="id")
-     * })
-     */
-    private $fuenteImagen;
-
-    /**
-     * @var \FuentesInformacion
-     *
-     * @ORM\ManyToOne(targetEntity="FuentesInformacion")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="fuente_informacion_id", referencedColumnName="id")
-     * })
-     */
-    private $fuenteInformacion;
+    private $modificacion;
 
     /**
      * @var \ObjetivosPlantacion
@@ -196,24 +173,34 @@ class Plantaciones
     private $objetivoPlantacion;
 
     /**
-     * @var \TiposPlantacion
+     * @var \FuentesInformacion
      *
-     * @ORM\ManyToOne(targetEntity="TiposPlantacion")
+     * @ORM\ManyToOne(targetEntity="FuentesInformacion")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tipo_plantacion_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="fuente_informacion_id", referencedColumnName="id")
      * })
      */
-    private $tipoPlantacion;
+    private $fuenteInformacion;
 
     /**
-     * @var \Titulares
+     * @var \Provincias
      *
-     * @ORM\ManyToOne(targetEntity="Titulares")
+     * @ORM\ManyToOne(targetEntity="Provincias")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="titular_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="provincia_id", referencedColumnName="id")
      * })
      */
-    private $titular;
+    private $provincia;
+
+    /**
+     * @var \Departamentos
+     *
+     * @ORM\ManyToOne(targetEntity="Departamentos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="departamento_id", referencedColumnName="id")
+     * })
+     */
+    private $departamento;
 
     /**
      * @var \UsosAnteriores
@@ -226,6 +213,46 @@ class Plantaciones
     private $usoAnterior;
 
     /**
+     * @var \Errores
+     *
+     * @ORM\ManyToOne(targetEntity="Errores")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="error_id", referencedColumnName="id")
+     * })
+     */
+    private $error;
+
+    /**
+     * @var \FuentesImagen
+     *
+     * @ORM\ManyToOne(targetEntity="FuentesImagen")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fuente_imagen_id", referencedColumnName="id")
+     * })
+     */
+    private $fuenteImagen;
+
+    /**
+     * @var \EstratosDesarrollo
+     *
+     * @ORM\ManyToOne(targetEntity="EstratosDesarrollo")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="estrato_desarrollo_id", referencedColumnName="id")
+     * })
+     */
+    private $estratoDesarrollo;
+
+    /**
+     * @var \TiposPlantacion
+     *
+     * @ORM\ManyToOne(targetEntity="TiposPlantacion")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tipo_plantacion_id", referencedColumnName="id")
+     * })
+     */
+    private $tipoPlantacion;
+
+    /**
      * @var \UsosForestales
      *
      * @ORM\ManyToOne(targetEntity="UsosForestales")
@@ -236,46 +263,27 @@ class Plantaciones
     private $usoForestal;
 
     /**
-     * @var \Provincias
+     * @var \EstadosPlantacion
      *
-     * @ORM\ManyToOne(targetEntity="Provincias", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="EstadosPlantacion")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="provincia_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="estado_plantacion_id", referencedColumnName="id")
      * })
      */
-    private $provincia;
+    private $estadoPlantacion;
 
     /**
-     * @var \Departamentos
+     * @var \Titulares
      *
-     * @ORM\ManyToOne(targetEntity="Departamentos", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Titulares")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="departamento_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="titular_id", referencedColumnName="id")
      * })
      */
-    private $departamento;
+    private $titular;
 
-    /**
-        * @var \Especies
-        * @ORM\ManyToMany(targetEntity="Especies", fetch="LAZY")
-        * @ORM\JoinTable(
-        *      name="especies_plantaciones",
-        *      joinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")},
-        *      inverseJoinColumns={@ORM\JoinColumn(name="especie_id", referencedColumnName="id")}
-        * )
-        */
-     private $especie;
 
-     /**
-         * @var \Actividades
-         * @ORM\ManyToMany(targetEntity="Actividades", fetch="LAZY")
-         * @ORM\JoinTable(
-         *      name="actividades_plantaciones",
-         *      joinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")},
-         *      inverseJoinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id")}
-         * )
-         */
-     private $actividad;
+
     /**
      * Get id
      *
@@ -287,11 +295,35 @@ class Plantaciones
     }
 
     /**
+     * Set idOrig
+     *
+     * @param integer $idOrig
+     *
+     * @return PlantacionesAportes
+     */
+    public function setIdOrig($idOrig)
+    {
+        $this->idOrig = $idOrig;
+
+        return $this;
+    }
+
+    /**
+     * Get idOrig
+     *
+     * @return integer
+     */
+    public function getIdOrig()
+    {
+        return $this->idOrig;
+    }
+
+    /**
      * Set anioPlantacion
      *
      * @param string $anioPlantacion
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setAnioPlantacion($anioPlantacion)
     {
@@ -315,7 +347,7 @@ class Plantaciones
      *
      * @param string $nomenclaturaCatastral
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setNomenclaturaCatastral($nomenclaturaCatastral)
     {
@@ -339,7 +371,7 @@ class Plantaciones
      *
      * @param string $distanciaPlantas
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setDistanciaPlantas($distanciaPlantas)
     {
@@ -363,7 +395,7 @@ class Plantaciones
      *
      * @param integer $cantidadFilas
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setCantidadFilas($cantidadFilas)
     {
@@ -387,7 +419,7 @@ class Plantaciones
      *
      * @param string $distanciaFilas
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setDistanciaFilas($distanciaFilas)
     {
@@ -411,7 +443,7 @@ class Plantaciones
      *
      * @param string $densidad
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setDensidad($densidad)
     {
@@ -435,7 +467,7 @@ class Plantaciones
      *
      * @param integer $anioInformacion
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setAnioInformacion($anioInformacion)
     {
@@ -459,7 +491,7 @@ class Plantaciones
      *
      * @param \DateTime $fechaImagen
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setFechaImagen($fechaImagen)
     {
@@ -483,7 +515,7 @@ class Plantaciones
      *
      * @param boolean $activo
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setActivo($activo)
     {
@@ -507,7 +539,7 @@ class Plantaciones
      *
      * @param string $comentarios
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setComentarios($comentarios)
     {
@@ -531,7 +563,7 @@ class Plantaciones
      *
      * @param integer $mpfId
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setMpfId($mpfId)
     {
@@ -555,7 +587,7 @@ class Plantaciones
      *
      * @param integer $unificadoId
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setUnificadoId($unificadoId)
     {
@@ -579,7 +611,7 @@ class Plantaciones
      *
      * @param \DateTime $createdAt
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setCreatedAt($createdAt)
     {
@@ -603,7 +635,7 @@ class Plantaciones
      *
      * @param \DateTime $updatedAt
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -627,7 +659,7 @@ class Plantaciones
      *
      * @param geometry $geom
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setGeom($geom)
     {
@@ -651,7 +683,7 @@ class Plantaciones
      *
      * @param integer $baseGeometricaId
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setBaseGeometricaId($baseGeometricaId)
     {
@@ -671,123 +703,75 @@ class Plantaciones
     }
 
     /**
-     * Set error
+     * Set usuario
      *
-     * @param \AppBundle\Entity\Errores $error
+     * @param string $usuario
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
-    public function setError(\AppBundle\Entity\Errores $error = null)
+    public function setUsuario($usuario)
     {
-        $this->error = $error;
+        $this->usuario = $usuario;
 
         return $this;
     }
 
     /**
-     * Get error
+     * Get usuario
      *
-     * @return \AppBundle\Entity\Errores
+     * @return string
      */
-    public function getError()
+    public function getUsuario()
     {
-        return $this->error;
+        return $this->usuario;
     }
 
     /**
-     * Set estadoPlantacion
+     * Set accion
      *
-     * @param \AppBundle\Entity\EstadosPlantacion $estadoPlantacion
+     * @param string $accion
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
-    public function setEstadoPlantacion(\AppBundle\Entity\EstadosPlantacion $estadoPlantacion = null)
+    public function setAccion($accion)
     {
-        $this->estadoPlantacion = $estadoPlantacion;
+        $this->accion = $accion;
 
         return $this;
     }
 
     /**
-     * Get estadoPlantacion
+     * Get accion
      *
-     * @return \AppBundle\Entity\EstadosPlantacion
+     * @return string
      */
-    public function getEstadoPlantacion()
+    public function getAccion()
     {
-        return $this->estadoPlantacion;
+        return $this->accion;
     }
 
     /**
-     * Set estratoDesarrollo
+     * Set modificacion
      *
-     * @param \AppBundle\Entity\EstratosDesarrollo $estratoDesarrollo
+     * @param \DateTime $modificacion
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
-    public function setEstratoDesarrollo(\AppBundle\Entity\EstratosDesarrollo $estratoDesarrollo = null)
+    public function setModificacion($modificacion)
     {
-        $this->estratoDesarrollo = $estratoDesarrollo;
+        $this->modificacion = $modificacion;
 
         return $this;
     }
 
     /**
-     * Get estratoDesarrollo
+     * Get modificacion
      *
-     * @return \AppBundle\Entity\EstratosDesarrollo
+     * @return \DateTime
      */
-    public function getEstratoDesarrollo()
+    public function getModificacion()
     {
-        return $this->estratoDesarrollo;
-    }
-
-    /**
-     * Set fuenteImagen
-     *
-     * @param \AppBundle\Entity\FuentesImagen $fuenteImagen
-     *
-     * @return Plantaciones
-     */
-    public function setFuenteImagen(\AppBundle\Entity\FuentesImagen $fuenteImagen = null)
-    {
-        $this->fuenteImagen = $fuenteImagen;
-
-        return $this;
-    }
-
-    /**
-     * Get fuenteImagen
-     *
-     * @return \AppBundle\Entity\FuentesImagen
-     */
-    public function getFuenteImagen()
-    {
-        return $this->fuenteImagen;
-    }
-
-    /**
-     * Set fuenteInformacion
-     *
-     * @param \AppBundle\Entity\FuentesInformacion $fuenteInformacion
-     *
-     * @return Plantaciones
-     */
-    public function setFuenteInformacion(\AppBundle\Entity\FuentesInformacion $fuenteInformacion = null)
-    {
-        $this->fuenteInformacion = $fuenteInformacion;
-
-        return $this;
-    }
-
-    /**
-     * Get fuenteInformacion
-     *
-     * @return \AppBundle\Entity\FuentesInformacion
-     */
-    public function getFuenteInformacion()
-    {
-        return $this->fuenteInformacion;
+        return $this->modificacion;
     }
 
     /**
@@ -795,7 +779,7 @@ class Plantaciones
      *
      * @param \AppBundle\Entity\ObjetivosPlantacion $objetivoPlantacion
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setObjetivoPlantacion(\AppBundle\Entity\ObjetivosPlantacion $objetivoPlantacion = null)
     {
@@ -815,99 +799,27 @@ class Plantaciones
     }
 
     /**
-     * Set tipoPlantacion
+     * Set fuenteInformacion
      *
-     * @param \AppBundle\Entity\TiposPlantacion $tipoPlantacion
+     * @param \AppBundle\Entity\FuentesInformacion $fuenteInformacion
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
-    public function setTipoPlantacion(\AppBundle\Entity\TiposPlantacion $tipoPlantacion = null)
+    public function setFuenteInformacion(\AppBundle\Entity\FuentesInformacion $fuenteInformacion = null)
     {
-        $this->tipoPlantacion = $tipoPlantacion;
+        $this->fuenteInformacion = $fuenteInformacion;
 
         return $this;
     }
 
     /**
-     * Get tipoPlantacion
+     * Get fuenteInformacion
      *
-     * @return \AppBundle\Entity\TiposPlantacion
+     * @return \AppBundle\Entity\FuentesInformacion
      */
-    public function getTipoPlantacion()
+    public function getFuenteInformacion()
     {
-        return $this->tipoPlantacion;
-    }
-
-    /**
-     * Set titular
-     *
-     * @param \AppBundle\Entity\Titulares $titular
-     *
-     * @return Plantaciones
-     */
-    public function setTitular(\AppBundle\Entity\Titulares $titular = null)
-    {
-        $this->titular = $titular;
-
-        return $this;
-    }
-
-    /**
-     * Get titular
-     *
-     * @return \AppBundle\Entity\Titulares
-     */
-    public function getTitular()
-    {
-        return $this->titular;
-    }
-
-    /**
-     * Set usoAnterior
-     *
-     * @param \AppBundle\Entity\UsosAnteriores $usoAnterior
-     *
-     * @return Plantaciones
-     */
-    public function setUsoAnterior(\AppBundle\Entity\UsosAnteriores $usoAnterior = null)
-    {
-        $this->usoAnterior = $usoAnterior;
-
-        return $this;
-    }
-
-    /**
-     * Get usoAnterior
-     *
-     * @return \AppBundle\Entity\UsosAnteriores
-     */
-    public function getUsoAnterior()
-    {
-        return $this->usoAnterior;
-    }
-
-    /**
-     * Set usoForestal
-     *
-     * @param \AppBundle\Entity\UsosForestales $usoForestal
-     *
-     * @return Plantaciones
-     */
-    public function setUsoForestal(\AppBundle\Entity\UsosForestales $usoForestal = null)
-    {
-        $this->usoForestal = $usoForestal;
-
-        return $this;
-    }
-
-    /**
-     * Get usoForestal
-     *
-     * @return \AppBundle\Entity\UsosForestales
-     */
-    public function getUsoForestal()
-    {
-        return $this->usoForestal;
+        return $this->fuenteInformacion;
     }
 
     /**
@@ -915,7 +827,7 @@ class Plantaciones
      *
      * @param \AppBundle\Entity\Provincias $provincia
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setProvincia(\AppBundle\Entity\Provincias $provincia = null)
     {
@@ -939,7 +851,7 @@ class Plantaciones
      *
      * @param \AppBundle\Entity\Departamentos $departamento
      *
-     * @return Plantaciones
+     * @return PlantacionesAportes
      */
     public function setDepartamento(\AppBundle\Entity\Departamentos $departamento = null)
     {
@@ -957,29 +869,197 @@ class Plantaciones
     {
         return $this->departamento;
     }
-    /**
-     * Get especie
-     *
-     * @return \AppBundle\Entity\Especies
-     */
-    public function getEspecie(){
-        return $this->especie;
-    }
 
     /**
-     * Get actividades
+     * Set usoAnterior
      *
-     * @return \AppBundle\Entity\Actividades
+     * @param \AppBundle\Entity\UsosAnteriores $usoAnterior
+     *
+     * @return PlantacionesAportes
      */
-    public function getActividad()
+    public function setUsoAnterior(\AppBundle\Entity\UsosAnteriores $usoAnterior = null)
     {
-        return $this->actividad;
+        $this->usoAnterior = $usoAnterior;
+
+        return $this;
     }
 
-    public function __construct() {
-        $this->especie = new \Doctrine\Common\Collections\ArrayCollection();
+    /**
+     * Get usoAnterior
+     *
+     * @return \AppBundle\Entity\UsosAnteriores
+     */
+    public function getUsoAnterior()
+    {
+        return $this->usoAnterior;
     }
 
+    /**
+     * Set error
+     *
+     * @param \AppBundle\Entity\Errores $error
+     *
+     * @return PlantacionesAportes
+     */
+    public function setError(\AppBundle\Entity\Errores $error = null)
+    {
+        $this->error = $error;
 
+        return $this;
+    }
+
+    /**
+     * Get error
+     *
+     * @return \AppBundle\Entity\Errores
+     */
+    public function getError()
+    {
+        return $this->error;
+    }
+
+    /**
+     * Set fuenteImagen
+     *
+     * @param \AppBundle\Entity\FuentesImagen $fuenteImagen
+     *
+     * @return PlantacionesAportes
+     */
+    public function setFuenteImagen(\AppBundle\Entity\FuentesImagen $fuenteImagen = null)
+    {
+        $this->fuenteImagen = $fuenteImagen;
+
+        return $this;
+    }
+
+    /**
+     * Get fuenteImagen
+     *
+     * @return \AppBundle\Entity\FuentesImagen
+     */
+    public function getFuenteImagen()
+    {
+        return $this->fuenteImagen;
+    }
+
+    /**
+     * Set estratoDesarrollo
+     *
+     * @param \AppBundle\Entity\EstratosDesarrollo $estratoDesarrollo
+     *
+     * @return PlantacionesAportes
+     */
+    public function setEstratoDesarrollo(\AppBundle\Entity\EstratosDesarrollo $estratoDesarrollo = null)
+    {
+        $this->estratoDesarrollo = $estratoDesarrollo;
+
+        return $this;
+    }
+
+    /**
+     * Get estratoDesarrollo
+     *
+     * @return \AppBundle\Entity\EstratosDesarrollo
+     */
+    public function getEstratoDesarrollo()
+    {
+        return $this->estratoDesarrollo;
+    }
+
+    /**
+     * Set tipoPlantacion
+     *
+     * @param \AppBundle\Entity\TiposPlantacion $tipoPlantacion
+     *
+     * @return PlantacionesAportes
+     */
+    public function setTipoPlantacion(\AppBundle\Entity\TiposPlantacion $tipoPlantacion = null)
+    {
+        $this->tipoPlantacion = $tipoPlantacion;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoPlantacion
+     *
+     * @return \AppBundle\Entity\TiposPlantacion
+     */
+    public function getTipoPlantacion()
+    {
+        return $this->tipoPlantacion;
+    }
+
+    /**
+     * Set usoForestal
+     *
+     * @param \AppBundle\Entity\UsosForestales $usoForestal
+     *
+     * @return PlantacionesAportes
+     */
+    public function setUsoForestal(\AppBundle\Entity\UsosForestales $usoForestal = null)
+    {
+        $this->usoForestal = $usoForestal;
+
+        return $this;
+    }
+
+    /**
+     * Get usoForestal
+     *
+     * @return \AppBundle\Entity\UsosForestales
+     */
+    public function getUsoForestal()
+    {
+        return $this->usoForestal;
+    }
+
+    /**
+     * Set estadoPlantacion
+     *
+     * @param \AppBundle\Entity\EstadosPlantacion $estadoPlantacion
+     *
+     * @return PlantacionesAportes
+     */
+    public function setEstadoPlantacion(\AppBundle\Entity\EstadosPlantacion $estadoPlantacion = null)
+    {
+        $this->estadoPlantacion = $estadoPlantacion;
+
+        return $this;
+    }
+
+    /**
+     * Get estadoPlantacion
+     *
+     * @return \AppBundle\Entity\EstadosPlantacion
+     */
+    public function getEstadoPlantacion()
+    {
+        return $this->estadoPlantacion;
+    }
+
+    /**
+     * Set titular
+     *
+     * @param \AppBundle\Entity\Titulares $titular
+     *
+     * @return PlantacionesAportes
+     */
+    public function setTitular(\AppBundle\Entity\Titulares $titular = null)
+    {
+        $this->titular = $titular;
+
+        return $this;
+    }
+
+    /**
+     * Get titular
+     *
+     * @return \AppBundle\Entity\Titulares
+     */
+    public function getTitular()
+    {
+        return $this->titular;
+    }
 
 }
