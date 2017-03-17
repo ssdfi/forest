@@ -17,7 +17,7 @@
   $(document).ready(function() {
 
     /* Define el objeto map y el div que lo contiene */
-    var geoJson, googleSatelital, ignBase, ignSatelital, map, osm, osmMini;
+    var geoJson,geoJsonAporte, googleSatelital, ignBase, ignSatelital, map, osm, osmMini;
     map = L.map('map');
 
     /* Capa WMS de imagen satelital del IGN y CONAE */
@@ -57,12 +57,23 @@
       }
     });
 
+    geoJsonAporte = L.geoJson(plantaciones_aporte, {
+      style: function(feature) {
+        return {
+          color: "blue"
+        };
+      },
+      onEachFeature: function(feature, layer) {
+        return layer.bindPopup(buildPopup(feature.properties));
+      }
+    });
     /**
      * Agrega las capas de Google y GeoJson al mapa por defecto
      * El resto de las capas se manejan a través del selector de capas
      */
     map.addLayer(googleSatelital);
     map.addLayer(geoJson);
+    map.addLayer(geoJsonAporte);
 
     /**
      * Define el extent del mapa para que abarque todas las plantaciones
@@ -81,7 +92,8 @@
       "IGN Satelital": ignSatelital,
       "IGN Base": ignBase
     }, {
-      "Plantaciones": geoJson
+      "Plantaciones": geoJson,
+      "Plantaciones Aporte": geoJsonAporte
     }).addTo(map);
 
     /* Agrega otros controles al mapa */

@@ -1,3 +1,6 @@
+#map{
+  min-height: 500px;
+}
 .panel-body {
     overflow: scroll;
 }
