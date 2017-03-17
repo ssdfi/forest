@@ -80,7 +80,7 @@
      * Si no hay plantaciones centra el mapa en un punto determinado
      */
     if (plantaciones) {
-      map.fitBounds(geoJson.getBounds());
+      map.fitBounds([geoJson.getBounds(),geoJsonAporte.getBounds()]);
     } else {
       map.setView([-36, -62], 4);
     }
