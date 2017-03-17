@@ -85,11 +85,24 @@ class PlantacionesAportesController extends Controller
       $em    = $this->get('doctrine.orm.entity_manager');
       $plantacione = $em->getRepository('AppBundle:Plantaciones')->findOneBy(array('id'=>$id));
       //$deleteForm = $this->createDeleteForm($plantacione);
+      $plantacion = $this->getGeoJSON($id);
+      dump($plantacion);
       return $this->render('plantacionesaportes/show.html.twig', array(
             'plantacione' => $plantacione,
+            'plantacion' => $plantacion,
             'aporte' => $aporte,
             //'delete_form' => $deleteForm->createView(),
         ));
+    }
+    /* Obtengo Plantacion, Aporte y Diferencia*/
+    public function getGeoJSON($id){
+      $em    = $this->get('doctrine.orm.entity_manager');
+      $dql_plantacion ="SELECT ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as plantacion,ST_AsGeoJson(ST_TRANSFORM(pa.geom,4326))as plantacion_aporte, ST_AsGeoJson(ST_TRANSFORM(ST_DIFFERENCE(pa.geom,p.geom),4326))
+                FROM AppBundle:Plantaciones p
+                JOIN AppBundle:PlantacionesAportes pa WITH pa.idOrig=p.id
+                WHERE p.id=:id";
+      $plantacion=$em->createQuery($dql_plantacion)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+      return $plantacion;
     }
 
     /**

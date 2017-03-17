@@ -5,9 +5,16 @@
         <h3 class="panel-title">Plantaciones</h3>
       </div>
       <div class="panel-body">
-        <dl class="dl-horizontal">
-        </dl>
+        <div id='map' class="map">
+        </div>
       </div>
     </div>
   </div>
 </div>
+{% block javascripts %}
+              <script>
+                var plantaciones = '{{ plantacion.0.geometry }}'
+              </script>
+             <script src="{{ asset('js/jquery-3.1.1.js') }}"></script>
+              <script src="{{ asset('js/map.js') }}"></script>
+{% endblock %}
