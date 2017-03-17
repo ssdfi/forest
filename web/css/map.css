@@ -8183,6 +8183,7 @@ body {
 
 /* line 19, /home/martin/proyectos/forestapp/app/assets/stylesheets/map/map.css.scss */
 html, body, #map {
+  min-height: 500px;
   height: 100%;
 }
 

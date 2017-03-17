@@ -7,6 +7,11 @@
       <div class="panel-body">
         <div id='map' class="map">
         </div>
+        {% if plantacion.0.diff == false %}
+
+        {% else %}
+          No hay diferencias entre las capas.
+        {% endif %}
       </div>
     </div>
   </div>

@@ -96,12 +96,14 @@ class PlantacionesAportesController extends Controller
     }
     /* Obtengo Plantacion, Aporte y Diferencia*/
     public function getGeoJSON($id){
+      dump('llega');
       $em    = $this->get('doctrine.orm.entity_manager');
-      $dql_plantacion ="SELECT ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as plantacion,ST_AsGeoJson(ST_TRANSFORM(pa.geom,4326))as plantacion_aporte, ST_AsGeoJson(ST_TRANSFORM(ST_DIFFERENCE(pa.geom,p.geom),4326))
+      $dql_plantacion ="SELECT ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as plantacion,ST_AsGeoJson(ST_TRANSFORM(pa.geom,4326))as plantacion_aporte, ST_EQUALS(pa.geom,p.geom) as diff
                 FROM AppBundle:Plantaciones p
                 JOIN AppBundle:PlantacionesAportes pa WITH pa.idOrig=p.id
-                WHERE p.id=:id";
+                WHERE pa.id=:id";
       $plantacion=$em->createQuery($dql_plantacion)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+      dump($plantacion);
       return $plantacion;
     }
 
