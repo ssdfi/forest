@@ -26,10 +26,6 @@ class TitularesController extends Controller
      */
     public function indexAction(Request $request)
     {
-      dump($this->getRequest());
-       /*if($this->get('request_stack')->getCurrentRequest()->query('titular[nombre]')){
-          dump($request);
-        }*/
         $titulare = new Titulares();
         $search_form = $this->createForm('AppBundle\Form\TitularesType', $titulare);
         $search_form->handleRequest($request);
