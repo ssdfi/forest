@@ -1061,5 +1061,5 @@ class PlantacionesAportes
     {
         return $this->titular;
     }
-
+    
 }
