@@ -22,11 +22,10 @@ class ActividadesPlantacionesType extends AbstractType
         $builder
           ->add('plantacion',NumberType::class, array('label' => 'Plantación ID'))
           ->add('fecha',DateType::class, array('widget'=>'single_text','format' => 'yyyy-MM-dd HH:mm','attr' => array('class' => 'form-control')))
-          ->add('numeroPlantas',NumberType::class, array('label'=>'Plantación ID'))
+          ->add('numeroPlantas',NumberType::class, array('label'=>'Numero de Plantas'))
           ->add('superficieRegistrada',TextType::class,array('attr' => array('class' => 'form-control')))
           ->add('estadoAprobacion',EntityType::class, array('class'=>'AppBundle\Entity\EstadosAprobacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
           ->add('observaciones',TextareaType::class,array('attr' => array('class' => 'form-control')));
-          //set actividad in controller
     }
 
     /**
