@@ -27,8 +27,16 @@
                   <th></th>
                 </tr>
               </thead>
-            </table>
+              <tbody>
+                {% for emailField in form.actividadesPlantaciones %}
+                  <li>
+                      {{ form_errors(emailField) }}
+                      {{ form_widget(emailField) }}
+                  </li>
+              {% endfor %}
 
+              </tbody>
+            </table>
             <a id="add-plantacion" class="btn btn-primary btn-sm add_nested_fields" data-association="actividades_plantaciones" data-blueprint-id="actividades_plantaciones_fields_blueprint" data-target="#plantaciones" href="javascript:void(0)">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
               Agregar Plantación
@@ -46,4 +54,18 @@
 
   </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        var count ={{ form.actividadesPlantaciones|length }};
+        $(document).ready(function () {
+            $('#add-plantacion').click(function (e) {
+                e.preventDefault();
+                ActividadPlantacionAdd();
+            });
+        });
+    </script>
+
 {% endblock %}
