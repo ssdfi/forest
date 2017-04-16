@@ -160,4 +160,7 @@ class Departamentos
     {
         return $this->provincia;
     }
+    public function __toString(){
+        return $this->nombre;
+    }
 }
