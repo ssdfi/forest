@@ -28,6 +28,10 @@ class ActividadesType extends AbstractType
             'allow_delete'  => true,
             'prototype'     => true,
             'required'      => true,
+            'label'         => false,
+            'entry_options'  => array(
+                'attr'      => array('class' => 'jslink')
+            )
           ))
         ;
     }
