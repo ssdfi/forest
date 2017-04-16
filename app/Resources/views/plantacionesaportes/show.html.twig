@@ -8,6 +8,8 @@
       </div>
       <div class="panel-body">
         <dl class="dl-horizontal">
+            <dt> </dt>
+            <dd> </dd>
             <dt>Id Plantación</dt>
             <dd>{{ plantacione.id }}</dd>
             <dt>Titular</dt>
@@ -76,7 +78,11 @@
             <dt>Id Plantación</dt>
             <dd>{{ aporte.id }}</dd>
             <dt>Titular</dt>
-            <dd>{{ aporte.titular.nombre }}</dd>
+            {% if aporte.titular.nombre == plantacione.titular.nombre %}
+              <dd>{{ aporte.titular.nombre }}</dd>
+            {% else %}
+              <dd style="color:#7b942a";><b>{{ aporte.titular.nombre }}</b></dd>
+            {% endif %}
             <dt>Superficie</dt>
             <dd></dd>
             <dt>Año de Plantación</dt>
@@ -102,7 +108,9 @@
             <dt>Fuente de Imagen</dt>
             <dd></dd>
             <dt>Fecha de Imagen</dt>
-            <dd>{# if aporte.fechaImagen // aporte.fechaImagen|date('Y-m-d') }} endif #}</dd>
+            <dd>{% if (aporte.fechaImagen) %}
+                {{ aporte.fechaImagen|date('Y-m-d') }}
+            {% endif %}</dd>
             <dt>Base Geométrica</dt>
             <dd></dd>
             <dt>Provincia</dt>
@@ -120,7 +128,11 @@
             <dt>Objetivo de Plantación</dt>
             <dd>{{ aporte.objetivoPlantacion }}</dd>
             <dt>Comentarios</dt>
-            <dd>{{ aporte.comentarios }}</dd>
+            {% if aporte.comentarios == plantacione.comentarios %}
+              <dd>{{ aporte.comentarios }}</dd>
+            {% else %}
+              <dd style="color:#7b942a";><b>{{ aporte.comentarios }}</b></dd>
+            {% endif %}
         </dl>
       </div>
       <div class="panel-footer">
