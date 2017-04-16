@@ -8,12 +8,14 @@
         <div id='map' class="map">
         </div>
         {% if plantacion.0.diff == false %}
-
+          <dd style="color:red";><b>Hay diferencias entre las geometrías.</b></dd>
         {% else %}
-          No hay diferencias entre las capas.
+          <dd style="color:#7b942a";><b>No hay diferencias entre geometrías.</b></dd>
         {% endif %}
       </div>
     </div>
+    <button type="button" class="btn btn-success btn-lg">Aceptar Aporte</button>
+    <button type="button" class="btn btn-danger btn-lg">Rechazar Aporte</button>
   </div>
 </div>
 {% block javascripts %}
