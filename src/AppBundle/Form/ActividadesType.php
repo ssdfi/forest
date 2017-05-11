@@ -22,16 +22,13 @@ class ActividadesType extends AbstractType
         ->add('superficieCertificada')
         ->add('superficieInspeccionada')
         ->add('superficieRegistrada',TextType::class, array('disabled'=>true,'required'=>false))
-        ->add('actividadesPlantaciones', CollectionType::class, array(
-            'entry_type' => ActividadesPlantacionesType::class,
+        ->add('plantaciones', CollectionType::class, array(
+            'entry_type'    => ActividadesPlantacionesType::class,
             'allow_add'     => true,
             'allow_delete'  => true,
             'prototype'     => true,
-            'required'      => true,
             'label'         => false,
-            'entry_options'  => array(
-                'attr'      => array('class' => 'jslink')
-            )
+            'by_reference'  => false
           ))
         ;
     }
