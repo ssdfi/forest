@@ -26,18 +26,45 @@ class TecnicosController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $em    = $this->get('doctrine.orm.entity_manager');
-        $dql   = "SELECT a FROM AppBundle:Tecnicos a";
-        $query = $em->createQuery($dql);
-        $paginator = $this->get('knp_paginator');
-        $tecnicos = $paginator->paginate(
-                $query,
-                $request->query->getInt('page', 1),
-                15,
-                array('defaultSortFieldName' => 'a.nombre', 'defaultSortDirection' => 'asc')
-            );
+      $tecnico = new Tecnicos();
+      $search_form = $this->createForm('AppBundle\Form\TecnicosType', $tecnico);
+      $search_form->handleRequest($request);
+      $param=$request->query->get('tecnico');
 
-        return $this->render('tecnicos/index.html.twig',array('tecnicos' => $tecnicos));
+      $wheres=array();
+
+      if($param['nombre']){
+        $nombre=$param['nombre'];
+        $wheres[]="lower(a.nombre) like lower('%$nombre%')";
+      }
+      if($param['dni']){
+        $dni=$param['dni'];
+        $wheres[]="a.dni like '%$dni%'";
+      }
+      if($param['cuit']){
+        $cuit=$param['cuit'];
+        $wheres[]="a.cuit like '%$cuit%'";
+      }
+      $filter = '';
+      foreach ($wheres as $key => $value) {
+        $filter = $filter .' '.$value;
+        if(count($wheres) > 1 && $value != end($wheres)) {
+          $filter = $filter .' AND';
+        }
+      }
+      
+      $em    = $this->get('doctrine.orm.entity_manager');
+      $dql   = "SELECT a FROM AppBundle:Tecnicos a";
+      $query = $em->createQuery($dql);
+      $paginator = $this->get('knp_paginator');
+      $tecnicos = $paginator->paginate(
+              $query,
+              $request->query->getInt('page', 1),
+              15,
+              array('defaultSortFieldName' => 'a.nombre', 'defaultSortDirection' => 'asc')
+          );
+
+      return $this->render('tecnicos/index.html.twig',array('tecnicos' => $tecnicos, 'search_form' => $search_form->createView(),'param' => $param));
 
     }
 
