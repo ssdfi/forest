@@ -10,3 +10,9 @@ services:
      plantaciones_manager:
         class: AppBundle\Controller\PlantacionesController
         arguments: [ "@doctrine.orm.entity_manager" ]
+
+     app.form.type.actividades_plantaciones:
+        class: AppBundle\Form\ActividadesPlantacionesType
+        arguments: [ "@doctrine.orm.entity_manager" ]
+        tags:
+            - { name: form.type }
