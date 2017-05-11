@@ -3,7 +3,6 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Actividades
  *
@@ -85,16 +84,48 @@ class Actividades
     private $tipoActividad;
 
     /**
-     * Get id
-     *
-     * @return \AppBundle\Entity\ActividadesPlantaciones
-     */
-    protected $actividadesPlantaciones;
+        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad")
+        * @ORM\JoinTable(
+        *      name="actividades_plantaciones",
+        *      joinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id",onDelete="CASCADE")},
+        *      inverseJoinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")}
+        * )
+        */
+    private $plantaciones;
 
-    public function getActividadesPlantaciones()
+    public function getPlantaciones()
     {
-        return $this->actividadesPlantaciones;
+        return $this->plantaciones;
     }
+
+    /**
+     * Set Plantaciones
+     *
+     * @var ArrayCollection $plantaciones
+     *
+     * @return Plantaciones
+     */
+   public function setPlantaciones($plantaciones=null)
+   {
+      foreach ($plantaciones as $key => $plantacion) {
+        $this->plantaciones[]=$plantacion;
+      }
+      //  if (true === $this->plantaciones->contains($plantacion)) {
+      //      return;
+      //  }
+
+   }
+
+   public function removePlantaciones($plantacion)
+   {
+       foreach ($plantacion as $key => $value) {
+         $planta = $value;
+         if (false === $this->plantaciones->contains($planta)) {
+             return;
+         }
+         $this->plantaciones->removeElement($planta);
+       }
+   }
 
     /**
      * Get id
@@ -296,5 +327,10 @@ class Actividades
     public function getTipoActividad()
     {
         return $this->tipoActividad;
+    }
+    public function __construct() {
+       //$this->plantaciones = new \Doctrine\Common\Collections\ArrayCollection();
+       //$this->plantaciones = new \AppBundle\Entity\TiposActividad();
+      //$this->plantaciones=[];
     }
 }
