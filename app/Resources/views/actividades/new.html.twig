@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig'%}
 
 {% block body %}
 {% form_theme form 'bootstrap_3_layout.html.twig' %}
@@ -9,10 +9,27 @@
     {{ form_start(form) }}
         <div class="row">
           <div class="col-md-5">
-            {{ form_widget(form) }}
+            {{ form_label(form.tipoActividad) }}
+            {{ form_errors(form.tipoActividad) }}
+            {{ form_widget(form.tipoActividad) }}
+
+            {{ form_label(form.superficiePresentada) }}
+            {{ form_errors(form.superficiePresentada) }}
+            {{ form_widget(form.superficiePresentada) }}
+
+            {{ form_label(form.superficieCertificada) }}
+            {{ form_errors(form.superficieCertificada) }}
+            {{ form_widget(form.superficieCertificada) }}
+
+            {{ form_label(form.superficieInspeccionada) }}
+            {{ form_errors(form.superficieInspeccionada) }}
+            {{ form_widget(form.superficieInspeccionada) }}
+
+            {{ form_label(form.superficieRegistrada) }}
+            {{ form_errors(form.superficieRegistrada) }}
+            {{ form_widget(form.superficieRegistrada) }}
           </div>
         </div>
-        <h3>Plantaciones</h3><hr>
         <div class="row">
           <div class="col-md-12">
             <table id="plantaciones" class="table">
@@ -27,13 +44,7 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody>
-                {% for emailField in form.actividadesPlantaciones %}
-                  <li>
-                      {{ form_errors(emailField) }}
-                      {{ form_widget(emailField) }}
-                  </li>
-              {% endfor %}
+              <tbody class="actividadesPlantaciones" data-prototype="{% filter escape %}{% include 'actividades/prototypeActividades.html.twig' with {'form': form.plantaciones.vars.prototype } %}{% endfilter %}">
 
               </tbody>
             </table>
@@ -59,7 +70,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        var count ={{ form.actividadesPlantaciones|length }};
+        var count ={{ form.plantaciones|length }};
         $(document).ready(function () {
             $('#add-plantacion').click(function (e) {
                 e.preventDefault();
