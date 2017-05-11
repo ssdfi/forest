@@ -67,7 +67,7 @@ class ActividadesPlantaciones
     /**
      * @var \Actividades
      *
-     * @ORM\ManyToOne(targetEntity="Actividades")
+     * @ORM\ManyToOne(targetEntity="Actividades", inversedBy="plantaciones", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="actividad_id", referencedColumnName="id")
      * })
@@ -87,7 +87,7 @@ class ActividadesPlantaciones
     /**
      * @var \Plantaciones
      *
-     * @ORM\ManyToOne(targetEntity="Plantaciones")
+     * @ORM\ManyToOne(targetEntity="Plantaciones", inversedBy="actividad", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")
      * })
@@ -260,7 +260,7 @@ class ActividadesPlantaciones
     public function setActividad(\AppBundle\Entity\Actividades $actividad = null)
     {
         $this->actividad = $actividad;
-
+        dump($this);
         return $this;
     }
 
@@ -305,11 +305,11 @@ class ActividadesPlantaciones
      *
      * @return ActividadesPlantaciones
      */
-    public function setPlantacion(\AppBundle\Entity\Plantaciones $plantacion = null)
+    public function setPlantacion(\AppBundle\Entity\Plantaciones $plantacion)
     {
         $this->plantacion = $plantacion;
 
-        return $this;
+        return $this->plantacion;
     }
 
     /**
@@ -323,6 +323,7 @@ class ActividadesPlantaciones
     }
 
     public function __toString(){
-        return $this->id;
+        return '$this->observaciones';
     }
+
 }
