@@ -30,8 +30,34 @@ class TitularesController extends Controller
         $search_form = $this->createForm('AppBundle\Form\TitularesType', $titulare);
         $search_form->handleRequest($request);
 
+        $param=$request->query->get('titulares');
+
+        $wheres=array();
+
+         if($param['nombre']){
+            $nombre=$param['nombre'];
+            $wheres[]="lower(a.nombre) like lower('%$nombre%')";
+          }
+         if($param['dni']){
+            $dni=$param['dni'];
+            $wheres[]="a.dni like '%$dni%'";
+         }
+         if($param['cuit']){
+            $cuit=$param['cuit'];
+            $wheres[]="a.cuit like '%$cuit%'";
+         }
+        $filter = '';
+        foreach ($wheres as $key => $value) {
+          $filter = $filter .' '.$value;
+          if(count($wheres) > 1 && $value != end($wheres)) {
+            $filter = $filter .' AND';
+          }
+        }
         $em    = $this->get('doctrine.orm.entity_manager');
         $dql   = "SELECT a FROM AppBundle:Titulares a";
+        if(!empty($wheres)) {
+          $dql = $dql .' WHERE '.$filter;
+        }
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $titulares = $paginator->paginate(
@@ -66,14 +92,11 @@ class TitularesController extends Controller
            $wheres[]="a.dni = $dni";
          }
         $titulare = new Titulares();
-        //$search_form = $this->createForm('AppBundle\Form\TitularesType', $titulare);
-        //$search_form->handleRequest($request);
 
         $titulares = $this->getDoctrine()->getRepository('AppBundle:Titulares');
         $query = $titulares->createQueryBuilder('p')
                 ->where("p.nombre like :nombre")
                 ->setParameter('nombre', '%'.$param['nombre'].'%')
-                //->setParameter('partida', $partida)
                 ->getQuery();
       $result=$query->getResult((\Doctrine\ORM\Query::HYDRATE_ARRAY));
 
@@ -81,25 +104,11 @@ class TitularesController extends Controller
         if(!empty($wheres)){
           //$dql=implode("and",$wheres);
         }
-        //dump($dql);
-        //$query = $em->createQuery($dql);
-      /*  $paginator = $this->get('knp_paginator');
-        $titulares = $paginator->paginate(
-                $query,
-                $request->query->getInt('page', 1),
-                15,
-                array('defaultSortFieldName' => 'a.nombre', 'defaultSortDirection' => 'asc')
-            );
-      */
-      //dump($result);
-      //dump(json_encode($result));
       $response = new Response();
       $response->setContent(json_encode($result));
       $response->headers->set('Content-Type', 'application/json');
 
       return $response;
-        //return $this->render('titulares/index.html.twig',array('titulares' => $titulares, 'search_form'=>$search_form->createView()));
-
     }
 
     public function getRequest()
