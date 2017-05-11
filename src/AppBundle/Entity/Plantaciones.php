@@ -266,16 +266,21 @@ class Plantaciones
         */
      private $especie;
 
-     /**
-         * @var \Actividades
-         * @ORM\ManyToMany(targetEntity="Actividades", fetch="LAZY")
-         * @ORM\JoinTable(
-         *      name="actividades_plantaciones",
-         *      joinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")},
-         *      inverseJoinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id")}
-         * )
-         */
+    /**
+        * @var \Doctrine\Common\Collections\ArrayCollection|Actividades[]
+        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="plantacion",cascade={"persist"}, fetch="EAGER")
+    */
      private $actividad;
+
+     public function setActividad(\AppBundle\Entity\Actividades $actividad){
+       if (true === $this->actividad->contains($actividad)) {
+           return;
+       }
+       dump($this);
+       $this->actividad->add($actividad);
+       $actividad->setActividad($this);
+       return $this;
+     }
     /**
      * Get id
      *
@@ -978,6 +983,7 @@ class Plantaciones
 
     public function __construct() {
         $this->especie = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->actividad = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
