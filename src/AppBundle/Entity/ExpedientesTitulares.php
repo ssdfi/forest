@@ -86,7 +86,6 @@ class ExpedientesTitulares
      */
     public function setTitular(\AppBundle\Entity\Titulares $titular = null)
     {
-        dump($titular);
         $this->titular = $titular;
 
         return $this;
