@@ -1,0 +1,5 @@
+{% block collection_widget %}
+  {% if prototype is defined %}
+    {% set attr = attr|merge({'data-prototype': include('identificar.html.twig', {'form':prototype})}) %}
+  {% endif %}
+{% endblock collection_widget %}
