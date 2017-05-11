@@ -5,8 +5,11 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Actividades;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\Query;
+use Symfony\Component\Validator\Constraints\DateTime;
+
 /**
  * Actividades controller.
  *
@@ -27,15 +30,21 @@ class ActividadesController extends Controller
       $form->handleRequest($request);
 
       if ($form->isSubmitted() && $form->isValid()) {
+
           $em = $this->getDoctrine()->getManager();
           $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
           $actividad->setMovimiento($movimiento);
-          $actividad->setCreatedAt(new DateTime());
-          $actividad->setUpdatedAt(new DateTime());
-          $em->persist($actividad);
-          $em->flush($actividad);
+          // $actividad->addActividadesPlantaciones();
+          // $actividad->setCreatedAt(new DateTime());
+          // $actividad->setUpdatedAt(new DateTime());
+          // dump($actividad->getActividadesPlantaciones());
+          // dump($actividad->getActividadesPlantaciones());
 
-          return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividad->getId()));
+          dump($actividad);
+          $em->persist($actividad);
+          //$em->flush();
+
+          //return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividad->getId()));
       }
 
       return $this->render('actividades/new.html.twig', array(
