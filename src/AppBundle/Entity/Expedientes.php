@@ -135,7 +135,6 @@ class Expedientes
         *      inverseJoinColumns={@ORM\JoinColumn(name="titular_id", referencedColumnName="id")}
         * )
         */
-        // orphanRemoval=true
      private $titulares;
 
      /**
