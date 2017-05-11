@@ -10,22 +10,38 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Doctrine\Common\Persistence\ObjectManager;
+use AppBundle\Form\DataTransformer\PlantacionesToNumberTransformer;
 
 class ActividadesPlantacionesType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
+    private $manager;
+    public function __construct(ObjectManager $manager) {
+       $this->manager = $manager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $transformer = new PlantacionesToNumberTransformer($this->manager);
         $builder
-          ->add('plantacion',NumberType::class, array('label' => 'Plantación ID'))
-          ->add('fecha',DateType::class, array('widget'=>'single_text','format' => 'yyyy-MM-dd HH:mm','attr' => array('class' => 'form-control')))
-          ->add('numeroPlantas',NumberType::class, array('label'=>'Numero de Plantas'))
-          ->add('superficieRegistrada',TextType::class,array('attr' => array('class' => 'form-control')))
-          ->add('estadoAprobacion',EntityType::class, array('class'=>'AppBundle\Entity\EstadosAprobacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
-          ->add('observaciones',TextareaType::class,array('attr' => array('class' => 'form-control')));
+          // ->add('plantacion',IntegerType::class, array('label' => false,'required'=>true))
+          ->add('fecha',DateType::class, array('label' => false,'widget'=>'single_text','format' => 'yyyy-MM-dd HH:mm','required'=>false,'attr' => array('class' => 'form-control')))
+          ->add('numeroPlantas',IntegerType::class, array('label'=>false,'required'=>false))
+          ->add('superficieRegistrada',TextType::class,array('label' => false,'required'=>false,'attr' => array('class' => 'input-group')))
+          ->add('estadoAprobacion',EntityType::class, array('class'=>'AppBundle\Entity\EstadosAprobacion', 'placeholder' => "Seleccione una opción" ,'required'=>false,'label' => false))
+          ->add('observaciones',TextareaType::class,array('label' => false,'required'=>false,'attr' => array('class' => 'form-control')));
+
+           $builder->add(
+              $builder->create('plantacion', IntegerType::class, array('label' => false,'required'=>true))
+                  ->addModelTransformer($transformer)
+          );
     }
 
     /**
