@@ -1,0 +1,50 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Buscador</h3>
+	</div>
+	<div class="panel-body">
+		<form id="new_tecnico" class="form-horizontal" accept-charset="UTF-8" action="/tecnicos/" method="get" role="form">
+			<div style="display:none">
+				<input name="utf8" value="✓" type="hidden">
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-5" for="tecnico_nombre">Nombre</label>
+				<div class="col-sm-7">
+					<input id="tecnico_nombre" class="form-control" value="{% if param.nombre is defined %}{{param.nombre}}{% endif %}" name="tecnico[nombre]" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-5" for="tecnico_dni">DNI</label>
+				<div class="col-sm-7">
+					<input id="tecnico_dni" class="form-control" value="{% if param.dni is defined %}{{param.dni}}{% endif %}" name="tecnico[dni]" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-5" for="tecnico_cuit">CUIT</label>
+				<div class="col-sm-7">
+					<input id="tecnico_cuit" class="form-control" value="{% if param.cuit is defined %}{{param.cuit}}{% endif %}" name="tecnico[cuit]" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-5" for="tecnico_activo">Activo</label>
+				<div class="col-sm-7">
+					<label class="radio-inline" for="tecnico_activo_">
+						<input id="tecnico_activo_" name="tecnico[activo]" value="" type="radio">
+						Todos
+					</label>
+					<label class="radio-inline" for="tecnico_activo_true">
+						<input id="tecnico_activo_true" {% if param.activo is defined %} checked="checked" value="true" {% endif %} name="tecnico[activo]" type="radio">
+						Sí
+					</label>
+					<label class="radio-inline" for="tecnico_activo_false">
+						<input id="tecnico_activo_false" {% if param.activo is not defined %} checked="checked" value="false" {% endif %} name="tecnico[activo]" type="radio">
+						No
+					</label>
+				</div>
+			</div>
+			<hr>
+			   <input type="hidden" name="_csrf_token" value="{{ csrf_token('tecnicos') }}">
+			<input id="search" class="btn btn-primary pull-right" name="commit" value="Buscar" type="submit">
+		</form>
+	</div>
+</div>
