@@ -34,17 +34,12 @@ class ActividadesController extends Controller
           $em = $this->getDoctrine()->getManager();
           $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
           $actividad->setMovimiento($movimiento);
-          // $actividad->addActividadesPlantaciones();
-          // $actividad->setCreatedAt(new DateTime());
-          // $actividad->setUpdatedAt(new DateTime());
-          // dump($actividad->getActividadesPlantaciones());
-          // dump($actividad->getActividadesPlantaciones());
-
-          dump($actividad);
           $em->persist($actividad);
-          //$em->flush();
-
-          //return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividad->getId()));
+          foreach ($actividad->getPlantaciones() as $key => $actividad_plantacion) {
+            $actividad_plantacion->setActividad($actividad);
+          }
+          $em->flush();
+          return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividad->getId()));
       }
 
       return $this->render('actividades/new.html.twig', array(
