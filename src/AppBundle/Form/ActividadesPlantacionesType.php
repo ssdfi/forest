@@ -34,7 +34,7 @@ class ActividadesPlantacionesType extends AbstractType
           ->add('fecha',DateType::class, array('label' => false,'widget'=>'single_text','format' => 'yyyy-MM-dd HH:mm','required'=>false,'attr' => array('class' => 'form-control')))
           ->add('numeroPlantas',IntegerType::class, array('label'=>false,'required'=>false))
           ->add('superficieRegistrada',TextType::class,array('label' => false,'required'=>false,'attr' => array('class' => 'input-group')))
-          ->add('estadoAprobacion',EntityType::class, array('class'=>'AppBundle\Entity\EstadosAprobacion', 'placeholder' => "Seleccione una opción" ,'required'=>false,'label' => false))
+          ->add('estadoAprobacion',EntityType::class, array('class'=>'AppBundle\Entity\EstadosAprobacion','required'=>true,'label' => false))
           ->add('observaciones',TextareaType::class,array('label' => false,'required'=>false,'attr' => array('class' => 'form-control')));
 
            $builder->add(
