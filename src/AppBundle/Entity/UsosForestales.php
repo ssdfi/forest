@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="usos_forestales", indexes={@ORM\Index(name="index_usos_forestales_on_codigo", columns={"codigo"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class UsosForestales
 {
@@ -51,6 +52,26 @@ class UsosForestales
     private $updatedAt;
 
 
+
+    /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime("now");
+    }
+
+    /**
+     * Gets triggered every time on update
+
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new \DateTime("now");
+    }
 
     /**
      * Get id

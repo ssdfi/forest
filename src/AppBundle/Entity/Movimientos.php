@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="movimientos", indexes={@ORM\Index(name="index_movimientos_on_reinspector_id", columns={"reinspector_id"}), @ORM\Index(name="index_movimientos_on_destino_id", columns={"destino_id"}), @ORM\Index(name="index_movimientos_on_expediente_id", columns={"expediente_id"}), @ORM\Index(name="index_movimientos_on_responsable_id", columns={"responsable_id"}), @ORM\Index(name="index_movimientos_on_inspector_id", columns={"inspector_id"}), @ORM\Index(name="index_movimientos_on_validador_id", columns={"validador_id"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class Movimientos
 {
@@ -99,6 +100,26 @@ class Movimientos
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
     private $updatedAt;
+
+    /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime("now");
+    }
+
+    /**
+     * Gets triggered every time on update
+
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new \DateTime("now");
+    }
 
     /**
      * @var \Destinos

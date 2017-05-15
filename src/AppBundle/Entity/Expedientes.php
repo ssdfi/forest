@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="expedientes", indexes={@ORM\Index(name="index_expedientes_on_tecnico_id", columns={"tecnico_id"}), @ORM\Index(name="index_expedientes_on_zona_departamento_id", columns={"zona_departamento_id"}), @ORM\Index(name="index_expedientes_on_zona_id", columns={"zona_id"}), @ORM\Index(name="index_expedientes_on_numero_expediente", columns={"numero_expediente"}), @ORM\Index(name="index_expedientes_on_numero_interno", columns={"numero_interno"})})
  * @ORM\Entity
  * @UniqueEntity(fields="numeroInterno",message="Este valor ya existe y no puede repetirse") @UniqueEntity(fields="numeroExpediente",message="Este valor ya existe y no puede repetirse")
+ * @ORM\HasLifecycleCallbacks
  */
 class Expedientes
 {
@@ -151,6 +152,26 @@ class Expedientes
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime("now");
+    }
+
+    /**
+     * Gets triggered every time on update
+
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new \DateTime("now");
     }
 
     /**

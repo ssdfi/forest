@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="tecnicos", indexes={@ORM\Index(name="index_tecnicos_on_nombre", columns={"nombre"}), @ORM\Index(name="index_tecnicos_on_cuit", columns={"cuit"}), @ORM\Index(name="index_tecnicos_on_dni", columns={"dni"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class Tecnicos
 {
@@ -73,6 +74,26 @@ class Tecnicos
     private $cuit;
 
 
+
+    /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime("now");
+    }
+
+    /**
+     * Gets triggered every time on update
+
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new \DateTime("now");
+    }
 
     /**
      * Get id

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="actividades_plantaciones", indexes={@ORM\Index(name="index_actividades_plantaciones_on_plantacion_id", columns={"plantacion_id"}), @ORM\Index(name="index_actividades_plantaciones_on_actividad_id", columns={"actividad_id"}), @ORM\Index(name="index_actividades_plantaciones_on_estado_aprobacion_id", columns={"estado_aprobacion_id"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class ActividadesPlantaciones
 {
@@ -203,6 +204,26 @@ class ActividadesPlantaciones
     }
 
     /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime("now");
+    }
+
+    /**
+     * Gets triggered every time on update
+
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new \DateTime("now");
+    }
+
+    /**
      * Set createdAt
      *
      * @param \DateTime $createdAt
@@ -260,7 +281,6 @@ class ActividadesPlantaciones
     public function setActividad(\AppBundle\Entity\Actividades $actividad = null)
     {
         $this->actividad = $actividad;
-        dump($this);
         return $this;
     }
 

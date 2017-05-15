@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="responsables")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class Responsables
 {
@@ -65,6 +66,26 @@ class Responsables
     private $updatedAt;
 
 
+
+    /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime("now");
+    }
+
+    /**
+     * Gets triggered every time on update
+
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new \DateTime("now");
+    }
 
     /**
      * Get id
@@ -223,5 +244,5 @@ class Responsables
     public function __toString(){
         return $this->nombre;
     }
-    
+
 }

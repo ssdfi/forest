@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="plantaciones_aportes", indexes={@ORM\Index(name="index_plantaciones_aportes_on_objetivo_plantacion_id", columns={"objetivo_plantacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_estrato_desarrollo_id", columns={"estrato_desarrollo_id"}), @ORM\Index(name="index_plantaciones_aportes_on_fuente_imagen_id", columns={"fuente_imagen_id"}), @ORM\Index(name="index_plantaciones_aportes_on_departamento_id", columns={"departamento_id"}), @ORM\Index(name="index_plantaciones_aportes_on_provincia_id", columns={"provincia_id"}), @ORM\Index(name="index_plantaciones_aportes_on_fuente_informacion_id", columns={"fuente_informacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_uso_anterior_id", columns={"uso_anterior_id"}), @ORM\Index(name="index_plantaciones_aportes_on_tipo_plantacion_id", columns={"tipo_plantacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_base_geometrica_id", columns={"base_geometrica_id"}), @ORM\Index(name="index_plantaciones_aportes_on_uso_forestal_id", columns={"uso_forestal_id"}), @ORM\Index(name="index_plantaciones_aportes_on_titular_id", columns={"titular_id"}), @ORM\Index(name="index_plantaciones_aportes_on_estado_plantacion_id", columns={"estado_plantacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_error_id", columns={"error_id"}), @ORM\Index(name="index_plantaciones_aportes_on_activo", columns={"activo"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class PlantacionesAportes
 {
@@ -283,6 +284,26 @@ class PlantacionesAportes
     private $titular;
 
 
+
+    /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime("now");
+    }
+
+    /**
+     * Gets triggered every time on update
+
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new \DateTime("now");
+    }
 
     /**
      * Get id
@@ -1061,5 +1082,5 @@ class PlantacionesAportes
     {
         return $this->titular;
     }
-    
+
 }

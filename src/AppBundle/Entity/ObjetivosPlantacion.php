@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="objetivos_plantacion", indexes={@ORM\Index(name="index_objetivos_plantacion_on_codigo", columns={"codigo"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class ObjetivosPlantacion
 {
@@ -52,6 +53,25 @@ class ObjetivosPlantacion
 
 
 
+    /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime("now");
+    }
+
+    /**
+     * Gets triggered every time on update
+
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new \DateTime("now");
+    }
     /**
      * Get id
      *

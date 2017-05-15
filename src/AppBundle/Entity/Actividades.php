@@ -84,7 +84,7 @@ class Actividades
     private $tipoActividad;
 
     /**
-        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad")
+        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad",cascade={"persist"})
         * @ORM\JoinTable(
         *      name="actividades_plantaciones",
         *      joinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id",onDelete="CASCADE")},
@@ -329,7 +329,7 @@ class Actividades
         return $this->tipoActividad;
     }
     public function __construct() {
-       //$this->plantaciones = new \Doctrine\Common\Collections\ArrayCollection();
+       //$this->plantacion = new \Doctrine\Common\Collections\ArrayCollection();
        //$this->plantaciones = new \AppBundle\Entity\TiposActividad();
       //$this->plantaciones=[];
     }

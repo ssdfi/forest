@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="estratos_desarrollo", indexes={@ORM\Index(name="index_estratos_desarrollo_on_codigo", columns={"codigo"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class EstratosDesarrollo
 {
@@ -51,6 +52,25 @@ class EstratosDesarrollo
     private $updatedAt;
 
 
+    /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime("now");
+    }
+
+    /**
+     * Gets triggered every time on update
+
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new \DateTime("now");
+    }
 
     /**
      * Get id
@@ -157,7 +177,7 @@ class EstratosDesarrollo
     {
         return $this->updatedAt;
     }
-    
+
     public function __toString(){
         return $this->descripcion;
     }

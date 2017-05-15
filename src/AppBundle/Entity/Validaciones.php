@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="validaciones", indexes={@ORM\Index(name="index_validaciones_on_sistematizacion_id", columns={"sistematizacion_id"}), @ORM\Index(name="index_validaciones_on_responsable_id", columns={"responsable_id"}), @ORM\Index(name="index_validaciones_on_especie_2_id", columns={"especie_2_id"}), @ORM\Index(name="index_validaciones_on_plantacion_id", columns={"plantacion_id"}), @ORM\Index(name="index_validaciones_on_especie_3_id", columns={"especie_3_id"}), @ORM\Index(name="index_validaciones_on_especie_1_id", columns={"especie_1_id"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class Validaciones
 {
@@ -149,6 +150,26 @@ class Validaciones
     private $updatedAt;
 
 
+
+    /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTime("now");
+    }
+
+    /**
+     * Gets triggered every time on update
+
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new \DateTime("now");
+    }
 
     /**
      * Get id
