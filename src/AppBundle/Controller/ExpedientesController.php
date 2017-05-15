@@ -108,8 +108,6 @@ class ExpedientesController extends Controller
             }else{
 
             }
-            $expediente->setCreatedAt(new DateTime());
-            $expediente->setUpdatedAt(new DateTime());
             $expediente->setAnio($expediente->getAnioSplit());
 
             $em = $this->getDoctrine()->getManager();
