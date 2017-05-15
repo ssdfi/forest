@@ -21,9 +21,13 @@
             <td><a href="/titular/{{plantacion.titular.id}}">{{plantacion.titular.nombre}}</a></td>
             <td>{{plantacion.especie.first.nombreCientifico}}</td>
             <td>{{plantacion.tipoPlantacion.descripcion}}</td>
+            {% if (plantacion.actividad.first) %}
+              <td>{{plantacion.actividad.first.superficieRegistrada}}</td>
+            {% endif %}
             <td></td>
-            <td></td>
-            <td></td>
+            {% if (plantacion.actividad.first) %}
+              <td>{{plantacion.actividad.first.estadoAprobacion}}</td>
+            {% endif %}
             <td>{{plantacion.comentarios}}</td>
             <td class="icon icon-lg hidden-print">
               <a href="/plantaciones/8/mapa" onclick="event.stopPropagation()" target="_blank">
