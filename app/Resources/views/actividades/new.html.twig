@@ -45,7 +45,47 @@
                 </tr>
               </thead>
               <tbody class="actividadesPlantaciones" data-prototype="{% filter escape %}{% include 'actividades/prototypeActividades.html.twig' with {'form': form.plantaciones.vars.prototype } %}{% endfilter %}">
+                {% if form.plantaciones %}
+                  {% for tag in form.plantaciones %}
+                    <td>
+                    	<div class="col-sm-12">
+                    		{{ form_row(tag.plantacion) }}
+                    	</div>
 
+                    </td>
+                    <td>
+                    		<div class="col-sm-12">
+                    			{{ form_row(tag.fecha) }}
+                    		</div>
+                    </td>
+                    <td>
+                    		<div class="col-sm-12">
+                    			{{ form_row(tag.numeroPlantas) }}
+                    		</div>
+                    	</td>
+                    <td>
+                    	<div class="col-sm-12">
+                    			{{ form_row(tag.superficieRegistrada) }}
+                    	</div>
+                    </td>
+                    <td>
+                      	<div class="col-sm-12">
+                    			{{ form_row(tag.estadoAprobacion) }}
+                    		</div>
+                    </td>
+                    <td>
+                    		<div class="col-sm-12">
+                    			{{ form_row(tag.observaciones) }}
+                    		</div>
+                    </td>
+                    <td>
+                    	<a class="btn btn-danger btn-sm pull-right remove_nested_fields" data-association="actividades_plantaciones" href="javascript:void(0)">
+                    		<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    	</a>
+                    </td>
+
+                {% endfor %}
+              {% endif %}
               </tbody>
             </table>
             <a id="add-plantacion" class="btn btn-primary btn-sm add_nested_fields" data-association="actividades_plantaciones" data-blueprint-id="actividades_plantaciones_fields_blueprint" data-target="#plantaciones" href="javascript:void(0)">
