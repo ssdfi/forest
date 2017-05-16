@@ -92,7 +92,7 @@ class ActividadesController extends Controller
      * Finds and edit a Actividad entity.
      *
      * @Route("/expedientes/{id}/movimientos/{idMov}/actividades/{idAct}/edit", name="edit_actividades")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Actividades $actividade)
     {
@@ -102,8 +102,8 @@ class ActividadesController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('actividades_edit', array('id' => $actividade->getId()));
+            return $this->redirectToRoute('list_actividades', array('id'=>$id,'idMov'=>$idMov,'idAct' => $actividad->getId()));
+            //return $this->redirectToRoute('actividades_edit', array('id' => $actividade->getId()));
         }
 
         return $this->render('actividades/edit.html.twig', array(
