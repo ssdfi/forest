@@ -1,21 +1,124 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Actividade edit</h1>
+{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+<div class="row">
+  <div class="col-md-12">
+    <h2>Editar Actividad</h2>
 
     {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
+        <div class="row">
+          <div class="col-md-5">
+            {{ form_label(edit_form.tipoActividad) }}
+            {{ form_errors(edit_form.tipoActividad) }}
+            {{ form_widget(edit_form.tipoActividad) }}
+
+            {{ form_label(edit_form.superficiePresentada) }}
+            {{ form_errors(edit_form.superficiePresentada) }}
+            {{ form_widget(edit_form.superficiePresentada) }}
+
+            {{ form_label(edit_form.superficieCertificada) }}
+            {{ form_errors(edit_form.superficieCertificada) }}
+            {{ form_widget(edit_form.superficieCertificada) }}
+
+            {{ form_label(edit_form.superficieInspeccionada) }}
+            {{ form_errors(edit_form.superficieInspeccionada) }}
+            {{ form_widget(edit_form.superficieInspeccionada) }}
+
+            {{ form_label(edit_form.superficieRegistrada) }}
+            {{ form_errors(edit_form.superficieRegistrada) }}
+            {{ form_widget(edit_form.superficieRegistrada) }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <table id="plantaciones" class="table">
+              <thead>
+                <tr>
+                  <th>Plantación ID</th>
+                  <th>Fecha</th>
+                  <th>Número de Plantas</th>
+                  <th>Superficie Registrada</th>
+                  <th>Estado Aprobación</th>
+                  <th>Observaciones</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody class="actividadesPlantaciones" data-prototype="{% filter escape %}{% include 'actividades/prototypeActividades.html.twig' with {'form': edit_form.plantaciones.vars.prototype } %}{% endfilter %}">
+                {% if edit_form.plantaciones %}
+                  {{dump(edit_form)}}
+                  {% for tag in edit_form.plantaciones %}
+                  <tr class="fields">
+                    <td>
+                    	<div class="col-sm-12">
+                    		{{ form_row(tag.plantacion) }}
+                    	</div>
+
+                    </td>
+                    <td>
+                    		<div class="col-sm-12">
+                    			{{ form_row(tag.fecha) }}
+                    		</div>
+                    </td>
+                    <td>
+                    		<div class="col-sm-12">
+                    			{{ form_row(tag.numeroPlantas) }}
+                    		</div>
+                    	</td>
+                    <td>
+                    	<div class="col-sm-12">
+                    			{{ form_row(tag.superficieRegistrada) }}
+                    	</div>
+                    </td>
+                    <td>
+                      	<div class="col-sm-12">
+                    			{{ form_row(tag.estadoAprobacion) }}
+                    		</div>
+                    </td>
+                    <td>
+                    		<div class="col-sm-12">
+                    			{{ form_row(tag.observaciones) }}
+                    		</div>
+                    </td>
+                    <td>
+                    	<a class="btn btn-danger btn-sm pull-right remove_nested_fields" data-association="actividades_plantaciones" href="javascript:void(0)">
+                    		<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    	</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              {% endif %}
+              </tbody>
+            </table>
+            <a id="add-plantacion" class="btn btn-primary btn-sm add_nested_fields" data-association="actividades_plantaciones" data-blueprint-id="actividades_plantaciones_fields_blueprint" data-target="#plantaciones" href="javascript:void(0)">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              Agregar Plantación
+            </a>
+            <button id="add-plantaciones" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#plantaciones-modal">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              Agregar Lista de Plantaciones
+            </button>
+          </div>
+        </div>
+        <hr>
+        <a id="cancel-actividad" class="btn btn-default" onClick="history.go(-1);return true;">Cancelar</a>
+        <input id="save-actividad" class="btn btn-primary pull-right" type="submit" value="Guardar" />
     {{ form_end(edit_form) }}
 
-    <ul>
-        <li>
-            <a href="{{ path('actividades_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        var count ={{ edit_form.plantaciones|length }};
+        $(document).ready(function () {
+            $('#add-plantacion').click(function (e) {
+                e.preventDefault();
+                ActividadPlantacionAdd();
+            });
+        });
+    </script>
+
 {% endblock %}
