@@ -45,10 +45,10 @@
                 </dd>
                 <dt>Sup. Registrada:</dt>
                 <dd>
-                  {% if actividad.superficieRegistrada %}
-                    {{actividad.superficieRegistrada}}
+                  {% if actividad.getSupTotalSuma > 0%}
+                    {{ actividad.getSupTotalSuma }}
                   {% else %}
-                      0.0
+                    0.0
                   {% endif %}
                 </dd>
               </dl>
