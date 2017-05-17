@@ -113,7 +113,6 @@ class Actividades
       //  if (true === $this->plantaciones->contains($plantacion)) {
       //      return;
       //  }
-
    }
 
    public function removePlantaciones($plantacion)
@@ -328,9 +327,15 @@ class Actividades
     {
         return $this->tipoActividad;
     }
+
+    public function getSupTotalSuma() {
+      $total = 0;
+      foreach ($this->plantaciones as $key => $value) {
+        $total += $value->getSuperficieRegistrada();
+      }
+      return $total;
+    }
+
     public function __construct() {
-       //$this->plantacion = new \Doctrine\Common\Collections\ArrayCollection();
-       //$this->plantaciones = new \AppBundle\Entity\TiposActividad();
-      //$this->plantaciones=[];
     }
 }
