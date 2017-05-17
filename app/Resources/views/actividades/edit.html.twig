@@ -46,7 +46,6 @@
               </thead>
               <tbody class="actividadesPlantaciones" data-prototype="{% filter escape %}{% include 'actividades/prototypeActividades.html.twig' with {'form': edit_form.plantaciones.vars.prototype } %}{% endfilter %}">
                 {% if edit_form.plantaciones %}
-                  {{dump(edit_form)}}
                   {% for tag in edit_form.plantaciones %}
                   <tr class="fields">
                     <td>
