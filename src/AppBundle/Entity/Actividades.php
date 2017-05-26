@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\ORM\Mapping as ORM;
 /**
@@ -84,7 +85,7 @@ class Actividades
     private $tipoActividad;
 
     /**
-        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad",cascade={"persist"})
+        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad",fetch="EAGER",cascade={"persist","remove"}, orphanRemoval=true)
         * @ORM\JoinTable(
         *      name="actividades_plantaciones",
         *      joinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id",onDelete="CASCADE")},
@@ -107,16 +108,21 @@ class Actividades
      */
    public function setPlantaciones($plantaciones=null)
    {
+     if ($this->plantaciones->contains($plantaciones)) {
+          dump($this->plantaciones->contains($plantaciones));
+         return;
+     }
+     // dump($plantaciones);
       foreach ($plantaciones as $key => $plantacion) {
+        $plantacion->addActividad($this);
         $this->plantaciones[]=$plantacion;
       }
-      //  if (true === $this->plantaciones->contains($plantacion)) {
-      //      return;
-      //  }
+      return $this->plantaciones;
    }
 
-   public function removePlantaciones($plantacion)
+   public function removePlantaciones($plantaciones=null)
    {
+      dump('removePlantacionessss');
        foreach ($plantacion as $key => $value) {
          $planta = $value;
          if (false === $this->plantaciones->contains($planta)) {
@@ -337,5 +343,6 @@ class Actividades
     }
 
     public function __construct() {
+      $this->plantaciones = new ArrayCollection();
     }
 }

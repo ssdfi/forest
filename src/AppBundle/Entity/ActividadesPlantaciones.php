@@ -88,7 +88,7 @@ class ActividadesPlantaciones
     /**
      * @var \Plantaciones
      *
-     * @ORM\ManyToOne(targetEntity="Plantaciones", inversedBy="actividad", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Plantaciones", inversedBy="actividad", cascade={"persist","merge", "refresh", "remove"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")
      * })
@@ -121,6 +121,19 @@ class ActividadesPlantaciones
         return $this;
     }
 
+
+    /**
+     * Set setActividad
+     *
+     * @param string $actividad
+     *
+     * @return ActividadesPlantaciones
+     */
+    public function setActividad($actividad)
+    {
+        $this->actividad = $actividad;
+        return $this;
+    }
     /**
      * Get superficieRegistrada
      *
@@ -278,10 +291,26 @@ class ActividadesPlantaciones
      *
      * @return ActividadesPlantaciones
      */
-    public function setActividad(\AppBundle\Entity\Actividades $actividad = null)
+    public function addActividad(\AppBundle\Entity\Actividades $actividad = null)
     {
         $this->actividad = $actividad;
         return $this;
+    }
+
+    /**
+     * Delete actividad
+     *
+     * @param \AppBundle\Entity\Actividades $actividad
+     *
+     * @return ActividadesPlantaciones
+     */
+    public function removeActividad(\AppBundle\Entity\Actividades $actividad = null)
+    {
+      dump('removeActividad');
+      if (false === $this->actividad->contains($actividad)) {
+          return;
+      }
+      $this->actividad->removeElement($actividad);
     }
 
     /**
