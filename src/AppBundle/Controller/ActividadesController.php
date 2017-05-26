@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\Query;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Actividades controller.
@@ -94,25 +95,37 @@ class ActividadesController extends Controller
      * @Route("/expedientes/{idExp}/movimientos/{idMov}/actividades/{id}/edit", name="edit_actividades")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Actividades $actividade,$idExp,$idMov)
+    public function editAction(Request $request, Actividades $actividade, $idExp, $idMov)
     {
-        $deleteForm = $this->createDeleteForm($actividade);
+        $em = $this->getDoctrine()->getManager();
+        $actividades_plantaciones = $em->getRepository('AppBundle:Actividades')->find($actividade->getId());
+
+        if (!$actividades_plantaciones) {
+          throw $this->createNotFoundException('No task found for id '.$id);
+        }
+        $originalActs = new ArrayCollection();
+
+        foreach ($actividades_plantaciones->getPlantaciones() as $actividadPlantacion) {
+            $originalActs->add($actividadPlantacion);
+        }
+
         $editForm = $this->createForm('AppBundle\Form\ActividadesType', $actividade);
         $editForm->handleRequest($request);
-
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($actividade->getPlantaciones() as $key => $actividad_plantacion) {
-              $actividad_plantacion->setActividad($actividade);
+          foreach ($originalActs as $act) {
+            if (false === $editForm->get('plantaciones')->getData()->contains($act)) {
+                $act->setActividad(null);
+                $em->persist($act);
             }
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividade->getId()));
+        }
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividade->getId()));
         }
 
         return $this->render('actividades/edit.html.twig', array(
             'actividade' => $actividade,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            //'delete_form' => $deleteForm->createView(),
         ));
     }
 
