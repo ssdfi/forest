@@ -14,11 +14,21 @@
 			{{ form_row(form.numeroPlantas) }}
 		</div>
 	</td>
-<td>
-	<div class="col-sm-12">
-			{{ form_row(form.superficieRegistrada) }}
-	</div>
-</td>
+<td width="200px">
+		<div class="form-group">
+			<label class="sr-only control-label col-sm-0 control-label" for="actividad_actividades_plantaciones_attributes_0_superficie_registrada">Superficie registrada</label>
+			<div class="col-sm-12">
+				<div class="input-group">
+					{{ form_row(form.superficieRegistrada) }}
+					<span class="input-group-btn">
+						<button class="btn btn-default hectareas" name="button" type="button">
+							<span class="glyphicon glyphicon-circle-arrow-down"></span>
+						</button>
+					</span>
+				</div>
+			</div>
+		</div>
+	</td>
 <td>
   	<div class="col-sm-12">
 			{{ form_row(form.estadoAprobacion) }}
