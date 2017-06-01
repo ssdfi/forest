@@ -11,7 +11,9 @@
             <dt>Id Plantación</dt>
             <dd>{{ plantacione.id }}</dd>
             <dt>Titular</dt>
-            <dd>{{ plantacione.titular.nombre }}</dd>
+            {% if plantacione.titular %}
+              <dd>{{ plantacione.titular.nombre }}</dd>
+            {% endif %}
             <dt>Superficie</dt>
             <dd></dd>
             <dt>Especie/s</dt>
