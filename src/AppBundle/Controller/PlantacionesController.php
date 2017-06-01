@@ -15,6 +15,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 use Doctrine\ORM\Query;
 /**
@@ -54,7 +55,7 @@ class PlantacionesController extends Controller
      */
     public function getHectarea($geom)
     {
-        return 'hola';
+        return st_area(pl.geom) / 10000;
     }
 
     /**
@@ -157,6 +158,28 @@ class PlantacionesController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
+    /**
+     * Finds and displays a Plantaciones entity.
+     *
+     * @Route("/json/{id}", name="json_plantacion")
+     * @Method("GET")
+     */
+      public function jsonAction($id)
+      {
+          $em = $this->getDoctrine()->getManager();
+          $dql_p   = "SELECT st_area(p.geom)/10000
+                    FROM AppBundle:Plantaciones p
+                    WHERE p.id=:id";
+          $plantacion=$em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult();
+          $response = new Response();
+          if($plantacion[0][1]) {
+            $plantacion[0][1] = round($plantacion[0][1],1,PHP_ROUND_HALF_UP);
+          }
+          $response->setContent(json_encode($plantacion[0]));
+          $response->headers->set('Content-Type', 'application/json');
+          return $response;
+      }
 
     /**
      * Deletes a Plantaciones entity.
