@@ -1,46 +1,48 @@
-<td>
-	<div class="col-sm-12">
-		{{ form_row(form.plantacion) }}
-	</div>
 
-</td>
-<td>
+{% block tumaentan %}
+	<td>
 		<div class="col-sm-12">
-			{{ form_row(form.fecha) }}
-		</div>
-</td>
-<td>
-		<div class="col-sm-12">
-			{{ form_row(form.numeroPlantas) }}
+			{{ form_row(form.plantacion) }}
 		</div>
 	</td>
-<td width="200px">
-		<div class="form-group">
-			<label class="sr-only control-label col-sm-0 control-label" for="actividad_actividades_plantaciones_attributes_0_superficie_registrada">Superficie registrada</label>
+	<td>
 			<div class="col-sm-12">
-				<div class="input-group">
-					{{ form_row(form.superficieRegistrada) }}
-					<span class="input-group-btn">
-						<button class="btn btn-default hectareas" name="button" type="button">
-							<span class="glyphicon glyphicon-circle-arrow-down"></span>
-						</button>
-					</span>
+				{{ form_row(form.fecha) }}
+			</div>
+	</td>
+	<td>
+			<div class="col-sm-12">
+				{{ form_row(form.numeroPlantas) }}
+			</div>
+		</td>
+	<td width="200px">
+			<div class="form-group">
+				<label class="sr-only control-label col-sm-0 control-label" for="actividad_actividades_plantaciones_attributes_0_superficie_registrada">Superficie registrada</label>
+				<div class="col-sm-12">
+					<div class="input-group">
+						{{ form_row(form.superficieRegistrada) }}
+						<span class="input-group-btn">
+							<button class="btn btn-default hectareas" name="button" type="button">
+								<span class="glyphicon glyphicon-circle-arrow-down"></span>
+							</button>
+						</span>
+					</div>
 				</div>
 			</div>
-		</div>
+		</td>
+	<td>
+	  	<div class="col-sm-12">
+				{{ form_row(form.estadoAprobacion) }}
+			</div>
 	</td>
-<td>
-  	<div class="col-sm-12">
-			{{ form_row(form.estadoAprobacion) }}
-		</div>
-</td>
-<td>
-		<div class="col-sm-12">
-			{{ form_row(form.observaciones) }}
-		</div>
-</td>
-<td>
-	<a id="remove-plantacion" class="btn btn-danger btn-sm pull-right remove_nested_fields" data-association="actividades_plantaciones" href="javascript:void(0)">
-		<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-	</a>
-</td>
+	<td>
+			<div class="col-sm-12">
+				{{ form_row(form.observaciones) }}
+			</div>
+	</td>
+	<td>
+		<a class="btn btn-danger btn-sm pull-right remove-plantacion remove_nested_fields" data-association="actividades_plantaciones">
+			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+		</a>
+	</td>
+{% endblock %}
