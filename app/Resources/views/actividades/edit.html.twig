@@ -44,7 +44,7 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody class="actividadesPlantaciones" data-prototype="{% filter escape %}{% include 'actividades/prototypeActividades.html.twig' with {'form': edit_form.plantaciones.vars.prototype } %}{% endfilter %}">
+              <tbody class="actividadesPlantaciones" data-index="{{ edit_form.plantaciones|length }}" data-prototype="{% filter escape %}{% include 'actividades/prototypeActividades.html.twig' with {'form': edit_form.plantaciones.vars.prototype } %}{% endfilter %}">
                 {% if edit_form.plantaciones %}
                   {% for tag in edit_form.plantaciones %}
                   <tr class="fields">
@@ -113,7 +113,7 @@
         <a id="cancel-actividad" class="btn btn-default" onClick="history.go(-1);return true;">Cancelar</a>
         <input id="save-actividad" class="btn btn-primary pull-right" type="submit" value="Guardar" />
     {{ form_end(edit_form) }}
-
+    {{ include('actividades/agregar_plantaciones.html.twig') }}
   </div>
 </div>
 {% endblock %}
@@ -121,23 +121,4 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('js/actividades.js') }}"></script>
-    <script type="text/javascript">
-        var count ={{ edit_form.plantaciones|length }};
-        $(document).ready(function () {
-            $('#add-plantacion').click(function (e) {
-                e.preventDefault();
-                ActividadPlantacionAdd();
-            });
-            jQuery('.remove-plantacion').click(function (e) {
-              e.preventDefault();
-              ActividadPlantacionRemove(this);
-            });
-            jQuery('.hectareas').click(function (e) {
-              e.preventDefault();
-              getHectarea(this);
-
-            });
-        });
-    </script>
-
 {% endblock %}
