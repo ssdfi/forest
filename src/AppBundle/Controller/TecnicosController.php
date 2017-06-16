@@ -45,6 +45,11 @@ class TecnicosController extends Controller
         $cuit=$param['cuit'];
         $wheres[]="a.cuit like '%$cuit%'";
       }
+      if($param['activo']){
+        $activo=$param['activo'];
+        $wheres[]="a.activo = '$activo'";
+      }
+
       $filter = '';
       foreach ($wheres as $key => $value) {
         $filter = $filter .' '.$value;
@@ -52,9 +57,13 @@ class TecnicosController extends Controller
           $filter = $filter .' AND';
         }
       }
-      
+
       $em    = $this->get('doctrine.orm.entity_manager');
       $dql   = "SELECT a FROM AppBundle:Tecnicos a";
+      if(!empty($wheres)) {
+        $dql = $dql .' WHERE '.$filter;
+      }
+      dump($param);
       $query = $em->createQuery($dql);
       $paginator = $this->get('knp_paginator');
       $tecnicos = $paginator->paginate(
