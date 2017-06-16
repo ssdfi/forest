@@ -2,15 +2,15 @@
   <div id="titulares">
     <div class="form-group">
       <label class="control-label" for="titulares_nombre">Nombre</label>
-      <input id="titulares_nombre" class="form-control" name="titulares[nombre]" type="text">
+      <input id="titulares_nombre" class="form-control" value="{% if param.nombre is defined %}{{param.nombre}}{% endif %}" name="titulares[nombre]" type="text">
     </div>
     <div class="form-group">
       <label class="control-label" for="titulares_dni">DNI</label>
-      <input id="titulares_dni" class="form-control" name="titulares[dni]" type="text">
+      <input id="titulares_dni" class="form-control" value="{% if param.dni is defined %}{{param.dni}}{% endif %}" name="titulares[dni]" type="text">
     </div>
     <div class="form-group">
       <label class="control-label" for="titulares_cuit">CUIT</label>
-      <input id="titulares_cuit" class="form-control" name="titulares[cuit]" type="text">
+      <input id="titulares_cuit" class="form-control" value="{% if param.cuit is defined %}{{param.cuit}}{% endif %}" name="titulares[cuit]" type="text">
     </div>
     </div>
      <input type="hidden" name="_csrf_token" value="{{ csrf_token('titulares') }}">
