@@ -29,15 +29,15 @@
 				<label class="control-label col-sm-5" for="tecnico_activo">Activo</label>
 				<div class="col-sm-7">
 					<label class="radio-inline" for="tecnico_activo_">
-						<input id="tecnico_activo_" name="tecnico[activo]" value="" type="radio">
+						<input id="tecnico_activo_" {% if (param.activo is not defined or param.activo == '') %} checked="checked" {% endif %}  name="tecnico[activo]" value="" type="radio">
 						Todos
 					</label>
 					<label class="radio-inline" for="tecnico_activo_true">
-						<input id="tecnico_activo_true" {% if param.activo is defined %} checked="checked" value="true" {% endif %} name="tecnico[activo]" type="radio">
+						<input id="tecnico_activo_true" {% if param.activo is defined and param.activo == 'true' %} checked="checked" {% endif %} value="true"  name="tecnico[activo]" type="radio">
 						Sí
 					</label>
 					<label class="radio-inline" for="tecnico_activo_false">
-						<input id="tecnico_activo_false" {% if param.activo is not defined %} checked="checked" value="false" {% endif %} name="tecnico[activo]" type="radio">
+						<input id="tecnico_activo_false" {% if param.activo is defined and param.activo == 'false' %} checked="checked" {% endif %} value="false"  name="tecnico[activo]" type="radio">
 						No
 					</label>
 				</div>
