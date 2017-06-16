@@ -66,7 +66,7 @@ class TitularesController extends Controller
                 15,
                 array('defaultSortFieldName' => 'a.nombre', 'defaultSortDirection' => 'asc')
             );
-        return $this->render('titulares/index.html.twig',array('titulares' => $titulares, 'search_form'=>$search_form->createView()));
+        return $this->render('titulares/index.html.twig',array('titulares' => $titulares, 'search_form'=>$search_form->createView(),'param' => $param));
 
     }
 
