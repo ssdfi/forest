@@ -67,6 +67,24 @@ class MovimientosController extends Controller
     }
 
     /**
+     * Report Movimientos.
+     *
+     * @Route("/expedientes/{id}/movimientos/{idMov}/report", name="report_movimientos")
+     * @Method("GET")
+     */
+
+      public function reportAction($id, $idMov)
+      {
+          $em = $this->getDoctrine()->getManager();
+          $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
+          $actividades = $em->getRepository('AppBundle:Actividades')->findByMovimiento($idMov);
+          return $this->render('movimientos/report.html.twig', array(
+              'expediente' => $id,
+              'movimiento' => $movimiento,
+              'actividades'=>$actividades
+          ));
+      }
+    /**
      * Displays a form to edit an existing Movimientos entity.
      *
      * @Route("/expedientes/{idExp}/movimientos/{idMov}/edit", name="movimientos_edit")
