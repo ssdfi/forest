@@ -10,6 +10,7 @@ use AppBundle\Entity\Expedientes;
 use AppBundle\Entity\Titulares;
 use AppBundle\Entity\ZonaDepartamentos;
 use AppBundle\Form\ExpedientesType;
+use AppBundle\Form\ExpedientesSearchType;
 use Doctrine\ORM\Query;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -30,31 +31,12 @@ class ExpedientesController extends Controller
     {
 
       $expedientes = new Expedientes();
-
-      $search_form = $this->createFormBuilder($expedientes)
-            ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
-            ->add('numeroExpediente', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
-            ->add('zona',EntityType::class, array('class'=>'AppBundle\Entity\Zonas', 'required'=>false))
-            // anio etapa
-            // fecha entrada desde
-            // fecha entrada hasta
-            // fecha salida desde
-            // fecha salida hasta
-            // responsable que es igual a validador
-            ->add('tecnico',EntityType::class, array('class'=>'AppBundle\Entity\Tecnicos', 'required'=>false))
-            //  validador que es igual a responsable
-            ->add('activo',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
-            ->add('plurianual',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
-            ->add('agrupado',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
-            // ->add('pendiente',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
-            //->add('_validado',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
-            //->add('_estabilidad_fiscal',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
-            //->add('_incompleto',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'multiple'=>false,'empty_data'=>false))
-
-          ->getForm()->createView();
-
-      //$search_form->handleRequest($request);
-
+      $search_form = $this->createForm('AppBundle\Form\ExpedientesSearchType', $expedientes, array(
+        'action' => '/',
+        'method' => 'get'
+      ));
+      $search_form->handleRequest($request);
+      dump($expedientes);
       $em    = $this->get('doctrine.orm.entity_manager');
       $dql   = "SELECT a FROM AppBundle:Expedientes a";
       $query = $em->createQuery($dql);
@@ -65,7 +47,7 @@ class ExpedientesController extends Controller
               15,
               array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'desc')
           );
-      return $this->render('expedientes/list.html.twig',array('expedientes' => $expedientes, 'search_form'=>$search_form));
+      return $this->render('expedientes/list.html.twig',array('expedientes' => $expedientes, 'search_form'=>$search_form->createView()));
     }
 
     /**
