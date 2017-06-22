@@ -1,6 +1,7 @@
 {% form_theme search_form 'bootstrap_3_layout.html.twig' %}
 {{ form_start(search_form) }}
     {{ form_widget(search_form) }}
-    <input id="search" class="btn btn-primary pull-right" type="submit" value="Buscar" />
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('search_form') }}">
+    <input id="search" class="btn btn-primary pull-right" data-url="/expedientes" name="commit" value="Buscar" type="submit">
     <input id="exportar" class="btn btn-default-disabled" type="submit" value="Exportar a CSV" />
 {{ form_end(search_form) }}
