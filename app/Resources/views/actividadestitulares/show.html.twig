@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Actividadestitulare</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ actividadesTitulare.id }}</td>
+            </tr>
+            <tr>
+                <th>Superficiepresentada</th>
+                <td>{{ actividadesTitulare.superficiePresentada }}</td>
+            </tr>
+            <tr>
+                <th>Superficiecertificada</th>
+                <td>{{ actividadesTitulare.superficieCertificada }}</td>
+            </tr>
+            <tr>
+                <th>Superficieinspeccionada</th>
+                <td>{{ actividadesTitulare.superficieInspeccionada }}</td>
+            </tr>
+            <tr>
+                <th>Observaciones</th>
+                <td>{{ actividadesTitulare.observaciones }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('actividadestitulares_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('actividadestitulares_edit', { 'id': actividadesTitulare.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

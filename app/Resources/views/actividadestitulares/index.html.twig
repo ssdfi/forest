@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Actividadestitulares list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Superficiepresentada</th>
+                <th>Superficiecertificada</th>
+                <th>Superficieinspeccionada</th>
+                <th>Observaciones</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for actividadesTitulare in actividadesTitulares %}
+            <tr>
+                <td><a href="{{ path('actividadestitulares_show', { 'id': actividadesTitulare.id }) }}">{{ actividadesTitulare.id }}</a></td>
+                <td>{{ actividadesTitulare.superficiePresentada }}</td>
+                <td>{{ actividadesTitulare.superficieCertificada }}</td>
+                <td>{{ actividadesTitulare.superficieInspeccionada }}</td>
+                <td>{{ actividadesTitulare.observaciones }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('actividadestitulares_show', { 'id': actividadesTitulare.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('actividadestitulares_edit', { 'id': actividadesTitulare.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('actividadestitulares_new') }}">Create a new actividadesTitulare</a>
+        </li>
+    </ul>
+{% endblock %}
