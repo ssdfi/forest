@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ForestApp - Reporte de Movimiento</title>
+  <link rel="stylesheet" href="{{ asset('css/print.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="row">
+        <div class="col-xs-6 image">
+          <img src="{{ asset('assets/images/magyp.png') }}"></img>
+        </div>
+        <div class="col-xs-6 title">
+          <p>Dirección de Producción Forestal</p>
+          <p>Área SIG - Inventario Forestal</p>
+        </div>
+      </div>
+    </div>
+    {% block body %} {% endblock %}
+  </div>
+</body>
+</html>
