@@ -11,6 +11,7 @@ use AppBundle\Entity\Movimientos;
 use AppBundle\Entity\Expedientes;
 use AppBundle\Form\MovimientosType;
 use Doctrine;
+use Doctrine\ORM\Query;
 /**
  * Movimientos controller.
  *
@@ -78,11 +79,54 @@ class MovimientosController extends Controller
           $em = $this->getDoctrine()->getManager();
           $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
           $actividades = $em->getRepository('AppBundle:Actividades')->findByMovimiento($idMov);
+
+          foreach ($actividades as $key => $actividad) {
+            $dql_p   = "SELECT SUM(ap.superficieRegistrada), ap, IDENTITY(p.titular), IDENTITY(p.tipoPlantacion), IDENTITY(ep.especie)
+                        FROM AppBundle:ActividadesPlantaciones ap
+                        JOIN AppBundle:Plantaciones p WITH p.id = ap.plantacion
+                        INNER JOIN AppBundle:Actividades a WITH a.id = ap.actividad
+                        JOIN AppBundle:EspeciesPlantaciones ep WITH p.id = ep.plantacion
+                        WHERE a.movimiento = :id
+                        GROUP BY ap.id, p.titular, p.tipoPlantacion, ep.especie
+                        ORDER BY ap.actividad DESC ";
+            $plantaciones[$key] = $em->createQuery($dql_p)->setParameters(array('id' => $idMov))->getResult(Query::HYDRATE_OBJECT);
+          }
+
           return $this->render('movimientos/report.html.twig', array(
               'expediente' => $id,
               'movimiento' => $movimiento,
-              'actividades'=>$actividades
+              'actividades' => $actividades,
+              'plantaciones' => $plantaciones
           ));
+      }
+
+      public function getActividadAction($id){
+        $em = $this->getDoctrine()->getManager();
+        $actividad = $em->getRepository('AppBundle:Actividades')->findById($id);
+        dump($actividad[0]->getTipoActividad->getDescripcion());
+        return $actividad;
+      }
+      public function getTitularAction($id){
+        $em = $this->getDoctrine()->getManager();
+        $titular = $em->getRepository('AppBundle:Titulares')->findById($id);
+        return $this->render('movimientos/data.html.twig', array(
+            'data' => $titular[0]->getNombre()
+        ));
+      }
+      public function getTipoPlantacionAction($id){
+        $em = $this->getDoctrine()->getManager();
+        $actividad = $em->getRepository('AppBundle:TiposPlantacion')->findById($id);
+        return $this->render('movimientos/data.html.twig', array(
+            'data' => $actividad[0]->getDescripcion()
+        ));
+      }
+
+      public function getEspecieAction($id){
+        $em = $this->getDoctrine()->getManager();
+        $especie = $em->getRepository('AppBundle:Especies')->findById($id);
+        return $this->render('movimientos/data.html.twig', array(
+            'data' => $especie[0]->getNombreCientifico()
+        ));
       }
     /**
      * Displays a form to edit an existing Movimientos entity.
