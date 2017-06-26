@@ -36,7 +36,6 @@ class ExpedientesController extends Controller
         'method' => 'get'
       ));
       $search_form->handleRequest($request);
-      dump($expedientes);
       $em    = $this->get('doctrine.orm.entity_manager');
       $dql   = "SELECT a FROM AppBundle:Expedientes a";
       $query = $em->createQuery($dql);
