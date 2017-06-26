@@ -85,7 +85,7 @@ class Actividades
     private $tipoActividad;
 
     /**
-        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad",fetch="EAGER",cascade={"persist","remove"}, orphanRemoval=true)
+        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad",fetch="LAZY",cascade={"persist","remove"}, orphanRemoval=true)
         * @ORM\JoinTable(
         *      name="actividades_plantaciones",
         *      joinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id",onDelete="CASCADE")},
@@ -93,6 +93,19 @@ class Actividades
         * )
         */
     private $plantaciones;
+
+    /**
+        * @ORM\OneToMany(targetEntity="ActividadesTitulares",mappedBy="actividad",fetch="LAZY")
+        * @ORM\JoinColumns({
+        *   @ORM\JoinColumn(name="tipo_actividad_id", referencedColumnName="id")
+        * })
+        */
+    private $actividadesTitulares;
+
+    public function getActividadesTitulares()
+    {
+        return $this->actividadesTitulares;
+    }
 
     public function getPlantaciones()
     {
