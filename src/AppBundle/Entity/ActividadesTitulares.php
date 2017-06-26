@@ -53,7 +53,7 @@ class ActividadesTitulares
     /**
      * @var \Actividades
      *
-     * @ORM\ManyToOne(targetEntity="Actividades")
+     * @ORM\ManyToOne(targetEntity="Actividades", inversedBy="actividadesTitulares")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="actividad_id", referencedColumnName="id")
      * })
@@ -73,7 +73,7 @@ class ActividadesTitulares
     /**
      * @var \TiposPlantacion
      *
-     * @ORM\ManyToOne(targetEntity="TiposPlantacion")
+     * @ORM\ManyToOne(targetEntity="TiposPlantacion", fetch = "LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="tipo_plantacion_id", referencedColumnName="id")
      * })
@@ -83,13 +83,12 @@ class ActividadesTitulares
     /**
      * @var \Especies
      *
-     * @ORM\ManyToOne(targetEntity="Especies")
+     * @ORM\ManyToOne(targetEntity="Especies", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="especie_id", referencedColumnName="id")
      * })
      */
     private $especie;
-
 
 
     /**
