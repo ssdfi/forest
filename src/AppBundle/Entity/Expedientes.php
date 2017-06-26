@@ -110,7 +110,7 @@ class Expedientes
     /**
      * @var \Tecnicos
      *
-     * @ORM\ManyToOne(targetEntity="Tecnicos", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Tecnicos", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="tecnico_id", referencedColumnName="id")
      * })
@@ -129,7 +129,7 @@ class Expedientes
 
     /**
         * @var ArrayCollection $titulares
-        * @ORM\ManyToMany(targetEntity="Titulares", inversedBy="expediente" ,cascade={"all","remove","persist"}, fetch="EAGER")
+        * @ORM\ManyToMany(targetEntity="Titulares", inversedBy="expediente" ,cascade={"all","remove","persist"}, fetch="LAZY")
         * @ORM\JoinTable(
         *      name="expedientes_titulares",
         *      joinColumns={@ORM\JoinColumn(name="expediente_id", referencedColumnName="id",onDelete="CASCADE")},
