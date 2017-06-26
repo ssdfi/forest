@@ -269,7 +269,7 @@ class Plantaciones
 
     /**
         * @var \Doctrine\Common\Collections\ArrayCollection|Actividades[]
-        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="plantacion",cascade={"persist"}, fetch="EAGER")
+        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="plantacion",cascade={"persist"}, fetch="LAZY")
     */
      private $actividad;
 
