@@ -1,7 +1,6 @@
 {% extends 'print.html.twig' %}
 
 {% block body %}
-{{dump()}}
 <section>
   <h2>Información General</h2>
   <div class="block">
@@ -99,23 +98,38 @@
           </tr>
         </thead>
         <tbody>
-          {% for actividad in actividades%}
-          {{dump(actividad)}}
+          {% for plantacion in plantaciones %}
           sintesis por actividad, por productor por especie y por tipo de plantacion.
-            {% for plantacion in actividad.plantaciones %}
+            {% for datos in plantacion %}
+              <tr>
+                <td>
+                  {% if datos[0] %}
+                    {{datos[0].getActividad().getTipoActividad().getDescripcion()}}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if datos[2] %}
+                    {{ render(controller('AppBundle:Movimientos:getTitular', {'id': datos[2]})) }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if datos[3] %}
+                    {{ render(controller('AppBundle:Movimientos:getTipoPlantacion', {'id': datos[3]})) }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if datos[4] %}
+                    {{ render(controller('AppBundle:Movimientos:getEspecie', {'id': datos[4]})) }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if datos[1] %}
+                    {{datos[1]}}
+                  {% endif %}
+                </td>
+              </tr>
             {% endfor %}
           {% endfor %}
-          <% @plantaciones.each do |index,value| %>
-            <tr>
-              <td><%= Actividad.find(index[0]).tipo_actividad.descripcion  unless index[0].nil? %></td>
-              <% if @movimiento.expediente.agrupado %>
-                <td><%= Titular.find(index[1]).nombre unless index[1].nil? %></td>
-              <% end %>
-              <td><%= TipoPlantacion.find(index[2]).descripcion unless index[2].nil? %></td>
-              <td><%= Especie.find(index[3]).nombre_cientifico unless index[3].nil? %></td>
-              <td><%= value %></td>
-            </tr>
-          <% end %>
         </tbody>
       </table>
     </div>
@@ -141,24 +155,19 @@
             </tr>
           </thead>
           <tbody>
-            {% for actividad in movimiento.actividades %}
-            <% @movimiento.actividades.each do |actividad| %>
-              {% for actividad_titular in actividad.actividadesTitulares %}
-              <!-- Ahora aca tengo que actualizar el modelo de actividad y actividadTitulares -->
-              <!-- dump(actividad_titular) -->
-              <% actividad.actividades_titulares.each do |actividad_titular| %>
-                <tr>
-                  <td><%= actividad.tipo_actividad.descripcion %></td>
-                  <td><%= actividad_titular.titular.nombre if actividad_titular.titular %></td>
-                  <td><%= actividad_titular.especie.nombre_cientifico if actividad_titular.especie %></td>
-                  <td><%= actividad_titular.tipo_plantacion.descripcion if actividad_titular.tipo_plantacion %></td>
-                  <td><%= actividad_titular.superficie_presentada %></td>
-                  <td><%= actividad_titular.superficie_certificada %></td>
-                  <td><%= actividad_titular.superficie_inspeccionada %></td>
-                  <td><%= actividad_titular.observaciones %></td>
-                </tr>
-              <% end %>
-            <% end %>
+
+              {% for actividad in actividades %}
+                {% for actividad_titular in actividad.getActividadesTitulares() %}
+                  <tr>
+                    <td>{{ actividad_titular.actividad.tipoActividad.descripcion }}</td>
+                    <td>{% if actividad_titular.titular %}{{ actividad_titular.titular.nombre }} {% endif %}</td>
+                    <td>{% if actividad_titular.especie %}{{actividad_titular.especie.nombreCientifico}}{% endif %}</td>
+                    <td>{% if actividad_titular.tipoPlantacion %} {{actividad_titular.tipoPlantacion.descripcion}} {% endif %}</td>
+                    <td> {{ actividad_titular.superficiePresentada }} </td>
+                    <td> {{ actividad_titular.superficieCertificada }} </td>
+                    <td> {{ actividad_titular.superficieInspeccionada }} </td>
+                    <td> {{ actividad_titular.observaciones }} </td>
+                  </tr>
               {% endfor %}
             {% endfor %}
           </tbody>
