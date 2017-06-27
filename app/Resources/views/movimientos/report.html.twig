@@ -63,7 +63,11 @@
                 <td>{{actividad.superficiePresentada}}</td>
                 <td>{{actividad.superficieCertificada}}</td>
                 <td>{{actividad.superficieInspeccionada}}</td>
-                <td>{{actividad.superficieRegistrada}}</td>
+                <td>
+                  {% if actividad.superficieRegistrada is not null %}
+                    {{actividad.superficieRegistrada}}
+                  {% else %} 0.0 {% endif %}
+                </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -99,36 +103,23 @@
         </thead>
         <tbody>
           {% for plantacion in plantaciones %}
-          sintesis por actividad, por productor por especie y por tipo de plantacion.
-            {% for datos in plantacion %}
-              <tr>
-                <td>
-                  {% if datos[0] %}
-                    {{datos[0].getActividad().getTipoActividad().getDescripcion()}}
-                  {% endif %}
+           <tr>
+             <td>
+                {{render(controller('AppBundle:Movimientos:getActividad', {'id': plantacion['id']}))}}
+             </td>
+             {% if movimiento.expediente.agrupado %}
+               <td>
+                  {{ render(controller('AppBundle:Movimientos:getTitular', {'id': plantacion[2]})) }}
                 </td>
-                <td>
-                  {% if datos[2] %}
-                    {{ render(controller('AppBundle:Movimientos:getTitular', {'id': datos[2]})) }}
-                  {% endif %}
-                </td>
-                <td>
-                  {% if datos[3] %}
-                    {{ render(controller('AppBundle:Movimientos:getTipoPlantacion', {'id': datos[3]})) }}
-                  {% endif %}
-                </td>
-                <td>
-                  {% if datos[4] %}
-                    {{ render(controller('AppBundle:Movimientos:getEspecie', {'id': datos[4]})) }}
-                  {% endif %}
-                </td>
-                <td>
-                  {% if datos[1] %}
-                    {{datos[1]}}
-                  {% endif %}
-                </td>
-              </tr>
-            {% endfor %}
+              {% endif %}
+             <td>{{ render(controller('AppBundle:Movimientos:getTipoPlantacion', {'id': plantacion[3]})) }}</td>
+             <td>{{ render(controller('AppBundle:Movimientos:getEspecie', {'id': plantacion[4]})) }}</td>
+             <td>
+               {% if plantacion[1] is not null %}
+                {{plantacion[1]}}
+               {% else %}0.0{% endif %}
+             </td>
+          </tr>
           {% endfor %}
         </tbody>
       </table>
