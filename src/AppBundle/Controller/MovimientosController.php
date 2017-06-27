@@ -79,19 +79,16 @@ class MovimientosController extends Controller
           $em = $this->getDoctrine()->getManager();
           $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
           $actividades = $em->getRepository('AppBundle:Actividades')->findByMovimiento($idMov);
-
-          foreach ($actividades as $key => $actividad) {
-            $dql_p   = "SELECT SUM(ap.superficieRegistrada), ap, IDENTITY(p.titular), IDENTITY(p.tipoPlantacion), IDENTITY(ep.especie)
-                        FROM AppBundle:ActividadesPlantaciones ap
-                        JOIN AppBundle:Plantaciones p WITH p.id = ap.plantacion
-                        INNER JOIN AppBundle:Actividades a WITH a.id = ap.actividad
-                        JOIN AppBundle:EspeciesPlantaciones ep WITH p.id = ep.plantacion
-                        WHERE a.movimiento = :id
-                        GROUP BY ap.id, p.titular, p.tipoPlantacion, ep.especie
-                        ORDER BY ap.actividad DESC ";
-            $plantaciones[$key] = $em->createQuery($dql_p)->setParameters(array('id' => $idMov))->getResult(Query::HYDRATE_OBJECT);
-          }
-
+          $dql_p   = "SELECT SUM(ap.superficieRegistrada), IDENTITY(ap.actividad) as id, IDENTITY(p.titular), IDENTITY(p.tipoPlantacion), IDENTITY(ep.especie)
+                      FROM AppBundle:ActividadesPlantaciones ap
+                      INNER JOIN AppBundle:Plantaciones p WITH p.id = ap.plantacion
+                      INNER JOIN AppBundle:Actividades a WITH a.id = ap.actividad
+                      INNER JOIN AppBundle:Actividades act WITH ap.actividad = act.id
+                      JOIN AppBundle:EspeciesPlantaciones ep WITH p.id = ep.plantacion
+                      WHERE a.movimiento = :id
+                      GROUP BY ap.actividad, p.titular, p.tipoPlantacion, ep.especie
+                      ORDER BY ap.actividad DESC ";
+          $plantaciones = $em->createQuery($dql_p)->setParameters(array('id' => $idMov))->getResult(Query::HYDRATE_OBJECT);
           return $this->render('movimientos/report.html.twig', array(
               'expediente' => $id,
               'movimiento' => $movimiento,
@@ -103,8 +100,10 @@ class MovimientosController extends Controller
       public function getActividadAction($id){
         $em = $this->getDoctrine()->getManager();
         $actividad = $em->getRepository('AppBundle:Actividades')->findById($id);
-        dump($actividad[0]->getTipoActividad->getDescripcion());
-        return $actividad;
+        return $this->render('movimientos/data.html.twig', array(
+            'data' => $actividad[0]->getTipoActividad()->getDescripcion()
+        ));
+
       }
       public function getTitularAction($id){
         $em = $this->getDoctrine()->getManager();
