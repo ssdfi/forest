@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class MovimientosType extends AbstractType
@@ -30,10 +31,10 @@ class MovimientosType extends AbstractType
             ->add('fechaEntrada',DateType::class, array('label'=>'Fecha entrada', 'widget'=>'single_text'))
             ->add('fechaSalida',DateType::class, array('label'=>'Fecha salida', 'widget'=>'single_text','required'=>false))
             ->add('etapa')
-            ->add('estabilidadFiscal')
+            ->add('estabilidadFiscal',CheckboxType::class, array('attr' => array('data-label' => 'Estabilidad Fiscal'), 'label' => false))
             ->add('observacion')
             ->add('observacionInterna')
-            ->add('auditar')
+            ->add('auditar',CheckboxType::class, array('attr' => array('data-label' => 'Auditar'), 'label' => false))
             // agregar expediente en controlador
         ;
     }
