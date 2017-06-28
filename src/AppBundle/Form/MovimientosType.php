@@ -35,7 +35,6 @@ class MovimientosType extends AbstractType
             ->add('observacion')
             ->add('observacionInterna')
             ->add('auditar',CheckboxType::class, array('attr' => array('data-label' => 'Auditar'), 'label' => false))
-            // agregar expediente en controlador
         ;
     }
 
