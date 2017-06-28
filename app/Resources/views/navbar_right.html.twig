@@ -167,6 +167,12 @@
     {#  -------------------------ACTIVIDADES---------------------------- #}
 {% if route == "list_actividades" %}
   <li>
+    <a id="nav-add-productor" href="{{path}}/actividadesTitular/new">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      Agregar Productor
+    </a>
+  </li>
+  <li>
     <a id="nav-edit-plantacion" href="{{path}}/edit">
       <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
         Editar Actividad
