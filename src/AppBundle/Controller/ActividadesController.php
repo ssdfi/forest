@@ -57,7 +57,6 @@ class ActividadesController extends Controller
     public function indexAction($id, $idMov,$idAct)
     {
         $em = $this->getDoctrine()->getManager();
-
         $actividades = $em->getRepository('AppBundle:Actividades')->findOneById($idAct);
 
         $dql_p   = "SELECT p
