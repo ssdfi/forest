@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Actividadestitulare controller.
+ * Actividadestitulares controller.
  *
  *
  */
@@ -23,7 +23,7 @@ class ActividadesTitularesController extends Controller
 
     public function newAction(Request $request)
     {
-      $actividadesTitulare = new Actividadestitulare();
+      $actividadesTitulare = new Actividadestitulares();
       $form = $this->createForm('AppBundle\Form\ActividadesTitularesType', $actividadesTitulare);
       $form->handleRequest($request);
 
