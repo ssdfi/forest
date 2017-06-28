@@ -8,46 +8,8 @@
 </ul>
 <div class="tab-content">
   <div id="expedientes-tab" class="tab-pane fade in active">
-    <table id="expedientes" class="table table-hover table-grid">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th nowrap="">Número interno</th>
-          <th nowrap="">Número expediente</th>
-          <th>Titular</th>
-          <th>Última Entrada</th>
-          <th>Última Salida</th>
-          <th>Técnico</th>
-          <th class="icon">Activo</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for expediente in expedientes %}
-        <tr>
-          <td>{{expediente.id}}</td>
-          <td nowrap="">{{expediente.numeroInterno}}</td>
-          <td nowrap="">{{expediente.numeroExpediente}}</td>
-          {% if expediente.titular is defined %}
-          <td title="{% for titular in expediente.titular %} {{titular.nombre}} {% endfor %}">
-            {{ expediente.titular.first.nombre }}</td>
-          {% endif %}
-          <td></td>
-          <td></td>
-          <td>{% if expediente.tecnico %}
-                {{expediente.tecnico.nombre}}
-              {% endif %}
-          </td>
-          <td class="icon">
-            {% if expediente.activo %}
-              <span class="glyphicon glyphicon-ok"></span>
-            {% else %}
-              <span class="glyphicon glyphicon-remove"></span>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <h4>Expedientes</h4>
+    {{ include('expedientes/show_list.html.twig', {'expedientes': expedientes}) }}
     <h4>Movimientos</h4>
     <table id="movimientos" class="table table-hover table-grid">
       <thead>
@@ -129,6 +91,4 @@
       </tbody>
     </table>
   </div>
-  <div id="historial-tab" class="tab-pane fade"></div>
-  <div id="validaciones-tab" class="tab-pane fade"> </div>
 </div>
