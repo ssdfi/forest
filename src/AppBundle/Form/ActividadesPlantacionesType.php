@@ -23,6 +23,7 @@ class ActividadesPlantacionesType extends AbstractType
      * {@inheritdoc}
      */
     private $manager;
+
     public function __construct(ObjectManager $manager) {
        $this->manager = $manager;
     }
@@ -37,10 +38,10 @@ class ActividadesPlantacionesType extends AbstractType
           ->add('estadoAprobacion',EntityType::class, array('class'=>'AppBundle\Entity\EstadosAprobacion','required'=>true,'label' => false))
           ->add('observaciones',TextareaType::class,array('label' => false,'required'=>false,'attr' => array('class' => 'form-control')));
 
-           $builder->add(
-              $builder->create('plantacion', IntegerType::class, array('label' => false,'required'=>true))
-                  ->addModelTransformer($transformer)
-          );
+         $builder->add(
+            $builder->create('plantacion', IntegerType::class, array('label' => false,'required'=>true))
+                ->addModelTransformer($transformer)
+        );
     }
 
     /**
