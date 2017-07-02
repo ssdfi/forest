@@ -1,3 +1,4 @@
+{% set params = app.request.attributes.get('_route_params') %}
 <div id="titulares-tab" class="tab-pane" role="tabpanel">
   <table id="titulares" class="table table-hover table-grid">
     <thead>
@@ -15,7 +16,8 @@
       {% for productor in actividad.getActividadesTitulares() %}
         <tr>
           <td>
-            <a href="/titulares/{{productor.titular.id}}">{{productor.titular.nombre}}</a>
+
+            <a href="/titulares/{{productor.titular.id}}">{{productor.titular.getNombre}}</a>
           </td>
           <td>{{productor.especie.codigoSp}}</td>
           <td>{{productor.tipoPlantacion.codigo}}</td>
@@ -23,7 +25,7 @@
           <td>{{productor.superficieCertificada}}</td>
           <td>{{productor.superficieInspeccionada}}</td>
           <td>{{productor.observaciones}}</td>
-          <td><a id="nav-edit-productor" href="/edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></a></span></td>
+          <td><a id="nav-edit-productor" href="{{path('actividadestitulares_edit', {'idExp': params.id, 'idMov': params.idMov, 'idAct': params.idAct, 'id': productor.id})}}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></a></span></td>
         </tr>
       {% endfor %}
     </tbody>
