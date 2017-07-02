@@ -87,3 +87,7 @@
 */
 </script>
 {% endblock %}
+{% block javascripts %}
+  {{parent()}}
+  <script src="{{ asset('js/expedientes.js') }}"></script>
+{% endblock %}

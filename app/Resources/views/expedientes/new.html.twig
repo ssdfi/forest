@@ -91,3 +91,8 @@ var cantidad='{{ form.titulares|length }}';
 </script>
 
 {% endblock %}
+
+{% block javascripts %}
+  {{parent()}}
+  <script src="{{ asset('js/expedientes.js') }}"></script>
+{% endblock %}
