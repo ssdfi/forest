@@ -161,7 +161,7 @@ class ExpedientesController extends Controller
             $em->persist($expediente);
             $em->flush();
 
-            return $this->redirectToRoute('expedientes_edit', array('id' => $expediente->getId()));
+            return $this->redirectToRoute('expedientes_show', array('id' => $expediente->getId()));
         }
 
         return $this->render('expedientes/edit.html.twig', array(
