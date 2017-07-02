@@ -21,22 +21,23 @@ class ActividadesTitularesController extends Controller
     * @Method({"GET", "POST"})
     */
 
-    public function newAction(Request $request)
+    public function newAction(Request $request, $idExp, $idMov, $idAct)
     {
-      $actividadesTitulare = new Actividadestitulares();
-      $form = $this->createForm('AppBundle\Form\ActividadesTitularesType', $actividadesTitulare);
+      $actividadesTitulares = new Actividadestitulares();
+      $form = $this->createForm('AppBundle\Form\ActividadesTitularesType', $actividadesTitulares);
       $form->handleRequest($request);
 
       if ($form->isSubmitted() && $form->isValid()) {
         $em = $this->getDoctrine()->getManager();
-        $em->persist($actividadesTitulare);
-        $em->flush($actividadesTitulare);
+        $actividadesTitulares->setActividad($em->getRepository('AppBundle:Actividades')->findOneById($idAct));
+        $em->persist($actividadesTitulares);
+        $em->flush($actividadesTitulares);
 
-        return $this->redirectToRoute('actividadestitulares_show', array('id' => $actividadesTitulare->getId()));
+        return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
       }
 
       return $this->render('actividadestitulares/new.html.twig', array(
-        'actividadesTitulare' => $actividadesTitulare,
+        'actividadesTitulare' => $actividadesTitulares,
         'form' => $form->createView(),
       ));
     }
@@ -80,22 +81,23 @@ class ActividadesTitularesController extends Controller
      * @Route("/expedientes/{idExp}/movimientos/{idMov}/actividades/{idAct}/actividadesTitular/{id}/edit", name="actividadestitulares_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, ActividadesTitulares $actividadesTitulare)
+    public function editAction( $idExp, $idMov, $idAct, $id, Request $request)
     {
-        $deleteForm = $this->createDeleteForm($actividadesTitulare);
-        $editForm = $this->createForm('AppBundle\Form\ActividadesTitularesType', $actividadesTitulare);
+        $em = $this->getDoctrine()->getManager();
+        $actividadesTitulares = $em->getRepository('AppBundle:ActividadesTitulares')->findOneById($id);
+        $editForm = $this->createForm('AppBundle\Form\ActividadesTitularesType', $actividadesTitulares);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('actividadestitulares_edit', array('id' => $actividadesTitulare->getId()));
+            return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
         }
 
         return $this->render('actividadestitulares/edit.html.twig', array(
-            'actividadesTitulare' => $actividadesTitulare,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'actividadesTitulare' => $actividadesTitulares,
+            'form' => $editForm->createView(),
         ));
     }
 
