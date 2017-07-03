@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ForestApp - Visualizador de Mapas</title>
+  <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}" />
+  <link rel="stylesheet" href="{{ asset('css/map.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/bootstrap-switch.min.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/body.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/application.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/leaflet.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/Control.MiniMap.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/L.Control.ZoomBox.css') }}" />
+</head>
+<body>
+  <div id="map" class="map"></div>
+  </div>
+  {% block javascripts %}
+   <script>
+      var plantaciones = {
+              "id":"1",
+              "type":"Feature",
+              "geometry": {{ plantacion.0.plantacion|raw }},
+              "properties":{"Fuente":"Original"}
+            }
+   </script>
+  {% endblock %}
+  {{ include('map_js.html.twig') }}
+</body>
+</html>
