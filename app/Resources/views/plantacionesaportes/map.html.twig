@@ -27,14 +27,11 @@
                 "properties":{"Fuente":"Original"}
               }
               var plantaciones_aporte = {
-              "id":"2",
-              "type":"Feature",
-              "geometry": {{ plantacion.0.plantacion_aporte|raw }},
-              "properties":{"Fuente":"Aporte de Tecnico"}
-            }
-
+                    "id":"2",
+                    "type":"Feature",
+                    "geometry": {{ plantacion.0.plantacion_aporte|raw }},
+                    "properties":{"Fuente":"Aporte de Tecnico"}
+                  }
               </script>
-             <script src="{{ asset('js/jquery-3.1.1.js') }}"></script>
-              <script src="{{ asset('js/map.js') }}"></script>
 {% endblock %}
 {{ include('map_js.html.twig') }}
