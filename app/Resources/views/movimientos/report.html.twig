@@ -82,10 +82,7 @@
       </div>
     </div>
   </div>
-{% if movimiento.expediente.agrupado %}
-  </section>
-  <section>
-{% endif %}
+{% if movimiento.expediente.agrupado == false %}
   <h2>Plantaciones</h2>
   <div class="row">
     <div class="col-xs-12">
@@ -126,45 +123,5 @@
     </div>
   </div>
 </section>
-
-{% if movimiento.expediente.agrupado %}
-  <section>
-    <h2>Detalle por Titular</h2>
-    <div class="row">
-      <div class="col-xs-12">
-        <table class="table table-bordered table-condensed table-compressed">
-          <thead>
-            <tr>
-              <th>Actividad</th>
-              <th>Titular</th>
-              <th>Especie</th>
-              <th>Tipo</th>
-              <th>Pres</th>
-              <th>Cert</th>
-              <th>Insp</th>
-              <th>Observaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-
-              {% for actividad in actividades %}
-                {% for actividad_titular in actividad.getActividadesTitulares() %}
-                  <tr>
-                    <td>{{ actividad_titular.actividad.tipoActividad.descripcion }}</td>
-                    <td>{% if actividad_titular.titular %}{{ actividad_titular.titular.nombre }} {% endif %}</td>
-                    <td>{% if actividad_titular.especie %}{{actividad_titular.especie.nombreCientifico}}{% endif %}</td>
-                    <td>{% if actividad_titular.tipoPlantacion %} {{actividad_titular.tipoPlantacion.descripcion}} {% endif %}</td>
-                    <td> {{ actividad_titular.superficiePresentada }} </td>
-                    <td> {{ actividad_titular.superficieCertificada }} </td>
-                    <td> {{ actividad_titular.superficieInspeccionada }} </td>
-                    <td> {{ actividad_titular.observaciones }} </td>
-                  </tr>
-              {% endfor %}
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
 {% endif %}
 {% endblock %}
