@@ -1,4 +1,3 @@
-
 {% block tumaentan %}
 	<td>
 		<div class="col-sm-12">
@@ -22,7 +21,7 @@
 					<div class="input-group">
 						{{ form_row(form.superficieRegistrada) }}
 						<span class="input-group-btn">
-							<button class="btn btn-default hectareas" name="button" type="button">
+							<button id="hectareas" class="btn btn-default hectareas" name="button" type="button">
 								<span class="glyphicon glyphicon-circle-arrow-down"></span>
 							</button>
 						</span>
@@ -41,7 +40,7 @@
 			</div>
 	</td>
 	<td>
-		<a class="btn btn-danger btn-sm pull-right remove-plantacion remove_nested_fields" data-association="actividades_plantaciones">
+		<a id="remove-plantacion" class="btn btn-danger btn-sm pull-right remove-plantacion remove_nested_fields" data-association="actividades_plantaciones">
 			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 		</a>
 	</td>
