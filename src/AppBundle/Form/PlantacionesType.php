@@ -41,7 +41,7 @@ class PlantacionesType extends AbstractType
             ->add('usoForestal')
             ->add('usoAnterior')
             ->add('objetivoPlantacion',EntityType::class, array('class'=>'AppBundle\Entity\ObjetivosPlantacion', 'placeholder' => "Seleccione una opción" ))
-            ->add('activo',CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false))
+            ->add('activo',CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
             ->add('comentarios')
             //historico nuevas plantaciones copiar datos activar nuevas..
           ;
