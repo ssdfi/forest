@@ -25,8 +25,6 @@ use Doctrine\ORM\Query;
  */
 class PlantacionesController extends Controller
 {
-    //protected $em;
-
     /**
      * Lists all Plantaciones entities.
      *
@@ -49,13 +47,6 @@ class PlantacionesController extends Controller
             );
 
         return $this->render('plantaciones/index.html.twig',array('plantaciones' => $plantaciones));
-    }
-    /**
-     * Get hectarea value
-     */
-    public function getHectarea($geom)
-    {
-        return st_area(pl.geom) / 10000;
     }
 
     /**
@@ -134,7 +125,6 @@ class PlantacionesController extends Controller
 
     /**
      * Displays a form to edit an existing Plantaciones entity.
-     *
      * @Route("/{id}/edit", name="plantaciones_edit")
      * @Method({"GET", "POST"})
      */
@@ -159,24 +149,14 @@ class PlantacionesController extends Controller
         ));
     }
 
-    /* Obtengo Plantacion*/
-    public function getGeoJSON($id){
-      $em    = $this->getDoctrine()->getManager();
-      $dql_plantacion ="SELECT ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as plantacion
-                FROM AppBundle:Plantaciones p
-                WHERE p.id=:id";
-      $plantacion=$em->createQuery($dql_plantacion)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
-      return $plantacion;
-    }
-
-    /**
-     * Finds and displays a Plantaciones entity.
-     *
-     * @Route("/json/{id}", name="json_plantacion")
-     * @Method("GET")
-     */
-      public function jsonAction($id)
-      {
+      /* Obtengo Plantacion*/
+      /**
+       * Finds and displays a Plantaciones entity.
+       *
+       * @Route("/json/{id}", name="sjson_plantacion")
+       * @Method("GET")
+       */
+      public function jsonAction($id){
           $em = $this->getDoctrine()->getManager();
           $dql_p   = "SELECT st_area(p.geom)/10000
                     FROM AppBundle:Plantaciones p
@@ -189,6 +169,21 @@ class PlantacionesController extends Controller
           $response->setContent(json_encode($plantacion[0]));
           $response->headers->set('Content-Type', 'application/json');
           return $response;
+      }
+      /* Obtengo Plantacion*/
+      /**
+       * Finds and displays a Plantaciones entity.
+       *
+       * @Route("/geojson/{id}", name="geojson_plantacion")
+       * @Method("GET")
+       */
+      public function getGeoJSON($id){
+        $em    = $this->getDoctrine()->getManager();
+        $dql_plantacion ="SELECT ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as plantacion
+                  FROM AppBundle:Plantaciones p
+                  WHERE p.id=:id";
+        $plantacion=$em->createQuery($dql_plantacion)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+        return $plantacion;
       }
 
       /**
@@ -235,6 +230,14 @@ class PlantacionesController extends Controller
         }
 
         return $this->redirectToRoute('plantaciones_index');
+    }
+
+    /**
+     * Get hectarea value
+     */
+    public function getHectarea($geom)
+    {
+        return st_area(pl.geom) / 10000;
     }
 
     /**
