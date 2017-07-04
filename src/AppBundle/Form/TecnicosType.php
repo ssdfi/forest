@@ -17,7 +17,7 @@ class TecnicosType extends AbstractType
     {
         $builder
             ->add('nombre')
-            ->add('activo',CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false))
+            ->add('activo',CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
             ->add('dni')
             ->add('cuit');
     }
