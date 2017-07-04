@@ -31,10 +31,10 @@ class MovimientosType extends AbstractType
             ->add('fechaEntrada',DateType::class, array('label'=>'Fecha entrada', 'widget'=>'single_text'))
             ->add('fechaSalida',DateType::class, array('label'=>'Fecha salida', 'widget'=>'single_text','required'=>false))
             ->add('etapa')
-            ->add('estabilidadFiscal',CheckboxType::class, array('attr' => array('data-label' => 'Estabilidad Fiscal'), 'label' => false))
+            ->add('estabilidadFiscal',CheckboxType::class, array('attr' => array('data-label' => 'Estabilidad Fiscal'), 'label' => false,'required'=>false))
             ->add('observacion')
             ->add('observacionInterna')
-            ->add('auditar',CheckboxType::class, array('attr' => array('data-label' => 'Auditar'), 'label' => false))
+            ->add('auditar',CheckboxType::class, array('attr' => array('data-label' => 'Auditar'), 'label' => false,'required'=>false))
         ;
     }
 
