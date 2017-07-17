@@ -58,6 +58,7 @@ class ActividadesController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $actividades = $em->getRepository('AppBundle:Actividades')->findOneById($idAct);
+        $deleteForm = $this->createDeleteForm($actividades);
 
         $dql_p   = "SELECT p
                     FROM AppBundle:Actividades a
@@ -68,7 +69,8 @@ class ActividadesController extends Controller
 
         return $this->render('actividades/index.html.twig', array(
             'actividad' => $actividades,
-            'plantaciones' => $plantaciones
+            'plantaciones' => $plantaciones,
+            'delete'=> $deleteForm->createView()
         ));
     }
 
@@ -131,7 +133,7 @@ class ActividadesController extends Controller
     /**
      * Deletes a actividade entity.
      *
-     * @Route("/{id}", name="actividades_delete")
+     * @Route("/expedientes/{idExp}/movimientos/{idMov}/actividades/{id}", name="actividades_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Actividades $actividade)
@@ -145,7 +147,7 @@ class ActividadesController extends Controller
             $em->flush($actividade);
         }
 
-        return $this->redirectToRoute('actividades_index');
+        return $this->redirectToRoute('list_movimientos', array('id'=>$actividade->getMovimiento()->getExpediente()->getId(), 'idMov'=>$actividade->getMovimiento()->getId()));
     }
 
     /**
@@ -158,7 +160,7 @@ class ActividadesController extends Controller
     private function createDeleteForm(Actividades $actividade)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('actividades_delete', array('id' => $actividade->getId())))
+            ->setAction($this->generateUrl('actividades_delete', array('id' => $actividade->getId(),'idMov'=>$actividade->getMovimiento()->getId(),'idExp'=>$actividade->getMovimiento()->getExpediente()->getId())))
             ->setMethod('DELETE')
             ->getForm()
         ;
