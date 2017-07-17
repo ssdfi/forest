@@ -185,10 +185,14 @@
     </a>
   </li>
   <li>
-    <a id="nav-delete-expediente" data-confirm="¿Está seguro que desea eliminar la Plantacion?" value="Delete" href="/plantaciones/" rel="nofollow">
-      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-        Eliminar Actividad
-    </a>
+    <a id="nav-delete-expediente" data-confirm="¿Está seguro que desea eliminar la Actividad?" value="Delete"  rel="nofollow">
+    {{ form_start(delete) }}
+        <button type="submit">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          Eliminar Actividad
+        </button>
+    {{ form_end(delete) }}
+  </a>
   </li>
   <li>
     <a id="nav_expediente" href="/expedientes/{#expediente.id#}">{#expediente.numeroInterno#}</a>
