@@ -177,7 +177,7 @@ class MovimientosController extends Controller
      * @Route("/expedientes/{idExp}/movimientos/{id_mov}/delete", name="movimientos_delete")
      * @Method("DELETE")
      */
-    public function deleteAction($id_mov, $idExp)
+    public function deleteAction(Request $request, Movimientos $movimiento)
     {
         $form = $this->createDeleteForm($movimiento);
         $form->handleRequest($request);
