@@ -17,7 +17,7 @@
         {% for plantacion in plantaciones %}
           <tr data-link="/plantaciones/{{plantacion.id}}">
             <td>{{plantacion.id}}</td>
-            <td><a href="/titular/{{plantacion.titular.id}}">{{plantacion.titular.nombre}}</a></td>
+            <td><a href="/titulares/{{plantacion.titular.id}}">{{plantacion.titular.nombre}}</a></td>
             <td>{{plantacion.especie.first.nombreCientifico}}</td>
             <td>{{plantacion.tipoPlantacion.descripcion}}</td>
             {% if (plantacion.actividad.first) %}
@@ -29,7 +29,7 @@
             {% endif %}
             <td>{{plantacion.comentarios}}</td>
             <td class="icon icon-lg hidden-print">
-              <a href="/plantaciones/8/mapa" onclick="event.stopPropagation()" target="_blank">
+              <a href="/plantaciones/{{plantacion.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
                 <span class="glyphicon glyphicon-globe"></span>
               </a>
             </td>
