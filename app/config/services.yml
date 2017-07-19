@@ -22,3 +22,9 @@ services:
         arguments: [ "@doctrine.orm.entity_manager" ]
         tags:
             - { name: form.type }
+
+     app.form.type.plantaciones:
+       class: AppBundle\Form\PlantacionesType
+       arguments: [ "@doctrine.orm.entity_manager" ]
+       tags:
+         -  { name: form.type }
