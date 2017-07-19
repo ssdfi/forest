@@ -10,18 +10,29 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use Doctrine\Common\Persistence\ObjectManager;
+use AppBundle\Form\DataTransformer\PlantacionesHistoricoToNumberTransformer;
 
 class PlantacionesType extends AbstractType
 {
+
+    private $manager;
+
+    public function __construct(ObjectManager $manager) {
+       $this->manager = $manager;
+    }
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $nombre='';
+        $transformer = new PlantacionesHistoricoToNumberTransformer($this->manager);
         $builder
-            //->add('titular')
             ->add('anioPlantacion',TextType::class,array('label'=>'Año de Plantación'))
             ->add('tipoPlantacion',EntityType::class, array('class'=>'AppBundle\Entity\TiposPlantacion', 'placeholder' => "Seleccione una opción" ))
             ->add('nomenclaturaCatastral',TextType::class,array('label'=>'Nomenclatura Catrastal'))
@@ -43,8 +54,65 @@ class PlantacionesType extends AbstractType
             ->add('objetivoPlantacion',EntityType::class, array('class'=>'AppBundle\Entity\ObjetivosPlantacion', 'placeholder' => "Seleccione una opción" ))
             ->add('activo',CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
             ->add('comentarios')
-            //historico nuevas plantaciones copiar datos activar nuevas..
-          ;
+            ->add('copiarDatos',CheckboxType::class, array('attr' => array('data-label' => 'Copiar Datos'), 'mapped'=> false, 'label' => false, 'required'=>false))
+            ->add('activarNuevas',CheckboxType::class, array('attr' => array('data-label' => 'Activar Nuevas'), 'mapped'=> false, 'label' => false, 'required'=>false));
+
+            $builder->addEventListener(
+              FormEvents::PRE_SET_DATA,
+              function(FormEvent $event){
+                $form=$event->getForm();
+                $data=$event->getData();
+                if($data->getTitular()){
+                  $titular= $data->getTitular();
+                }else{
+                  $titular = null;
+                }
+                $form->add('plantacion_titular_id', HiddenType::class, array(
+                  'data' => ($titular !== null) ? $titular->getId() : '',
+                  'mapped' => false,
+                ));
+                $form->add('titular', TextType::class, array(
+                  'data' => ($titular !== null) ? $titular->getNombre() : '',
+                  'required'=>true,
+                  'attr' => ['disabled' => 'disabled'],
+                ));
+            });
+
+            $builder->addEventListener(
+              FormEvents::PRE_SUBMIT,
+              function(FormEvent $event){
+                $form=$event->getForm();
+                $data=$event->getData();
+                $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
+                $data['titular'] = $titular;
+                $event->setData($data);
+            });
+
+            $builder->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                function(FormEvent $event){
+                  $form=$event->getForm();
+                  $data=$event->getData();
+                  if($data->getHistorico()){
+                    $choices = array();
+                    foreach ($data->getHistorico() as $key => $value) {
+                      $choices[]=$value->getPlantacionNueva()->getId();
+                    }
+                  }else{
+                    $choices=[];
+                  }
+                  $form->add('historico', EntityType::class, array(
+                                'class' => 'AppBundle:PlantacionesHistorico',
+                                'multiple'=>true,
+                                'required'=>true,
+                                'choices'=> $choices,
+                                'choice_value'=>function($value){
+                                  return $value;
+                                },
+                            ));
+              });
+
+
     }
 
     /**
