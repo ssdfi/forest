@@ -133,7 +133,6 @@ class PlantacionesController extends Controller
         $deleteForm = $this->createDeleteForm($plantacione);
         $editForm = $this->createForm('AppBundle\Form\PlantacionesType', $plantacione);
         $editForm->handleRequest($request);
-
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($plantacione);
