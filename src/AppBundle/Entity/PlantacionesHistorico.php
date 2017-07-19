@@ -13,19 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 class PlantacionesHistorico
 {
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="plantaciones_historico_id_seq", allocationSize=1, initialValue=1)
-     */
-    private $id;
-
-    /**
      * @var \Plantaciones
      *
-     * @ORM\ManyToOne(targetEntity="Plantaciones")
+     * @ORM\ManyToOne(targetEntity="Plantaciones", inversedBy="historico")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="plantacion_anterior_id", referencedColumnName="id")
      * })
@@ -34,7 +24,7 @@ class PlantacionesHistorico
 
     /**
      * @var \Plantaciones
-     *
+    * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Plantaciones")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="plantacion_nueva_id", referencedColumnName="id")
@@ -100,5 +90,9 @@ class PlantacionesHistorico
     public function getPlantacionNueva()
     {
         return $this->plantacionNueva;
+    }
+
+    public function __toString(){
+      return '{$this->plantacionNueva->getId()}';
     }
 }

@@ -257,22 +257,51 @@ class Plantaciones
     private $departamento;
 
     /**
-        * @var \Especies
-        * @ORM\ManyToMany(targetEntity="Especies", fetch="LAZY")
-        * @ORM\JoinTable(
-        *      name="especies_plantaciones",
-        *      joinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")},
-        *      inverseJoinColumns={@ORM\JoinColumn(name="especie_id", referencedColumnName="id")}
-        * )
-        */
+      * @var \Especies
+      * @ORM\ManyToMany(targetEntity="Especies", fetch="LAZY")
+      * @ORM\JoinTable(
+      *      name="especies_plantaciones",
+      *      joinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")},
+      *      inverseJoinColumns={@ORM\JoinColumn(name="especie_id", referencedColumnName="id")}
+      * )
+      */
      private $especie;
 
     /**
-        * @var \Doctrine\Common\Collections\ArrayCollection|Actividades[]
-        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="plantacion",cascade={"persist"}, fetch="LAZY")
+    * @var \Doctrine\Common\Collections\ArrayCollection|Actividades[]
+    * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="plantacion",cascade={"persist"}, fetch="LAZY")
     */
      private $actividad;
 
+     /**
+       * @var \Doctrine\Common\Collections\ArrayCollection|PlantacionesHistorico[]
+       * @ORM\OneToMany(targetEntity="PlantacionesHistorico", mappedBy="plantacionAnterior", fetch="LAZY")
+       */
+     private $historico;
+
+     /**
+      * Set Historico
+      *
+      * @param \AppBundle\Entity\PlantacionesHistorico $historico
+      *
+      * @return PlantacionesHistorico
+      */
+     public function setHistorico(\AppBundle\Entity\PlantacionesHistorico $historico = null)
+     {
+         $this->historico = $historico;
+
+         return $this;
+     }
+
+     /**
+      * Get Historico
+      *
+      * @return \AppBundle\Entity\PlantacionesHistorico
+      */
+     public function getHistorico()
+     {
+         return $this->historico;
+     }
 
      /**
       * Gets triggered only on insert
@@ -298,7 +327,6 @@ class Plantaciones
        if (true === $this->actividad->contains($actividad)) {
            return;
        }
-       dump($this);
        $this->actividad->add($actividad);
        $actividad->setActividad($this);
        return $this;
@@ -1006,6 +1034,7 @@ class Plantaciones
     public function __construct() {
         $this->especie = new \Doctrine\Common\Collections\ArrayCollection();
         $this->actividad = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->historico = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
