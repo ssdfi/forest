@@ -1,10 +1,11 @@
 <?php
 namespace AppBundle\Form\DataTransformer;
 
-use AppBundle\Entity\Titulares;
+use AppBundle\Entity\PlantacionesHistorico;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class PlantacionesHistoricoToNumberTransformer implements DataTransformerInterface
 {
@@ -27,9 +28,13 @@ class PlantacionesHistoricoToNumberTransformer implements DataTransformerInterfa
             return null;
         }
         $choices = array();
+        dump('issue');
+        dump($issue);
+
         foreach ($issue as $key => $value) {
-          $choices[] = $value->getPlantacionNueva()->getId();
+          $choices[] = $value->getPlantacionNueva();
         }
+        dump($choices);
         return $choices;
     }
 
@@ -42,6 +47,7 @@ class PlantacionesHistoricoToNumberTransformer implements DataTransformerInterfa
      */
     public function reverseTransform($issueNumber)
     {
+        dump('reverse transformer');
         // no issue number? It's optional, so that's ok
         if (!$issueNumber) {
             return;
@@ -52,6 +58,13 @@ class PlantacionesHistoricoToNumberTransformer implements DataTransformerInterfa
             // query for the issue with this id
             ->findById($issueNumber)
         ;
+        $plantacioneshistorico = new ArrayCollection();
+        foreach ($issue as $key => $value) {
+          $historico = new PlantacionesHistorico($value,null);
+          $historico->setPlantacionNueva($value);
+          $historico->setPlantacionAnterior(null);
+          $plantacioneshistorico->add($historico);
+        }
 
         if (null === $issue) {
             // causes a validation error
@@ -62,7 +75,7 @@ class PlantacionesHistoricoToNumberTransformer implements DataTransformerInterfa
                 $issueNumber
             ));
         }
-        //dump($issue[0]);
-        return $issue[0];
+        // dump($plantacioneshistorico);
+        return $plantacioneshistorico;
     }
 }
