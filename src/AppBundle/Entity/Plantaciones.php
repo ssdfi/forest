@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Plantaciones
@@ -274,9 +275,9 @@ class Plantaciones
      private $actividad;
 
      /**
-       * @var \Doctrine\Common\Collections\ArrayCollection|PlantacionesHistorico[]
-       * @ORM\OneToMany(targetEntity="PlantacionesHistorico", mappedBy="plantacionAnterior", fetch="LAZY")
-       */
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="PlantacionesHistorico", mappedBy="plantacionAnterior", cascade={"persist","remove"}, fetch="LAZY")
+     */
      private $historico;
 
      /**
@@ -286,13 +287,23 @@ class Plantaciones
       *
       * @return PlantacionesHistorico
       */
-     public function setHistorico(\AppBundle\Entity\PlantacionesHistorico $historico = null)
+     public function setHistorico($historico = null)
      {
-         $this->historico = $historico;
+         $this->historico[] = $historico;
 
          return $this;
      }
 
+     /**
+     * @param Titulares $titular
+     */
+    public function addHistorico($historico)
+    {
+      if (true === $this->historico->contains($historico->getPlantacionNueva()->getId())) {
+        return;
+      }
+      $this->historico[]=$historico;
+    }
      /**
       * Get Historico
       *
@@ -301,6 +312,14 @@ class Plantaciones
      public function getHistorico()
      {
          return $this->historico;
+     }
+
+     public function removeHistorico($historico)
+     {
+       if (true === $this->historico->contains($historico)) {
+           return;
+       }
+       $this->historico->removeElement($historico);
      }
 
      /**
@@ -1036,7 +1055,8 @@ class Plantaciones
         $this->actividad = new \Doctrine\Common\Collections\ArrayCollection();
         $this->historico = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
-
+    public function __toString() {
+      return (string)$this->id;
+  }
 
 }

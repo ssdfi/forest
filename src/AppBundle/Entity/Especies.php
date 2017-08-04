@@ -318,6 +318,6 @@ class Especies
 
     public function __toString()
     {
-        return $this->codigoSp;
+        return $this->nombreComun;
     }
 }

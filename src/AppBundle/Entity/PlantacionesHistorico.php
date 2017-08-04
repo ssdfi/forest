@@ -14,7 +14,6 @@ class PlantacionesHistorico
 {
     /**
      * @var \Plantaciones
-     *
      * @ORM\ManyToOne(targetEntity="Plantaciones", inversedBy="historico")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="plantacion_anterior_id", referencedColumnName="id")
@@ -24,7 +23,7 @@ class PlantacionesHistorico
 
     /**
      * @var \Plantaciones
-    * @ORM\Id
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Plantaciones")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="plantacion_nueva_id", referencedColumnName="id")
@@ -41,7 +40,8 @@ class PlantacionesHistorico
      */
     public function getId()
     {
-        return $this->id;
+        dump($this->plantacionAnterior);
+        return $this->plantacionAnterior;
     }
 
     /**
@@ -92,7 +92,12 @@ class PlantacionesHistorico
         return $this->plantacionNueva;
     }
 
+    public function __construct($plantacionNueva, $plantacionAnterior) {
+        $this->plantacionNueva = $plantacionNueva;
+        $this->plantacionAnterior = $plantacionAnterior;
+    }
+
     public function __toString(){
-      return '{$this->plantacionNueva->getId()}';
+      return (string)$this->plantacionNueva->getId();
     }
 }
