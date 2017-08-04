@@ -16,6 +16,9 @@ use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
+use AppBundle\Entity\PlantacionesHistorico;
+use AppBundle\Entity\Especies;
 
 use Doctrine\ORM\Query;
 /**
@@ -130,19 +133,41 @@ class PlantacionesController extends Controller
      */
     public function editAction(Request $request, Plantaciones $plantacione)
     {
+        $em = $this->getDoctrine()->getManager();
         $deleteForm = $this->createDeleteForm($plantacione);
+        $generos = $em->getRepository('AppBundle:Generos')->findAll();
+        $plantaciones_historicos = $em->getRepository('AppBundle:PlantacionesHistorico')->findByPlantacionAnterior($plantacione->getId());
+
+        $originalHistoricos = new ArrayCollection();
+        foreach ($plantaciones_historicos as $plantacionHistorico) {
+            $originalHistoricos->add($plantacionHistorico);
+        }
         $editForm = $this->createForm('AppBundle\Form\PlantacionesType', $plantacione);
         $editForm->handleRequest($request);
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($plantacione);
-            $em->flush();
 
-            return $this->redirectToRoute('plantaciones_edit', array('id' => $plantacione->getId()));
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+          foreach ($originalHistoricos as $key => $value) {
+            if (false == $plantacione->getHistorico()->contains($value->getPlantacionNueva()->getId())){
+              $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
+              $plantacione->removeHistorico($value);
+              $em->remove($value);
+            }
+          }
+          foreach ($plantacione->getHistorico() as $key => $value) {
+            $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findOneBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
+            $plantacione->setHistorico($historico);
+            if (is_integer($value)) {
+              $plantacione->getHistorico()->removeElement($value);
+            }
+          }
+          $em->persist($plantacione);
+          $em->flush();
+        // return $this->redirectToRoute('plantaciones_edit', array('id' => $plantacione->getId()));
         }
 
         return $this->render('plantaciones/edit.html.twig', array(
             'plantacione' => $plantacione,
+            'generos' => $generos,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
@@ -155,7 +180,7 @@ class PlantacionesController extends Controller
        * @Route("/json/{id}", name="sjson_plantacion")
        * @Method("GET")
        */
-      public function jsonAction($id){
+      public function jsonAction($id) {
           $em = $this->getDoctrine()->getManager();
           $dql_p   = "SELECT st_area(p.geom)/10000
                     FROM AppBundle:Plantaciones p
@@ -185,6 +210,58 @@ class PlantacionesController extends Controller
         return $plantacion;
       }
 
+      /* Obtengo Especies*/
+      /**
+       * Finds and displays a Plantaciones entity.
+       *
+       * @Route("/especie_json/", name="json_especies")
+       * @Method("GET")
+       */
+      public function jsonEspeciesAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+          $param=$request->query->get('especie');
+          // dump($param);
+          $wheres=array();
+
+         if($param['codigo_sp']){
+            $codigo_sp=$param['codigo_sp'];
+            $wheres[]="lower(a.codigoSp) like lower('$codigo_sp')";
+          }
+          if($param['nombre_cientifico']){
+             $nombre_cientifico=$param['nombre_cientifico'];
+             $wheres[]="lower(a.nombreCientifico) like ($nombre_cientifico)";
+           }
+           if($param['nombre_comun']){
+              $nombre_comun=$param['nombre_comun'];
+              $wheres[]="lower(a.nombreComun) like lower($nombre_comun)";
+            }
+          $filter = '';
+          foreach ($wheres as $key => $value) {
+            $filter = $filter .' '.$value;
+            if(count($wheres) > 1 && $value != end($wheres)) {
+              $filter = $filter .' AND';
+            }
+          }
+          // $em    = $this->get('doctrine.orm.entity_manager');
+          $dql   = "SELECT a FROM AppBundle:Especies a";
+          if(!empty($wheres)) {
+            $dql = $dql .' WHERE '.$filter;
+          }
+          // dump($dql);
+          $query = $em->createQuery($dql);
+
+          $result=$query->getResult((\Doctrine\ORM\Query::HYDRATE_ARRAY));
+
+        //$dql   = "SELECT a FROM AppBundle:Titulares a where a.nombre like '%tincho%'";
+          if(!empty($wheres)){
+            //$dql=implode("and",$wheres);
+          }
+        $response = new Response();
+        $response->setContent(json_encode($result));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+      }
       /**
        * Finds and displays a Plantaciones entity's Map.
        *
