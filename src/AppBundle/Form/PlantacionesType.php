@@ -153,8 +153,6 @@ class PlantacionesType extends AbstractType
                 }
               });
 
-              // $builder->get('historico')->addModelTransformer($transformer);
-
              $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
                   $event->stopPropagation();
               }, 900);
