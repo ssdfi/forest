@@ -162,7 +162,7 @@ class PlantacionesController extends Controller
           }
           $em->persist($plantacione);
           $em->flush();
-        // return $this->redirectToRoute('plantaciones_edit', array('id' => $plantacione->getId()));
+        return $this->redirectToRoute('plantaciones_edit', array('id' => $plantacione->getId()));
         }
 
         return $this->render('plantaciones/edit.html.twig', array(
@@ -219,43 +219,44 @@ class PlantacionesController extends Controller
        */
       public function jsonEspeciesAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-          $param=$request->query->get('especie');
-          // dump($param);
-          $wheres=array();
+        $param=$request->query->get('especie');
+        dump($param);
+        $wheres=array();
 
-         if($param['codigo_sp']){
-            $codigo_sp=$param['codigo_sp'];
-            $wheres[]="lower(a.codigoSp) like lower('$codigo_sp')";
+        if($param['genero_id']){
+           $genero=$param['genero_id'];
+           $wheres[]="a.genero = $genero";
+         }
+       if($param['codigo_sp']){
+          $codigo_sp=$param['codigo_sp'];
+          $wheres[]="lower(a.codigoSp) like lower('%$codigo_sp%')";
+        }
+        if($param['nombre_cientifico']){
+           $nombre_cientifico=$param['nombre_cientifico'];
+           $wheres[]="lower(a.nombreCientifico) like lower('%$nombre_cientifico%')";
+         }
+         if($param['nombre_comun']){
+            $nombre_comun=$param['nombre_comun'];
+            $wheres[]="lower(a.nombreComun) like lower('%$nombre_comun%')";
           }
-          if($param['nombre_cientifico']){
-             $nombre_cientifico=$param['nombre_cientifico'];
-             $wheres[]="lower(a.nombreCientifico) like ($nombre_cientifico)";
-           }
-           if($param['nombre_comun']){
-              $nombre_comun=$param['nombre_comun'];
-              $wheres[]="lower(a.nombreComun) like lower($nombre_comun)";
-            }
-          $filter = '';
-          foreach ($wheres as $key => $value) {
-            $filter = $filter .' '.$value;
-            if(count($wheres) > 1 && $value != end($wheres)) {
-              $filter = $filter .' AND';
-            }
+        $filter = '';
+        foreach ($wheres as $key => $value) {
+          $filter = $filter .' '.$value;
+          if(count($wheres) > 1 && $value != end($wheres)) {
+            $filter = $filter .' AND';
           }
-          // $em    = $this->get('doctrine.orm.entity_manager');
-          $dql   = "SELECT a FROM AppBundle:Especies a";
-          if(!empty($wheres)) {
-            $dql = $dql .' WHERE '.$filter;
-          }
-          // dump($dql);
-          $query = $em->createQuery($dql);
+        }
+        $dql   = "SELECT a FROM AppBundle:Especies a";
+        if(!empty($wheres)) {
+          $dql = $dql .' WHERE '.$filter;
+        }
+        $query = $em->createQuery($dql);
 
-          $result=$query->getResult((\Doctrine\ORM\Query::HYDRATE_ARRAY));
+        $result=$query->getResult((\Doctrine\ORM\Query::HYDRATE_ARRAY));
 
-        //$dql   = "SELECT a FROM AppBundle:Titulares a where a.nombre like '%tincho%'";
-          if(!empty($wheres)){
-            //$dql=implode("and",$wheres);
-          }
+        if(!empty($wheres)){
+          //$dql=implode("and",$wheres);
+        }
         $response = new Response();
         $response->setContent(json_encode($result));
         $response->headers->set('Content-Type', 'application/json');
