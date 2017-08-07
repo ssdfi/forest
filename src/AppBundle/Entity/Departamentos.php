@@ -36,12 +36,6 @@ class Departamentos
      */
     private $codigo;
 
-    /**
-     * @var geometry
-     *
-     * @ORM\Column(name="geom", type="geometry", nullable=true)
-     */
-    private $geom;
 
     /**
      * @var \Provincias
