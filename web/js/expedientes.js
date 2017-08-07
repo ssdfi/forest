@@ -78,9 +78,4 @@
       return $("#expedientes_titulares option").prop('selected', true);
     });
   });
-
-
-
-
-
 }).call(this);
