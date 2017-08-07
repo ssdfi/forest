@@ -160,6 +160,7 @@ class PlantacionesController extends Controller
               $plantacione->getHistorico()->removeElement($value);
             }
           }
+          // dump($plantacione);
           $em->persist($plantacione);
           $em->flush();
         return $this->redirectToRoute('plantaciones_edit', array('id' => $plantacione->getId()));
@@ -220,7 +221,6 @@ class PlantacionesController extends Controller
       public function jsonEspeciesAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $param=$request->query->get('especie');
-        dump($param);
         $wheres=array();
 
         if($param['genero_id']){
@@ -282,7 +282,7 @@ class PlantacionesController extends Controller
             // }
             // dump($plantacion);
             $plantacion = $this->getGeoJSON($id);
-            dump($plantacion);
+
             return $this->render('map.html.twig', array('plantacion'=>$plantacion));
             // $response->setContent(json_encode($plantacion[0]));
             // $response->headers->set('Content-Type', 'application/json');
