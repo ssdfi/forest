@@ -1041,6 +1041,38 @@ class Plantaciones
     }
 
     /**
+    * @param Especie $titular
+    */
+     public function setEspecie($especie)
+     {
+       if (true === $this->especie->contains($especie)) {
+         return;
+       }
+       $this->especie[]=$especie;
+     }
+
+     /**
+     * @param Especie $titular
+     */
+      public function addEspecie($especie)
+      {
+        if (true === $this->especie->contains($especie)) {
+          return;
+        }
+        $this->especie[]=$especie;
+      }
+
+      /**
+      * @param Especie $titular
+      */
+       public function removeEspecie($especie)
+       {
+         if (true === $this->especie->contains($especie)) {
+             return;
+         }
+         $this->especie->removeElement($especie);
+       }
+    /**
      * Get actividades
      *
      * @return \AppBundle\Entity\Actividades
