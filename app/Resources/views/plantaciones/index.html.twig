@@ -40,7 +40,10 @@
             <tr data-link="/plantaciones/{{ plantacion.id }}">
               <td>{{ plantacion.id }}</td>
               <td>{% if plantacion.titular %}<a href="/titulares/{{ plantacion.titular.id }}"> {{ plantacion.titular.nombre }} </a> {% else %} {% endif %} </td>
-              <td>{% if plantacion.especie %}{{ plantacion.especie.first.nombreCientifico }}{% else %} {% endif %} </td>
+              <td>{% if plantacion.especie|length > 0 %}
+                {{plantacion.especie.first.nombreCientifico}}
+            {% endif %}
+            </td>
               <td>{% if plantacion.tipoPlantacion %}{{ plantacion.tipoPlantacion.descripcion }}{% else %} {% endif %} </td>
               <td></td>
               <td class="icon">
