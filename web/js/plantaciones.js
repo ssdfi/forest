@@ -175,7 +175,7 @@
     /* Convertir el listado de IDs del textarea de plantaciones en un array antes de ejectuar el submit
  del formulario */
     $("form").submit(function(e) {
-      $("#plantacion_especie_ids option").prop('selected', true);
+      $("#plantaciones_especie option").prop('selected', true);
       // alert('hl');
       return $("#plantaciones_historico option").prop('selected', true);
     });
