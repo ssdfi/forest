@@ -5,6 +5,7 @@ use AppBundle\Entity\Especies;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class EspeciesToNumberTransformer implements DataTransformerInterface
 {
@@ -23,11 +24,14 @@ class EspeciesToNumberTransformer implements DataTransformerInterface
      */
     public function transform($issue)
     {
-        if (null === $issue) {
+      // dump($issue);
+        if (true === $issue->getEspecie()) {
             return null;
         }
-
-        return $issue->getId();
+        foreach ($issue as $key => $value) {
+          return $value;
+        }
+        return $issue;
     }
 
     /**
@@ -40,17 +44,16 @@ class EspeciesToNumberTransformer implements DataTransformerInterface
     public function reverseTransform($issueNumber)
     {
         // no issue number? It's optional, so that's ok
-        if (!$issueNumber) {
+        if ($issueNumber->getEspecie()->isEmpty()) {
             return;
         }
-
-        $issue = $this->manager
-            ->getRepository('AppBundle:Especies')
-            // query for the issue with this id
-            ->findById($issueNumber)
-        ;
-
-        if (null === $issue) {
+        $especies = new ArrayCollection();
+        foreach ($issueNumber->getEspecie() as $key => $value) {
+          $issue = $this->manager
+          ->getRepository('AppBundle:Especies')->findOneById($value);
+          $especies->add($issue);
+        }
+        if (null === $issueNumber) {
             // causes a validation error
             // this message is not shown to the user
             // see the invalid_message option
@@ -59,7 +62,6 @@ class EspeciesToNumberTransformer implements DataTransformerInterface
                 $issueNumber
             ));
         }
-        //dump($issue[0]);
-        return $issue;
+        return $especies;
     }
 }
