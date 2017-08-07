@@ -148,25 +148,25 @@
     });
 
     /* Busca y carga los departamentos pertenecientes a la provincia seleccionada */
-    $("#plantacion_provincia_id").change(function() {
-      $("#plantacion_departamento_id").prop('disabled', true);
-      $("#plantacion_departamento_id").empty();
-      $("#plantacion_departamento_id").append($("<option />"));
-      if ($("#plantacion_provincia_id").val()) {
+    $("#plantaciones_provincia").change(function() {
+      $("#plantaciones_departamento").prop('disabled', true);
+      $("#plantaciones_departamento").empty();
+      $("#plantaciones_departamento").append($("<option />"));
+      if ($("#plantaciones_provincia").val()) {
         return $.ajax({
-          url: "/provincias/" + $("#plantacion_provincia_id").val() + "/departamentos.json"
+          url: "/provincias/" + $("#plantaciones_provincia").val() + "/departamentos.json"
         }).done(function(data) {
           var departamento, _i, _len, _ref;
           _ref = $(data);
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             departamento = _ref[_i];
-            $("#plantacion_departamento_id").append($("<option />").val(departamento.id).text(departamento
+            $("#plantaciones_departamento").append($("<option />").val(departamento.id).text(departamento
 .nombre));
           }
-          return $("#plantacion_departamento_id").prop('disabled', false);
+          return $("#plantaciones_departamento").prop('disabled', false);
         });
       } else {
-        return $("#plantacion_departamento_id").prop('disabled', false);
+        return $("#plantaciones_departamento").prop('disabled', false);
       }
     });
 
