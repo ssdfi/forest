@@ -93,6 +93,15 @@ class Especies
     private $plantacion;
 
 
+    /**
+     * Get Plantacion
+     *
+     * @return Plantacion
+     */
+    public function getPlantacion()
+    {
+        return $this->plantacion;
+    }
 
     /**
      * Gets triggered only on insert
@@ -318,6 +327,6 @@ class Especies
 
     public function __toString()
     {
-        return $this->nombreComun;
+        return $this->nombreCientifico;
     }
 }
