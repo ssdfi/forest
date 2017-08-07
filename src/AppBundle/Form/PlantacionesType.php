@@ -15,10 +15,12 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Doctrine\Common\Persistence\ObjectManager;
-use AppBundle\Form\DataTransformer\PlantacionesHistoricoToNumberTransformer;
+use AppBundle\Form\DataTransformer\EspeciesToNumberTransformer;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\PlantacionesHistorico;
 use Doctrine\ORM\EntityRepository;
+use AppBundle\Form\EventListener\AddEspeciesListener;
+use AppBundle\Form\EventListener\AddHistoricoListener;
 
 class PlantacionesType extends AbstractType
 {
@@ -34,7 +36,8 @@ class PlantacionesType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transformer = new PlantacionesHistoricoToNumberTransformer($this->manager);
+        $transformer = new EspeciesToNumberTransformer($this->manager);
+        $id_plantacion = $builder->getData() ? $builder->getData()->getId() : '';
         $builder
             ->add('anioPlantacion',TextType::class,array('label'=>'Año de Plantación','required'=>false))
             ->add('tipoPlantacion',EntityType::class, array('class'=>'AppBundle\Entity\TiposPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
@@ -54,11 +57,30 @@ class PlantacionesType extends AbstractType
             ->add('estratoDesarrollo',EntityType::class, array('class'=>'AppBundle\Entity\EstratosDesarrollo', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('usoForestal')
             ->add('usoAnterior')
+            ->add($builder->create('especie', EntityType::class, array(
+                          'class' =>  \AppBundle\Entity\Especies::class,
+                          'multiple'=>true,
+                          'required'=>false,
+                          'compound'=>false,
+                          'query_builder' => function (EntityRepository $er) use ( $id_plantacion ) {
+                              return $er->createQueryBuilder('u')
+                              ->leftJoin('u.plantacion','p')
+                              ->where('p.id = :id_plantacion')
+                              ->setParameter('id_plantacion',$id_plantacion);
+                          },
+                          'choice_value'=>function($data){
+                            return $data->getId();
+                          },
+                      )))
             ->add('objetivoPlantacion',EntityType::class, array('class'=>'AppBundle\Entity\ObjetivosPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('activo',CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
             ->add('comentarios')
             ->add('copiarDatos',CheckboxType::class, array('attr' => array('data-label' => 'Copiar Datos'), 'mapped'=> false, 'label' => false, 'required'=>false))
             ->add('activarNuevas',CheckboxType::class, array('attr' => array('data-label' => 'Activar Nuevas'), 'mapped'=> false, 'label' => false, 'required'=>false));
+
+            // $builder->addModelTransformer($transformer);
+            $builder->addEventSubscriber(new AddEspeciesListener())->addModelTransformer($transformer);
+            // $builder->addEventSubscriber(new AddHistoricoListener());
 
             $builder->addEventListener(FormEvents::PRE_SET_DATA,
               function(FormEvent $event){
@@ -78,26 +100,6 @@ class PlantacionesType extends AbstractType
                   'required'=>true,
                   'attr' => ['disabled' => 'disabled'],
                 ));
-            });
-
-            $builder->addEventListener(FormEvents::PRE_SET_DATA,
-              function(FormEvent $event){
-                $form=$event->getForm();
-                $data=$event->getData();
-                if($data->getEspecie()){
-                  $especie= $data->getEspecie();
-                }else{
-                  $especie = null;
-                }
-                $form->add('especie', EntityType::class, array(
-                              'class' =>  \AppBundle\Entity\Especies::class,
-                              'multiple'=>true,
-                              'required'=>false,
-                              'choices'=> $especie,
-                              'choice_value'=>function($value){
-                                return (string)$value;
-                              },
-                          ));
             });
 
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
@@ -128,7 +130,6 @@ class PlantacionesType extends AbstractType
               $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event){
                 $form=$event->getForm();
                 $data=$event->getData();
-                // dump($data['plantacion_titular_id']);
                 $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
                 $data['titular'] = $titular;
                 $event->setData($data);
@@ -138,7 +139,7 @@ class PlantacionesType extends AbstractType
                 $form=$event->getForm();
                 $data=$event->getData();
 
-                $id_plantacion = $form->getViewData()->getId();
+                $id_plantacion = $form->getData()->getId();
                 $plantacioneshistorico = new ArrayCollection();
                 foreach ($event->getForm()->get('historico')->getViewData() as $key => $value) {
                   $historico = $this->manager->getRepository('AppBundle:PlantacionesHistorico')->findBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$id_plantacion));
@@ -152,12 +153,9 @@ class PlantacionesType extends AbstractType
                   }
                 }
               });
-
-             $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
-                  $event->stopPropagation();
-              }, 900);
-
-
+              // $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+              //                  $event->stopPropagation();
+              //              }, 900);
     }
 
     /**
