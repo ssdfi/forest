@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Doctrine\Common\Persistence\ObjectManager;
+use AppBundle\Form\DataTransformer\PlantacionesHistoricoToNumberTransformer;
 use AppBundle\Form\DataTransformer\EspeciesToNumberTransformer;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\PlantacionesHistorico;
@@ -78,9 +79,7 @@ class PlantacionesType extends AbstractType
             ->add('copiarDatos',CheckboxType::class, array('attr' => array('data-label' => 'Copiar Datos'), 'mapped'=> false, 'label' => false, 'required'=>false))
             ->add('activarNuevas',CheckboxType::class, array('attr' => array('data-label' => 'Activar Nuevas'), 'mapped'=> false, 'label' => false, 'required'=>false));
 
-            // $builder->addModelTransformer($transformer);
             $builder->addEventSubscriber(new AddEspeciesListener())->addModelTransformer($transformer);
-            // $builder->addEventSubscriber(new AddHistoricoListener());
 
             $builder->addEventListener(FormEvents::PRE_SET_DATA,
               function(FormEvent $event){
@@ -114,7 +113,6 @@ class PlantacionesType extends AbstractType
                     $choices=[];
                   }
                   $form->add('plantacion_nuevas_ids', HiddenType::class, array(
-                    // 'data' => ($titular !== null) ? $titular->getId() : '',
                     'mapped' => false,
                   ));
                   $form->add('historico', EntityType::class, array(
@@ -153,9 +151,9 @@ class PlantacionesType extends AbstractType
                   }
                 }
               });
-              // $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
-              //                  $event->stopPropagation();
-              //              }, 900);
+              $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+                               $event->stopPropagation();
+                           }, 900);
     }
 
     /**
