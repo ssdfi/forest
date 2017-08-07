@@ -199,7 +199,7 @@ class TitularesController extends Controller
             $em->persist($titulare);
             $em->flush();
 
-            return $this->redirectToRoute('titulares_edit', array('id' => $titulare->getId()));
+            return $this->redirectToRoute('titulares_show', array('id' => $titulare->getId()));
         }
 
         return $this->render('titulares/edit.html.twig', array(
