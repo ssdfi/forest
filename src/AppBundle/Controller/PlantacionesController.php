@@ -36,20 +36,25 @@ class PlantacionesController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $em    = $this->get('doctrine.orm.entity_manager');
+        $em = $this->get('doctrine.orm.entity_manager');
+        $param=$request->query->get('plantacion');
+        $datos = null;
+        if ($param['ids']) {
+          $str = $param['ids'];
+          $param = explode("\r\n", $str);
+          $datos = $em->getRepository('AppBundle:Plantaciones')->findBy(array('id'=>array_filter($param)));
+        }
         $dql   = "SELECT a FROM AppBundle:Plantaciones a";
-        //, st_area(a.geom)/10000
         $query = $em->createQuery($dql);
-        //var_dump($query);
         $paginator = $this->get('knp_paginator');
         $plantaciones = $paginator->paginate(
-                $query,
+                $datos ? $datos: $query,
                 $request->query->getInt('page', 1),
                 15,
                 array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'asc')
             );
 
-        return $this->render('plantaciones/index.html.twig',array('plantaciones' => $plantaciones));
+        return $this->render('plantaciones/index.html.twig',array('plantaciones' => $plantaciones, 'param'=> $param));
     }
 
     /**
