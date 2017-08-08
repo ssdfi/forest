@@ -32,7 +32,7 @@ class ActividadesPlantacionesType extends AbstractType
     {
         $transformer = new PlantacionesToNumberTransformer($this->manager);
         $builder
-          ->add('fecha',DateType::class, array('label' => false,'widget'=>'single_text','format' => 'yyyy-MM-dd HH:mm','required'=>false,'attr' => array('class' => 'form-control')))
+          ->add('fecha',DateType::class, array('label' => false,'widget'=>'single_text','format' => 'yyyy-MM-dd','required'=>false,'attr' => array('class' => 'form-control','placeholder'=>"AAAA-MM-DD")))
           ->add('numeroPlantas',IntegerType::class, array('label'=>false,'required'=>false))
           ->add('superficieRegistrada',TextType::class,array('label' => false,'required'=>false,'attr' => array('class' => 'input-group')))
           ->add('estadoAprobacion',EntityType::class, array('class'=>'AppBundle\Entity\EstadosAprobacion','required'=>true,'label' => false))
