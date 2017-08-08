@@ -30,12 +30,13 @@ class ExpedientesController extends Controller
     public function listExpedientes(Request $request)
     {
 
-      $expedientes = new Expedientes();
-      $search_form = $this->createForm('AppBundle\Form\ExpedientesSearchType', $expedientes, array(
+      $expediente = new Expedientes();
+      $search_form = $this->createForm('AppBundle\Form\ExpedientesSearchType', $expediente, array(
         'action' => '/',
         'method' => 'get'
       ));
-      $search_form->handleRequest($request);
+      $param=$request->query->get('expedientes_search');
+
       $em    = $this->get('doctrine.orm.entity_manager');
       $dql   = "SELECT a FROM AppBundle:Expedientes a";
       $query = $em->createQuery($dql);
