@@ -24,7 +24,6 @@ class EspeciesToNumberTransformer implements DataTransformerInterface
      */
     public function transform($issue)
     {
-      // dump($issue);
         if (true === $issue->getEspecie()) {
             return null;
         }

@@ -28,13 +28,9 @@ class PlantacionesHistoricoToNumberTransformer implements DataTransformerInterfa
             return null;
         }
         $choices = array();
-        dump('issue');
-        dump($issue);
-
         foreach ($issue as $key => $value) {
           $choices[] = $value->getPlantacionNueva();
         }
-        dump($choices);
         return $choices;
     }
 
@@ -47,15 +43,12 @@ class PlantacionesHistoricoToNumberTransformer implements DataTransformerInterfa
      */
     public function reverseTransform($issueNumber)
     {
-        dump('reverse transformer');
-        // no issue number? It's optional, so that's ok
         if (!$issueNumber) {
             return;
         }
 
         $issue = $this->manager
             ->getRepository('AppBundle:Plantaciones')
-            // query for the issue with this id
             ->findById($issueNumber)
         ;
         $plantacioneshistorico = new ArrayCollection();
@@ -75,7 +68,6 @@ class PlantacionesHistoricoToNumberTransformer implements DataTransformerInterfa
                 $issueNumber
             ));
         }
-        // dump($plantacioneshistorico);
         return $plantacioneshistorico;
     }
 }

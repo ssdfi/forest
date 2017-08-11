@@ -43,8 +43,6 @@ class TitularesToNumberTransformer implements DataTransformerInterface
         if (!$issueNumber) {
             return;
         }
-        dump('$issueNumber');
-        dump($issueNumber);
         $issue = $this->manager
             ->getRepository('AppBundle:Titulares')
             // query for the issue with this id
