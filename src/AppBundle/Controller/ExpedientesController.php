@@ -29,6 +29,7 @@ class ExpedientesController extends Controller
      */
     public function listExpedientes(Request $request)
     {
+      $em = $this->getDoctrine()->getManager();
 
       $expediente = new Expedientes();
       $search_form = $this->createForm('AppBundle\Form\ExpedientesSearchType', $expediente, array(
@@ -37,8 +38,63 @@ class ExpedientesController extends Controller
       ));
       $param=$request->query->get('expedientes_search');
 
-      $em    = $this->get('doctrine.orm.entity_manager');
-      $dql   = "SELECT a FROM AppBundle:Expedientes a";
+      $wheres=array();
+
+      if($param['numeroInterno']){
+        $numeroInterno = $param['numeroInterno'];
+        $wheres[]="lower(a.numeroInterno) like lower('%$numeroInterno%')";
+      }
+      if($param['numeroExpediente']){
+         $numeroExpediente = $param['numeroExpediente'];
+         $wheres[]="lower(a.numeroExpediente) like lower('%$numeroExpediente%')";
+       }
+      if($param['zona']){
+        $zona = $param['zona'];
+        $wheres[]="a.zona = $zona";
+      }
+      if($param['anio']){
+        $anio = $param['anio'];
+        $wheres[]="a.anio = $anio";
+      }
+      if($param['tecnico']){
+        $tecnico = $param['tecnico'];
+        $wheres[]="a.tecnico = $tecnico";
+      }
+      if($param['activo']){
+        $activo = $param['activo'] == 1 ? 'TRUE' : 'FALSE';
+        $wheres[]="a.activo = $activo";
+      }
+      if($param['plurianual']){
+        $plurianual = $param['plurianual'] == 1 ? 'TRUE' : 'FALSE';
+        $wheres[]="a.plurianual = $plurianual";
+      }
+      if($param['agrupado']){
+        $agrupado = $param['agrupado'] == 1 ? 'TRUE' : 'FALSE';
+        $wheres[]="a.agrupado = $agrupado";
+      }
+
+      if($param['responsable']){
+        $responsable = $param['responsable'];
+        $wheres[]="m.responsable = $responsable";
+      }
+      if($param['validador']){
+        $validador = $param['validador'];
+        $wheres[]="m.validador = $validador";
+      }
+
+
+      $dql   = "SELECT a FROM AppBundle:Expedientes a
+                INNER JOIN AppBundle:Movimientos m WITH a.id = m.expediente";
+      $filter = '';
+      foreach ($wheres as $key => $value) {
+        $filter = $filter .' '.$value;
+        if(count($wheres) > 1 && $value != end($wheres)) {
+          $filter = $filter .' AND';
+        }
+      }
+      if(!empty($wheres)) {
+        $dql = $dql .' WHERE '.$filter;
+      }
       $query = $em->createQuery($dql);
       $paginator = $this->get('knp_paginator');
       $expedientes = $paginator->paginate(

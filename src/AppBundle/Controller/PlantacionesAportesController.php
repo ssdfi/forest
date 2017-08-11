@@ -34,9 +34,7 @@ class PlantacionesAportesController extends Controller
     {
       $em    = $this->get('doctrine.orm.entity_manager');
       $dql   = "SELECT a FROM AppBundle:PlantacionesAportes a";
-      //, st_area(a.geom)/10000
       $query = $em->createQuery($dql);
-      //var_dump($query);
       $paginator = $this->get('knp_paginator');
       $plantaciones = $paginator->paginate(
               $query,

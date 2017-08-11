@@ -63,7 +63,6 @@ class TecnicosController extends Controller
       if(!empty($wheres)) {
         $dql = $dql .' WHERE '.$filter;
       }
-      dump($param);
       $query = $em->createQuery($dql);
       $paginator = $this->get('knp_paginator');
       $tecnicos = $paginator->paginate(

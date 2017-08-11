@@ -165,7 +165,6 @@ class PlantacionesController extends Controller
               $plantacione->getHistorico()->removeElement($value);
             }
           }
-          // dump($plantacione);
           $em->persist($plantacione);
           $em->flush();
         return $this->redirectToRoute('plantaciones_edit', array('id' => $plantacione->getId()));
@@ -285,7 +284,6 @@ class PlantacionesController extends Controller
             // if($plantacion[0][1]) {
             //   $plantacion[0][1] = round($plantacion[0][1],1,PHP_ROUND_HALF_UP);
             // }
-            // dump($plantacion);
             $plantacion = $this->getGeoJSON($id);
 
             return $this->render('map.html.twig', array('plantacion'=>$plantacion));
