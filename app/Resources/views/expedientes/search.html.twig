@@ -1,7 +1,125 @@
 {% form_theme search_form 'bootstrap_3_layout.html.twig' %}
 {{ form_start(search_form) }}
-    {{ form_widget(search_form) }}
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('search_form') }}">
-    <input id="search" class="btn btn-primary pull-right" data-url="/expedientes" name="commit" value="Buscar" type="submit">
-    <input id="exportar" class="btn btn-default-disabled" type="submit" value="Exportar a CSV" />
+<div class="form-group">
+	{{ form_label(search_form.numeroInterno) }}
+	{{ form_errors(search_form.numeroInterno) }}
+	{{ form_widget(search_form.numeroInterno) }}
+</div>
+<div class="form-group">
+	{{ form_label(search_form.numeroExpediente) }}
+	{{ form_errors(search_form.numeroExpediente) }}
+	{{ form_widget(search_form.numeroExpediente) }}
+</div>
+<div class="form-group">
+	{{ form_label(search_form.zona) }}
+	{{ form_errors(search_form.zona) }}
+	{{ form_widget(search_form.zona) }}
+</div>
+<div class="form-group">
+	{{ form_label(search_form.anio) }}
+	{{ form_errors(search_form.anio) }}
+	{{ form_widget(search_form.anio) }}
+</div>
+<div class="form-group">
+	{{ form_label(search_form.fechaEntradaDesde) }}
+	{{ form_errors(search_form.fechaEntradaDesde) }}
+	{{ form_widget(search_form.fechaEntradaDesde) }}
+</div>
+<div class="form-group">
+	{{ form_label(search_form.fechaEntradaHasta) }}
+	{{ form_errors(search_form.fechaEntradaHasta) }}
+	{{ form_widget(search_form.fechaEntradaHasta) }}
+</div>
+<div class="form-group">
+	{{ form_label(search_form.fechaSalidaDesde) }}
+	{{ form_errors(search_form.fechaSalidaDesde) }}
+	{{ form_widget(search_form.fechaSalidaDesde) }}
+</div>
+<div class="form-group">
+	{{ form_label(search_form.fechaSalidaHasta) }}
+	{{ form_errors(search_form.fechaSalidaHasta) }}
+	{{ form_widget(search_form.fechaSalidaHasta) }}
+</div>
+<div class="form-group">
+	{{ form_label(search_form.responsable) }}
+	{{ form_errors(search_form.responsable) }}
+	{{ form_widget(search_form.responsable) }}
+</div>
+<div class="form-group">
+	{{ form_label(search_form.tecnico) }}
+	{{ form_errors(search_form.tecnico) }}
+	{{ form_widget(search_form.tecnico) }}
+</div>
+<div class="form-group">
+	{{ form_label(search_form.validador) }}
+	{{ form_errors(search_form.validador) }}
+	{{ form_widget(search_form.validador) }}
+</div>
+<div class="form-group">
+	{{ form_label(search_form.activo) }}
+	<div class="row">
+		{% for child in search_form.activo %}
+			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			</label>
+		{% endfor %}
+	</div>
+</div>
+<div class="form-group">
+	{{ form_label(search_form.plurianual) }}
+	<div class="row">
+		{% for child in search_form.plurianual %}
+			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			</label>
+		{% endfor %}
+	</div>
+</div>
+<div class="form-group">
+	{{ form_label(search_form.agrupado) }}
+	<div class="row">
+		{% for child in search_form.agrupado %}
+			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			</label>
+		{% endfor %}
+	</div>
+</div>
+<div class="form-group">
+	{{ form_label(search_form.pendiente) }}
+	<div class="row">
+		{% for child in search_form.pendiente %}
+			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			</label>
+		{% endfor %}
+	</div>
+</div>
+<div class="form-group">
+	{{ form_label(search_form.validado) }}
+	<div class="row">
+		{% for child in search_form.validado %}
+			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			</label>
+		{% endfor %}
+	</div>
+</div>
+<div class="form-group">
+	{{ form_label(search_form.estabilidad_fiscal) }}
+	<div class="row">
+		{% for child in search_form.estabilidad_fiscal %}
+			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			</label>
+		{% endfor %}
+	</div>
+</div>
+<div class="form-group">
+	{{ form_label(search_form.incompleto) }}
+	<div class="row">
+		{% for child in search_form.incompleto %}
+			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			</label>
+		{% endfor %}
+	</div>
+</div>
+{{ form_widget(search_form) }}
+<input type="hidden" name="_csrf_token" value="{{ csrf_token('search_form') }}">
+<input id="search" class="btn btn-primary pull-right" data-url="/expedientes" name="commit" value="Buscar" type="submit">
+<input id="exportar" class="btn btn-default-disabled" type="submit" value="Exportar a CSV"/>
 {{ form_end(search_form) }}
