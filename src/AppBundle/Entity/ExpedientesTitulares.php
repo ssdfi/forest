@@ -61,7 +61,6 @@ class ExpedientesTitulares
      */
     public function setExpediente(\AppBundle\Entity\Expedientes $expediente = null)
     {
-        dump($expediente);
         $this->expediente = $expediente;
 
         return $this;

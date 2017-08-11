@@ -40,7 +40,6 @@ class PlantacionesHistorico
      */
     public function getId()
     {
-        dump($this->plantacionAnterior);
         return $this->plantacionAnterior;
     }
 

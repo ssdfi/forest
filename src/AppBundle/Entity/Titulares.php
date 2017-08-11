@@ -263,7 +263,6 @@ class Titulares
         if (true === $this->expediente->contains($expediente)) {
             return;
         }
-        dump($this);
         $this->expediente->add($expediente);
         $expediente->addCategory($this);
     }

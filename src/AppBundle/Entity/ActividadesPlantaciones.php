@@ -306,7 +306,6 @@ class ActividadesPlantaciones
      */
     public function removeActividad(\AppBundle\Entity\Actividades $actividad = null)
     {
-      dump('removeActividad');
       if (false === $this->actividad->contains($actividad)) {
           return;
       }

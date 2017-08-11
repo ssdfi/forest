@@ -122,10 +122,8 @@ class Actividades
    public function setPlantaciones($plantaciones=null)
    {
      if ($this->plantaciones->contains($plantaciones)) {
-          dump($this->plantaciones->contains($plantaciones));
          return;
      }
-     // dump($plantaciones);
       foreach ($plantaciones as $key => $plantacion) {
         $plantacion->addActividad($this);
         $this->plantaciones[]=$plantacion;
@@ -135,7 +133,6 @@ class Actividades
 
    public function removePlantaciones($plantaciones=null)
    {
-      dump('removePlantacionessss');
        foreach ($plantacion as $key => $value) {
          $planta = $value;
          if (false === $this->plantaciones->contains($planta)) {
