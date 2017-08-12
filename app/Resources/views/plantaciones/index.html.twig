@@ -12,7 +12,14 @@
 						<div class="form-group">
 							<label class="control-label col-sm-3" for="plantacion_ids">IDs</label>
 							<div class="col-sm-9">
-								<textarea id="plantacion_ids" class="form-control" rows="10" name="plantacion[ids]">{% if param %}{% for item in param %}{% if loop.last %}{{item}}{% else %}{{(item ~ '\n')|raw}}{% endif %}{% endfor %}{% endif %}</textarea>
+								<textarea id="plantacion_ids" class="form-control" rows="10" name="plantacion[ids]">
+									{% if param %}
+										{% for item in param %}
+											{% if loop.last %}{{item}}
+											{% else %}{{(item ~ '\n')|raw}}{% endif %}
+										{% endfor %}
+									{% endif %}
+								</textarea>
 							</div>
 						</div>
 						<hr>
