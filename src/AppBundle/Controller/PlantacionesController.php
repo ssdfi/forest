@@ -151,6 +151,8 @@ class PlantacionesController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+          $copiarDatos = $editForm->get("copiarDatos")->getData();
+          $activarNuevas = $editForm->get("activarNuevas")->getData();
           foreach ($originalHistoricos as $key => $value) {
             if (false == $plantacione->getHistorico()->contains($value->getPlantacionNueva()->getId())){
               $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
@@ -165,9 +167,41 @@ class PlantacionesController extends Controller
               $plantacione->getHistorico()->removeElement($value);
             }
           }
-          $em->persist($plantacione);
-          $em->flush();
-        return $this->redirectToRoute('plantaciones_edit', array('id' => $plantacione->getId()));
+
+          if (count($plantacione->getHistorico()) > 0) {
+            $plantacione->setActivo(false);
+          }
+
+          if ($copiarDatos === true) {
+            foreach ($plantacione->getHistorico() as $key => $plantacionNueva) {
+              $plantacionNueva->getPlantacionNueva()->setActivo($activarNuevas);
+              $plantacionNueva->getPlantacionNueva()->setTitular($plantacione->getTitular());
+              $plantacionNueva->getPlantacionNueva()->setEspecie($plantacione->getEspecie());
+              $plantacionNueva->getPlantacionNueva()->setAnioPlantacion($plantacione->getAnioPlantacion());
+              $plantacionNueva->getPlantacionNueva()->setTipoPlantacion($plantacione->getTipoPlantacion());
+              $plantacionNueva->getPlantacionNueva()->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
+              $plantacionNueva->getPlantacionNueva()->setProvincia($plantacione->getProvincia());
+              $plantacionNueva->getPlantacionNueva()->setDepartamento($plantacione->getDepartamento());
+              $plantacionNueva->getPlantacionNueva()->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
+              $plantacionNueva->getPlantacionNueva()->setUsoForestal($plantacione->getUsoForestal());
+              $plantacionNueva->getPlantacionNueva()->setUsoAnterior($plantacione->getUsoAnterior());
+              $plantacionNueva->getPlantacionNueva()->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
+            }
+          }
+          try{
+
+            $em->persist($plantacione);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha editado correctamente la plantación.'));
+            return $this->redirectToRoute('plantaciones_show', array('id' => $plantacione->getId()));
+
+          } catch(\Doctrine\ORM\ORMException $e){
+
+            $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar la plantación');
+            $this->get('logger')->error($e->getMessage());
+            return $this->redirect('plantaciones_show', array('id' => $plantacione->getId()));
+          }
+
         }
 
         return $this->render('plantaciones/edit.html.twig', array(
