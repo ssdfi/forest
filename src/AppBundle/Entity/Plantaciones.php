@@ -1045,10 +1045,12 @@ class Plantaciones
     */
      public function setEspecie($especie)
      {
+       dump('hola');
+       dump($especie);
        if (true === $this->especie->contains($especie)) {
          return;
        }
-       $this->especie[]=$especie;
+       $this->especie=$especie;
      }
 
      /**
@@ -1056,6 +1058,7 @@ class Plantaciones
      */
       public function addEspecie($especie)
       {
+        dump('add');
         if (true === $this->especie->contains($especie)) {
           return;
         }
