@@ -89,10 +89,17 @@ class ActividadesTitularesController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            try{
+              $this->getDoctrine()->getManager()->flush();
+              $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Productor actualizado satisfactoriamente.'));
+              return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
+            } catch(\Doctrine\ORM\ORMException $e){
+              $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el productor');
+              $this->get('logger')->error($e->getMessage());
+              return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
+            }
 
-            $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
         }
 
         return $this->render('actividadestitulares/edit.html.twig', array(

@@ -142,12 +142,19 @@ class MovimientosController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+          $em = $this->getDoctrine()->getManager();
 
-            $em = $this->getDoctrine()->getManager();
+          try{
             $em->persist($movimiento);
             $em->flush();
-
+            $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Movimiento actualizado satisfactoriamente.'));
             return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+          } catch(\Doctrine\ORM\ORMException $e){
+            $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el movimiento');
+            $this->get('logger')->error($e->getMessage());
+            return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+          }
+
         }
 
         return $this->render('movimientos/edit.html.twig', array(

@@ -189,14 +189,12 @@ class PlantacionesController extends Controller
             }
           }
           try{
-
             $em->persist($plantacione);
             $em->flush();
             $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha editado correctamente la plantación.'));
             return $this->redirectToRoute('plantaciones_show', array('id' => $plantacione->getId()));
 
           } catch(\Doctrine\ORM\ORMException $e){
-
             $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar la plantación');
             $this->get('logger')->error($e->getMessage());
             return $this->redirect('plantaciones_show', array('id' => $plantacione->getId()));

@@ -214,10 +214,17 @@ class ExpedientesController extends Controller
             }
             $expediente->setUpdatedAt(new DateTime());
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($expediente);
-            $em->flush();
+            try{
+              $em->persist($expediente);
+              $em->flush();
+              $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Expediente actualizado satisfactoriamente.'));
+              return $this->redirectToRoute('expedientes_show', array('id' => $expediente->getId()));
 
+            } catch(\Doctrine\ORM\ORMException $e){
+              $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el expediente');
+              $this->get('logger')->error($e->getMessage());
+              return $this->redirect('expedientes_show', array('id' => $expediente->getId()));
+            }
             return $this->redirectToRoute('expedientes_show', array('id' => $expediente->getId()));
         }
 

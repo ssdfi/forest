@@ -119,8 +119,17 @@ class ActividadesController extends Controller
                 $em->persist($act);
             }
         }
-        $this->getDoctrine()->getManager()->flush();
-        return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividade->getId()));
+
+        try{
+          $this->getDoctrine()->getManager()->flush();
+          $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Actividad actualizada satisfactoriamente.'));
+          return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividade->getId()));
+        } catch(\Doctrine\ORM\ORMException $e){
+          $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar la actividad');
+          $this->get('logger')->error($e->getMessage());
+          return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividade->getId()));
+        }
+
         }
 
         return $this->render('actividades/edit.html.twig', array(
