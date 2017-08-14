@@ -1,0 +1,5 @@
+{% for msg in app.session.flashbag.get('notice') %}
+  <div class="alert alert-info alert-{{ msg.type }}">
+    {{ msg.message }}
+  </div>
+{% endfor %}
