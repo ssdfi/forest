@@ -1,11 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	{% for msg in app.session.flashbag.get('notice') %}
-		<div class="alert alert-info alert-{{ msg.type }}">
-			<strong>{{ msg.title }}</strong><br/>{{ msg.message }}
-		</div>
-	{% endfor %}
+	{{ include('flash/message.html.twig') }}
 	<div class="col-md-3 hidden-print">
 		<div class="panel panel-primary">
 			<div class="panel-heading">
