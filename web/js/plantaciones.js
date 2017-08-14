@@ -176,7 +176,6 @@
  del formulario */
     $("form").submit(function(e) {
       $("#plantaciones_especie option").prop('selected', true);
-      // alert('hl');
       return $("#plantaciones_historico option").prop('selected', true);
     });
 
@@ -225,8 +224,6 @@
   });
   /* Selecciona todos los titulares del listado antes ejectuar el submit del formulario */
   return $("form").submit(function() {
-    // alert('hola');
-    // return $("#plantaciones_especie option").prop('selected', true);
     return $("#plantaciones_historico option").prop('selected', true);
   });
 }).call(this);
