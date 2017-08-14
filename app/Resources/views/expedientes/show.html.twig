@@ -1,100 +1,100 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="col-md-3">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h3 class="panel-title">Expediente</h3>
-        </div>
-        <div class="panel-body">
-          <dl class="dl-horizontal">
-            <dt>ID expediente:</dt>
-            <dd>{{ expediente.id }}</dd>
-            <dt>Número interno:</dt>
-            <dd>{{ expediente.numeroInterno }}</dd>
-            <dt>Número expediente:</dt>
-            <dd>{{ expediente.numeroExpediente }}</dd>
-            <dt>Titular/es:</dt>
-            <dd>
-              <ul class="list-unstyled">
-                <li>
-                  {% if expediente.titulares is defined %}
-                    {% for titular in expediente.titulares %}
-                      {% for titu in titular %}
-                        <a href="/titulares/{{titu.id}}" title="{{titu.nombre}}" data-length="10">
-                          {{ titu.nombre }}
-                        </a>
-                      {% endfor %}
-                    {% endfor %}
-                  {% endif %}
-                </li>
-              </ul>
-            </dd>
-            <dt>Técnico:</dt>
-            {% if expediente.tecnico.nombre is defined %}
-              <dd title="{{ expediente.tecnico.nombre }}" data-length="20">
-                {{ expediente.tecnico.nombre }}
-              </dd>
-            {% else %}
-              <dd> </dd>
-            {% endif %}
-            <dt>Zona:</dt>
-            {% if expediente.zona.descripcion is defined %}
-              <dd>
-                {{ expediente.zona.descripcion }}
-              </dd>
-            {% else %}
-              <dd> </dd>
-            {% endif %}
-            <dt>Departamento:</dt>
-            {% if expediente.zonaDepartamento.descripcion is defined %}
-              <dd>
-                {{ expediente.zonaDepartamento.descripcion }}
-              </dd>
-            {% else %}
-              <dd> </dd>
-            {% endif %}
-            <dt>Año:</dt>
-            <dd>{{ expediente.anio }}</dd>
-            <dt>Plurianual:</dt>
-            <dd>
-              <span class="glyphicon glyphicon-remove"></span>
-            </dd>
-            <dt>Agrupado:</dt>
-            <dd>
-              <span class="glyphicon glyphicon-remove"></span>
-            </dd>
-            <dt>Última Entrada:</dt>
-            <dd>
-              {% if expediente.movimientos.last.fechaEntrada is defined %}
-                {% if expediente.movimientos.last.fechaEntrada is not null %}
-                    {{ expediente.movimientos.last.fechaEntrada|date('d-m-Y') }}
-                {% endif %}
-              {% endif %}
-            </dd>
-            <dt>Última Salida:</dt>
-            <dd>
-              {% if expediente.movimientos.last.fechaSalida is defined %}
-                {% if expediente.movimientos.last.fechaSalida is not null %}
-                    {{ expediente.movimientos.last.fechaSalida|date('d-m-Y') }}
-                {% endif %}
-              {% endif %}
-            </dd>
-          </dl>
-        </div>
-        <div class="panel-footer">
-          {% if expediente.activo %}
-            <span class="label label-success">Activo</span>
-          {% else %}
-            <span class="label label-danger">Inactivo</span>
-          {% endif %}
-        </div>
-    </div>
-</div>
-<div class="col-md-9">
-  <h4>Movimientos</h4>
-  {{ include('movimientos/_show.html.twig', { 'movimientos': movimientos }) }}
-</div>
-
+	{{ include('flash/message.html.twig') }}
+	<div class="col-md-3">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Expediente</h3>
+			</div>
+			<div class="panel-body">
+				<dl class="dl-horizontal">
+					<dt>ID expediente:</dt>
+					<dd>{{ expediente.id }}</dd>
+					<dt>Número interno:</dt>
+					<dd>{{ expediente.numeroInterno }}</dd>
+					<dt>Número expediente:</dt>
+					<dd>{{ expediente.numeroExpediente }}</dd>
+					<dt>Titular/es:</dt>
+					<dd>
+						<ul class="list-unstyled">
+							<li>
+								{% if expediente.titulares is defined %}
+									{% for titular in expediente.titulares %}
+										{% for titu in titular %}
+											<a href="/titulares/{{titu.id}}" title="{{titu.nombre}}" data-length="10">
+												{{ titu.nombre }}
+											</a>
+										{% endfor %}
+									{% endfor %}
+								{% endif %}
+							</li>
+						</ul>
+					</dd>
+					<dt>Técnico:</dt>
+					{% if expediente.tecnico.nombre is defined %}
+						<dd title="{{ expediente.tecnico.nombre }}" data-length="20">
+							{{ expediente.tecnico.nombre }}
+						</dd>
+					{% else %}
+						<dd></dd>
+					{% endif %}
+					<dt>Zona:</dt>
+					{% if expediente.zona.descripcion is defined %}
+						<dd>
+							{{ expediente.zona.descripcion }}
+						</dd>
+					{% else %}
+						<dd></dd>
+					{% endif %}
+					<dt>Departamento:</dt>
+					{% if expediente.zonaDepartamento.descripcion is defined %}
+						<dd>
+							{{ expediente.zonaDepartamento.descripcion }}
+						</dd>
+					{% else %}
+						<dd></dd>
+					{% endif %}
+					<dt>Año:</dt>
+					<dd>{{ expediente.anio }}</dd>
+					<dt>Plurianual:</dt>
+					<dd>
+						<span class="glyphicon glyphicon-remove"></span>
+					</dd>
+					<dt>Agrupado:</dt>
+					<dd>
+						<span class="glyphicon glyphicon-remove"></span>
+					</dd>
+					<dt>Última Entrada:</dt>
+					<dd>
+						{% if expediente.movimientos.last.fechaEntrada is defined %}
+							{% if expediente.movimientos.last.fechaEntrada is not null %}
+								{{ expediente.movimientos.last.fechaEntrada|date('d-m-Y') }}
+							{% endif %}
+						{% endif %}
+					</dd>
+					<dt>Última Salida:</dt>
+					<dd>
+						{% if expediente.movimientos.last.fechaSalida is defined %}
+							{% if expediente.movimientos.last.fechaSalida is not null %}
+								{{ expediente.movimientos.last.fechaSalida|date('d-m-Y') }}
+							{% endif %}
+						{% endif %}
+					</dd>
+				</dl>
+			</div>
+			<div class="panel-footer">
+				{% if expediente.activo %}
+					<span class="label label-success">Activo</span>
+				{% else %}
+					<span class="label label-danger">Inactivo</span>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="col-md-9">
+		<h4>Movimientos</h4>
+		{{ include('movimientos/_show.html.twig', { 'movimientos': movimientos }) }}
+	</div>
 
 {% endblock %}
