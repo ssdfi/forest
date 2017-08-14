@@ -52,12 +52,6 @@
     });
 
     /**
-     * Ejecuta la llamada AJAX para hacer la búsqueda de titulares y lista los resultados
-     * con un checkbox
-     */
-
-
-    /**
      * Al hacer click en el botón de agregar titulares en la ventanda modal, se agregan al listado
      * todos los titulares que han sido seleccionados mediante el checkbox
      */
@@ -75,6 +69,7 @@
 
     /* Selecciona todos los titulares del listado antes ejectuar el submit del formulario */
     return $("form").submit(function() {
+      $("#expedientes_titulares option").prop('selected', true);
       return $("#expedientes_titulares option").prop('selected', true);
     });
   });
