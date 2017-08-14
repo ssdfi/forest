@@ -45,7 +45,7 @@ class ExpedientesType extends AbstractType
               }
               $form->add('titulares', ChoiceType::class, array(
                             'multiple'=>true,
-                            'required'=>true,
+                            'required'=>false,
                             'choices'=> $titulares,
                             'choice_label'=> 'nombre',
                             'choice_value'=>function($value){
@@ -61,11 +61,14 @@ class ExpedientesType extends AbstractType
               function(FormEvent $event){
                 $form=$event->getForm();
                 $data=$event->getData();
-
+                $titulares = null;
+                if (array_key_exists('titulares', $data)) {
+                  $titulares = $data['titulares'];
+                }
                 $form->add('titulares', ChoiceType::class, array(
                               'multiple'=>true,
-                              'required'=>true,
-                              'choices'=> $data['titulares'],
+                              'required'=>false,
+                              'choices'=> $titulares,
                               'choice_value'=>function($value){
                                 if((gettype($value)=="string")){
                                   return $value;
