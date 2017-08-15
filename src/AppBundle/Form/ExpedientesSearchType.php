@@ -28,25 +28,29 @@ class ExpedientesSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
-            ->add('numeroExpediente', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
-            ->add('zona',EntityType::class, array('class'=>'AppBundle\Entity\Zonas', 'required'=>false))
-            ->add('anio', NumberType::class, array("attr"=> array("class"=>"form-group",'placeholder'=>"AAAA"),'required'=>false,'label'=>'Año'))
+            ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-control"),'required'=>false))
+            ->add('numeroExpediente', TextType::class, array("attr"=> array("class"=>"form-control"),'required'=>false))
+            ->add('zona',EntityType::class, array("attr"=> array("class"=>"form-control"),'class'=>'AppBundle\Entity\Zonas', 'required'=>false))
+            ->add('anio', NumberType::class, array("attr"=> array("class"=>"form-control",'placeholder'=>"AAAA"),'required'=>false,'label'=>'Año'))
             ->add('fechaEntradaDesde',DateType::class, array('label'=>'Fecha entrada desde', 'widget'=>'single_text','format'=>'yyyy-MM-dd', 'attr'=>array('class' => 'form-control','placeholder'=>"AAAA-MM-DD"),'mapped'=>false))
             ->add('fechaEntradaHasta',DateType::class, array('label'=>'Fecha entrada hasta', 'widget'=>'single_text','format'=>'yyyy-MM-dd', 'attr'=>array('class' => 'form-control','placeholder'=>"AAAA-MM-DD"),'mapped'=>false))
             ->add('fechaSalidaDesde',DateType::class, array('label'=>'Fecha salida desde', 'widget'=>'single_text','required'=>false,'format'=>'yyyy-MM-dd', 'attr'=>array('class' => 'form-control','placeholder'=>"AAAA-MM-DD"),'mapped'=>false))
             ->add('fechaSalidaHasta',DateType::class, array('label'=>'Fecha salida hasta', 'widget'=>'single_text','required'=>false,'format'=>'yyyy-MM-dd', 'attr'=>array('class' => 'form-control','placeholder'=>"AAAA-MM-DD"),'mapped'=>false))
-            ->add('responsable',EntityType::class, array('class'=>'AppBundle\Entity\Responsables','placeholder' => "",'group_by'=> function($dato) { if ($dato->getActivo() == false) { return 'Inactivos'; } else { return 'Activo'; } },'mapped'=>false))
-            ->add('tecnico',EntityType::class, array('class'=>'AppBundle\Entity\Tecnicos', 'required'=>false))
-            ->add('validador',EntityType::class, array('class'=>'AppBundle\Entity\Responsables','placeholder' => "",'mapped'=>false ,'group_by'=> function($dato) { if ($dato->getActivo() == false) { return 'Inactivos'; } else { return 'Activo'; } }))
-            ->add('activo',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false))
-            ->add('plurianual',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false))
-            ->add('agrupado',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false))
-            ->add('pendiente',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"), 'expanded'=>true,'multiple'=>false,'empty_data'=>false, 'mapped'=>false))
-            ->add('validado',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false, 'mapped'=>false))
-            ->add('estabilidad_fiscal',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false, 'mapped'=>false))
-            ->add('incompleto',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-group"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false, 'mapped'=>false));
-
+            ->add('responsable',EntityType::class, array("attr"=> array("class"=>"form-control"),'class'=>'AppBundle\Entity\Responsables','placeholder' => "",'group_by'=> function($dato) { if ($dato->getActivo() == false) { return 'Inactivos'; } else { return 'Activo'; } },'mapped'=>false))
+            ->add('tecnico',EntityType::class, array("attr"=> array("class"=>"form-control"),'class'=>'AppBundle\Entity\Tecnicos', 'required'=>false))
+            ->add('validador',EntityType::class, array("attr"=> array("class"=>"form-control"),'class'=>'AppBundle\Entity\Responsables','placeholder' => "",'mapped'=>false ,'group_by'=> function($dato) { if ($dato->getActivo() == false) { return 'Inactivos'; } else { return 'Activo'; } }))
+            ->add('activo',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-control"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false))
+            ->add('plurianual',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-control"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false))
+            ->add('agrupado',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-control"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false))
+            ->add('pendiente',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-control"), 'expanded'=>true,'multiple'=>false,'empty_data'=>false, 'mapped'=>false))
+            ->add('validado',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-control"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false, 'mapped'=>false))
+            ->add('estabilidad_fiscal',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-control"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false, 'mapped'=>false))
+            ->add('incompleto',ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-control"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false, 'mapped'=>false))
+            ->add('buscar',SubmitType::class,array('attr'=>array('class'=>'btn btn-primary pull-right')))
+            ->add('exportar',SubmitType::class,array('attr'=>array('accept'=>".csv",'class'=>'btn btn-default'),'label'=>'Exportar a CSV'));
+            $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+                             $event->stopPropagation();
+                         }, 900);
     }
 
     /**
