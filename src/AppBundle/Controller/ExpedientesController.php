@@ -13,7 +13,8 @@ use AppBundle\Form\ExpedientesType;
 use AppBundle\Form\ExpedientesSearchType;
 use Doctrine\ORM\Query;
 use Symfony\Component\Validator\Constraints\DateTime;
-
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -39,7 +40,7 @@ class ExpedientesController extends Controller
       $param=$request->query->get('expedientes_search');
 
       $wheres=array();
-
+      $join=array();
       if($param['numeroInterno']){
         $numeroInterno = $param['numeroInterno'];
         $wheres[]="lower(a.numeroInterno) like lower('%$numeroInterno%')";
@@ -54,7 +55,7 @@ class ExpedientesController extends Controller
       }
       if($param['anio']){
         $anio = $param['anio'];
-        $wheres[]="a.anio = $anio";
+        $wheres[]="a.anio = $anio OR m.etapa = $anio";
       }
       if($param['tecnico']){
         $tecnico = $param['tecnico'];
@@ -81,8 +82,27 @@ class ExpedientesController extends Controller
         $validador = $param['validador'];
         $wheres[]="m.validador = $validador";
       }
+      if($param['fechaEntradaDesde']){
 
-
+        $fechaEntradaDesde = $param['fechaEntradaDesde'];
+        $wheres[]="m.fechaEntrada > '$fechaEntradaDesde'";
+      }
+      if($param['fechaEntradaHasta']){
+        $fechaEntradaHasta = $param['fechaEntradaHasta'];
+        $wheres[]="m.fechaEntrada <= '$fechaEntradaHasta'";
+      }
+      if($param['fechaSalidaDesde']){
+        $fechaSalidaaDesde = $param['fechaSalidaDesde'];
+        $wheres[]="m.fechaSalida >= '$fechaSalidaaDesde'";
+      }
+      if($param['fechaSalidaHasta']){
+        $fechaSalidaHasta = $param['fechaSalidaHasta'];
+        $wheres[]="m.fechaSalida <= '$fechaSalidaHasta'";
+      }
+      if($param['estabilidad_fiscal']){
+        $estabilidad_fiscal = $param['estabilidad_fiscal'] == 1 ? 'true' : 'false';
+        $wheres[]="m.estabilidadFiscal = $estabilidad_fiscal";
+      }
       $dql   = "SELECT a FROM AppBundle:Expedientes a
                 INNER JOIN AppBundle:Movimientos m WITH a.id = m.expediente";
       $filter = '';
@@ -103,7 +123,11 @@ class ExpedientesController extends Controller
               15,
               array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'desc')
           );
-      return $this->render('expedientes/list.html.twig',array('expedientes' => $expedientes, 'search_form'=>$search_form->createView()));
+      $search_form->handleRequest($request);
+      if ($search_form->get('exportar')->isClicked()) {
+        $this->exportCSV($dql);
+      }
+      return $this->render('expedientes/list.html.twig',array('expedientes' => $expedientes, 'search_form'=>$search_form->createView(),'param' => $param,'dql'=>$dql));
     }
 
     /**
@@ -126,15 +150,12 @@ class ExpedientesController extends Controller
           if($expediente->getTitulares()){
               foreach ($expediente->getTitulares() as $key => $array) {
                 foreach ($array as $key => $titulares) {
-                  foreach ($titulares as $key => $value) {
-                    $titu= $em->getRepository('AppBundle:Titulares')->findOneBy(array('id'=>$value));
-                    $expediente->addTitular($titu);
-                  }
+                  $titu= $em->getRepository('AppBundle:Titulares')->findOneBy(array('id'=>$titulares));
+                  $expediente->addTitular($titu);
+                  unset($expediente->getTitulares()[0][$key]);
                 }
               }
-              unset($expediente->getTitulares()[0][0]);
             }
-
             $zona= $em->getRepository('AppBundle:Zonas')->findOneBy(array('codigo'=>$expediente->getZonaSplit()));
             if($zona != null){
                 $expediente->setZona($zona);
@@ -254,7 +275,33 @@ class ExpedientesController extends Controller
 
         return $this->redirectToRoute('expedientes_index');
     }
+    /**
+     * Export a CSV file.
+     *
+     * @param Expedientes $expediente The Expedientes entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     * @Route("/expedientes.csv", name="expedientes_export")
+     */
+    public function exportCSV ($dql) {
+      $filename = 'expedientes';
+      $em = $this->getDoctrine()->getManager();
+      $filepath = $_SERVER["DOCUMENT_ROOT"] . $filename.'.csv';
+      $output = fopen($filepath, 'w+');
 
+      fputcsv($output, array('Número Interno', 'Número Expediente','Titular', 'Zona','Zona departamento','Técnico','Responsable'));
+      $result = $em->createQuery($dql)->getResult();
+      foreach ($result as $key => $value) {
+        fputcsv($output, array($value->getNumeroInterno(), $value->getNumeroExpediente(), $value->getTitularesGroup(), $value->getZona()? $value->getZona()->getDescripcion(): '', $value->getZonaDepartamento()? $value->getZonaDepartamento()->getDescripcion() : '',$value->getTecnico()? $value->getTecnico()->getNombre() : '',$value->getResponsablesGroup()));
+      }
+      header("Pragma: public");
+    	header("Expires: 0");
+    	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    	header("Cache-Control: private",false);
+    	header("Content-Type: 'text/csv'");
+    	header("Content-Disposition: attachment; filename=\"$filename.csv\";" );
+      echo readfile($filepath);
+    }
     /**
      * Creates a form to delete a Expedientes entity.
      *
