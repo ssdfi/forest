@@ -1,63 +1,83 @@
-{% form_theme search_form 'bootstrap_3_layout.html.twig' %}
-{{ form_start(search_form) }}
+{{ form_start(search_form, {'attr':{'class':'form-horizontal'}}) }}
 <div class="form-group">
-	{{ form_label(search_form.numeroInterno) }}
-	{{ form_errors(search_form.numeroInterno) }}
-	{{ form_widget(search_form.numeroInterno) }}
+	{{ form_label(search_form.numeroInterno, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{{ form_widget(search_form.numeroInterno, {'attr': {'class': 'form-control'}}) }}
+	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.numeroExpediente) }}
-	{{ form_errors(search_form.numeroExpediente) }}
-	{{ form_widget(search_form.numeroExpediente) }}
+	{{ form_label(search_form.numeroExpediente, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{{ form_errors(search_form.numeroExpediente) }}
+		{{ form_widget(search_form.numeroExpediente) }}
+	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.zona) }}
-	{{ form_errors(search_form.zona) }}
-	{{ form_widget(search_form.zona) }}
+	{{ form_label(search_form.zona, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{{ form_errors(search_form.zona) }}
+		{{ form_widget(search_form.zona) }}
+	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.anio) }}
-	{{ form_errors(search_form.anio) }}
-	{{ form_widget(search_form.anio) }}
+	{{ form_label(search_form.anio, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{{ form_errors(search_form.anio) }}
+		{{ form_widget(search_form.anio) }}
+	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.fechaEntradaDesde) }}
-	{{ form_errors(search_form.fechaEntradaDesde) }}
-	{{ form_widget(search_form.fechaEntradaDesde) }}
+	{{ form_label(search_form.fechaEntradaDesde, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{{ form_errors(search_form.fechaEntradaDesde) }}
+		{{ form_widget(search_form.fechaEntradaDesde) }}
+	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.fechaEntradaHasta) }}
-	{{ form_errors(search_form.fechaEntradaHasta) }}
-	{{ form_widget(search_form.fechaEntradaHasta) }}
+	{{ form_label(search_form.fechaEntradaHasta, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{{ form_errors(search_form.fechaEntradaHasta) }}
+		{{ form_widget(search_form.fechaEntradaHasta) }}
+	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.fechaSalidaDesde) }}
-	{{ form_errors(search_form.fechaSalidaDesde) }}
-	{{ form_widget(search_form.fechaSalidaDesde) }}
+	{{ form_label(search_form.fechaSalidaDesde, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{{ form_errors(search_form.fechaSalidaDesde) }}
+		{{ form_widget(search_form.fechaSalidaDesde) }}
+	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.fechaSalidaHasta) }}
-	{{ form_errors(search_form.fechaSalidaHasta) }}
-	{{ form_widget(search_form.fechaSalidaHasta) }}
+	{{ form_label(search_form.fechaSalidaHasta, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{{ form_errors(search_form.fechaSalidaHasta) }}
+		{{ form_widget(search_form.fechaSalidaHasta) }}
+	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.responsable) }}
-	{{ form_errors(search_form.responsable) }}
-	{{ form_widget(search_form.responsable) }}
+	{{ form_label(search_form.responsable, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{{ form_errors(search_form.responsable) }}
+		{{ form_widget(search_form.responsable) }}
+	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.tecnico) }}
-	{{ form_errors(search_form.tecnico) }}
-	{{ form_widget(search_form.tecnico) }}
+	{{ form_label(search_form.tecnico, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{{ form_errors(search_form.tecnico) }}
+		{{ form_widget(search_form.tecnico) }}
+	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.validador) }}
-	{{ form_errors(search_form.validador) }}
-	{{ form_widget(search_form.validador) }}
+	{{ form_label(search_form.validador, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{{ form_errors(search_form.validador) }}
+		{{ form_widget(search_form.validador) }}
+	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.activo) }}
-	<div class="row">
+	{{ form_label(search_form.activo, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
 		{% for child in search_form.activo %}
 			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
 			</label>
@@ -120,6 +140,6 @@
 </div>
 {{ form_widget(search_form) }}
 <input type="hidden" name="_csrf_token" value="{{ csrf_token('search_form') }}">
-<input id="search" class="btn btn-primary pull-right" data-url="/expedientes" name="commit" value="Buscar" type="submit">
-<input id="exportar" class="btn btn-default-disabled" type="submit" value="Exportar a CSV"/>
+<!-- <input id="search" class="btn btn-primary pull-right" data-url="/expedientes" name="commit" value="Buscar" type="submit"> -->
+<!-- <input id="exporta" class="btn btn-default-disabled" data-url="/expedientes.csv" type="submit" value="Exportar a CSV"/> -->
 {{ form_end(search_form) }}
