@@ -14,7 +14,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="expedientes", indexes={@ORM\Index(name="index_expedientes_on_tecnico_id", columns={"tecnico_id"}), @ORM\Index(name="index_expedientes_on_zona_departamento_id", columns={"zona_departamento_id"}), @ORM\Index(name="index_expedientes_on_zona_id", columns={"zona_id"}), @ORM\Index(name="index_expedientes_on_numero_expediente", columns={"numero_expediente"}), @ORM\Index(name="index_expedientes_on_numero_interno", columns={"numero_interno"})})
  * @ORM\Entity
- * @UniqueEntity(fields="numeroInterno",message="Este valor ya existe y no puede repetirse") @UniqueEntity(fields="numeroExpediente",message="Este valor ya existe y no puede repetirse")
+ * @UniqueEntity(fields="numeroInterno",message="Este valor ya existe y no puede repetirse")
+ * @UniqueEntity(fields="numeroExpediente",message="Este valor ya existe y no puede repetirse")
  * @ORM\HasLifecycleCallbacks
  */
 class Expedientes
@@ -35,7 +36,7 @@ class Expedientes
      * @ORM\Column(name="numero_interno", type="string", length=255, nullable=true)
      * @Assert\Regex(
      *     pattern     = "/[0-9]{2}-[0-9]{3}-[0-9]{3}\/[0-9]{2}/",
-     *     message ="El formato debe ser ##-###-###/##"
+     *     message = "El formato debe ser ##-###-###/##"
      * )
      * @Assert\Length(min = 13, max=13, exactMessage="El campo debe tener {{ limit }} digitos, ##-###-###/##")
      * @Assert\NotBlank(message="El campo no puede estar vacío")
@@ -553,6 +554,26 @@ class Expedientes
         }
 
         return null;
+    }
+
+    public function getTitularesGroup(){
+      if($this->titulares){
+        $titularesGroup='';
+        foreach ($this->titulares as $key => $value) {
+          $titularesGroup = $titularesGroup . ' - ' . $value->getNombre();
+        }
+      }
+      return $titularesGroup;
+    }
+
+    public function getResponsablesGroup(){
+      if($this->movimientos){
+        $responsablesGroup='';
+        foreach ($this->movimientos as $key => $value) {
+          $responsablesGroup = $responsablesGroup . ' - ' . $value->getResponsable();
+        }
+      }
+      return $responsablesGroup;
     }
 
     public function __construct() {
