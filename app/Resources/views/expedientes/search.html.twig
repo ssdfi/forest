@@ -79,67 +79,65 @@
 	{{ form_label(search_form.activo, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
 	<div class="col-sm-7">
 		{% for child in search_form.activo %}
-			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			</label>
+			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
 		{% endfor %}
 	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.plurianual) }}
-	<div class="row">
+	{{ form_label(search_form.plurianual, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
 		{% for child in search_form.plurianual %}
-			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			</label>
+			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
 		{% endfor %}
 	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.agrupado) }}
-	<div class="row">
+	{{ form_label(search_form.agrupado, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
 		{% for child in search_form.agrupado %}
-			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			</label>
+			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
 		{% endfor %}
 	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.pendiente) }}
-	<div class="row">
+	{{ form_label(search_form.pendiente, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
 		{% for child in search_form.pendiente %}
-			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			</label>
+			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
 		{% endfor %}
 	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.validado) }}
-	<div class="row">
+	{{ form_label(search_form.validado, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
 		{% for child in search_form.validado %}
-			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			</label>
+		 {{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+		 {{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
 		{% endfor %}
 	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.estabilidad_fiscal) }}
-	<div class="row">
+	{{ form_label(search_form.estabilidad_fiscal, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
 		{% for child in search_form.estabilidad_fiscal %}
-			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			</label>
+			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
 		{% endfor %}
 	</div>
 </div>
 <div class="form-group">
-	{{ form_label(search_form.incompleto) }}
-	<div class="row">
+	{{ form_label(search_form.incompleto, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
 		{% for child in search_form.incompleto %}
-			<label class="radio-inline">{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			</label>
+			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
 		{% endfor %}
 	</div>
 </div>
 {{ form_widget(search_form) }}
 <input type="hidden" name="_csrf_token" value="{{ csrf_token('search_form') }}">
-<!-- <input id="search" class="btn btn-primary pull-right" data-url="/expedientes" name="commit" value="Buscar" type="submit"> -->
-<!-- <input id="exporta" class="btn btn-default-disabled" data-url="/expedientes.csv" type="submit" value="Exportar a CSV"/> -->
 {{ form_end(search_form) }}
