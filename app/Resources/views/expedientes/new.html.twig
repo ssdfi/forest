@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
 <div class="modal fade" id="titulares-modal" tabindex="-1" role="dialog" aria-labelledby="titulares-modal-label" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -46,8 +45,8 @@
   </div>
 </div>
 
-
 {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{{ include('flash/message.html.twig') }}
 <div class="row">
   <div class="col-md-5">
     <h2>Nuevo Expediente </h2>
