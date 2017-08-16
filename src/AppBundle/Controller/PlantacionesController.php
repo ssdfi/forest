@@ -36,7 +36,7 @@ class PlantacionesController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $param=$request->query->get('plantacion');
         $datos = null;
         if ($param['ids']) {
@@ -65,20 +65,71 @@ class PlantacionesController extends Controller
      */
     public function newAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $plantacione = new Plantaciones();
         $form = $this->createForm('AppBundle\Form\PlantacionesType', $plantacione);
+        $generos = $em->getRepository('AppBundle:Generos')->findAll();
+        $plantaciones_historicos = $em->getRepository('AppBundle:PlantacionesHistorico')->findByPlantacionAnterior($plantacione->getId());
+        $originalHistoricos = new ArrayCollection();
+        foreach ($plantaciones_historicos as $plantacionHistorico) {
+            $originalHistoricos->add($plantacionHistorico);
+        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+          $copiarDatos = $form->get("copiarDatos")->getData();
+          $activarNuevas = $form->get("activarNuevas")->getData();
+          foreach ($originalHistoricos as $key => $value) {
+            if (false == $plantacione->getHistorico()->contains($value->getPlantacionNueva()->getId())){
+              $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
+              $plantacione->removeHistorico($value);
+              $em->remove($value);
+            }
+          }
+          foreach ($plantacione->getHistorico() as $key => $value) {
+            $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findOneBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
+            $plantacione->setHistorico($historico);
+            if (is_integer($value)) {
+              $plantacione->getHistorico()->removeElement($value);
+            }
+          }
+
+          if (count($plantacione->getHistorico()) > 0) {
+            $plantacione->setActivo(false);
+          }
+
+          if ($copiarDatos === true) {
+            foreach ($plantacione->getHistorico() as $key => $plantacionNueva) {
+              $plantacionNueva->getPlantacionNueva()->setActivo($activarNuevas);
+              $plantacionNueva->getPlantacionNueva()->setTitular($plantacione->getTitular());
+              $plantacionNueva->getPlantacionNueva()->setEspecie($plantacione->getEspecie());
+              $plantacionNueva->getPlantacionNueva()->setAnioPlantacion($plantacione->getAnioPlantacion());
+              $plantacionNueva->getPlantacionNueva()->setTipoPlantacion($plantacione->getTipoPlantacion());
+              $plantacionNueva->getPlantacionNueva()->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
+              $plantacionNueva->getPlantacionNueva()->setProvincia($plantacione->getProvincia());
+              $plantacionNueva->getPlantacionNueva()->setDepartamento($plantacione->getDepartamento());
+              $plantacionNueva->getPlantacionNueva()->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
+              $plantacionNueva->getPlantacionNueva()->setUsoForestal($plantacione->getUsoForestal());
+              $plantacionNueva->getPlantacionNueva()->setUsoAnterior($plantacione->getUsoAnterior());
+              $plantacionNueva->getPlantacionNueva()->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
+            }
+          }
+          try{
             $em->persist($plantacione);
             $em->flush();
-
+            $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha editado correctamente la plantación.'));
             return $this->redirectToRoute('plantaciones_show', array('id' => $plantacione->getId()));
+
+          } catch(\Doctrine\ORM\ORMException $e){
+            $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar la plantación');
+            $this->get('logger')->error($e->getMessage());
+            return $this->redirect('plantaciones_show', array('id' => $plantacione->getId()));
+          }
         }
 
         return $this->render('plantaciones/new.html.twig', array(
             'plantacione' => $plantacione,
+            'generos'=>$generos,
             'form' => $form->createView(),
         ));
     }
@@ -91,7 +142,7 @@ class PlantacionesController extends Controller
      */
     public function showAction(Plantaciones $plantacione, $id)
     {
-      $em    = $this->get('doctrine.orm.entity_manager');
+      $em = $this->getDoctrine()->getManager();
       $dql_m   = "SELECT m
                 FROM AppBundle:Plantaciones p
                 JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
@@ -142,7 +193,6 @@ class PlantacionesController extends Controller
         $deleteForm = $this->createDeleteForm($plantacione);
         $generos = $em->getRepository('AppBundle:Generos')->findAll();
         $plantaciones_historicos = $em->getRepository('AppBundle:PlantacionesHistorico')->findByPlantacionAnterior($plantacione->getId());
-
         $originalHistoricos = new ArrayCollection();
         foreach ($plantaciones_historicos as $plantacionHistorico) {
             $originalHistoricos->add($plantacionHistorico);
