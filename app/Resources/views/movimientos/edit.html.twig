@@ -1,11 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
 <div class="row">
   <div class="col-md-5">
     <h2>Editar Movimiento</h2>
-
     {{ form_start(edit_form) }}
         {{ form_widget(edit_form) }}
         <a id="cancel-movimiento" class="btn btn-default" onClick="history.go(-1);return true;">Cancelar</a>
