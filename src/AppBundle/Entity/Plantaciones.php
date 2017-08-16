@@ -131,9 +131,12 @@ class Plantaciones
     private $geom;
 
     /**
-     * @var integer
+     * @var \BasesGeometricas
      *
-     * @ORM\Column(name="base_geometrica_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="BasesGeometricas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="base_geometrica_id", referencedColumnName="id")
+     * })
      */
     private $baseGeometricaId;
 
@@ -1045,8 +1048,6 @@ class Plantaciones
     */
      public function setEspecie($especie)
      {
-       dump('hola');
-       dump($especie);
        if (true === $this->especie->contains($especie)) {
          return;
        }
@@ -1058,7 +1059,6 @@ class Plantaciones
      */
       public function addEspecie($especie)
       {
-        dump('add');
         if (true === $this->especie->contains($especie)) {
           return;
         }
