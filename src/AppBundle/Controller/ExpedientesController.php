@@ -139,11 +139,8 @@ class ExpedientesController extends Controller
     public function newAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-
         $expediente = new Expedientes();
-
         $form = $this->createForm('AppBundle\Form\ExpedientesType', $expediente);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -168,7 +165,6 @@ class ExpedientesController extends Controller
 
             }
             $expediente->setAnio($expediente->getAnioSplit());
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($expediente);
             $em->flush();
