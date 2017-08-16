@@ -165,11 +165,20 @@ class ExpedientesController extends Controller
 
             }
             $expediente->setAnio($expediente->getAnioSplit());
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($expediente);
-            $em->flush();
 
-            return $this->redirectToRoute('expedientes_show', array('id' => $expediente->getId()));
+            try{
+              $em->persist($expediente);
+              $em->flush();
+              $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Expediente creado satisfactoriamente.'));
+              return $this->redirectToRoute('expedientes_show', array('id' => $expediente->getId()));
+
+            } catch(\Doctrine\ORM\ORMException $e){
+              dump('hola');
+              $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al guardar los datos');
+              $this->get('logger')->error($e->getMessage());
+              return $this->redirect('expedientes_show', array('id' => $expediente->getId()));
+            }
+
         }
 
         return $this->render('expedientes/new.html.twig', array(
@@ -242,7 +251,6 @@ class ExpedientesController extends Controller
               $this->get('logger')->error($e->getMessage());
               return $this->redirect('expedientes_show', array('id' => $expediente->getId()));
             }
-            return $this->redirectToRoute('expedientes_show', array('id' => $expediente->getId()));
         }
 
         return $this->render('expedientes/edit.html.twig', array(
