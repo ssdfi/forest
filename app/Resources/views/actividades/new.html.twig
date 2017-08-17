@@ -108,5 +108,21 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript">
+    var estabilidad = '{{estabilidadFiscal}}';
+    if (!estabilidad) {
+      $( "#appbundle_actividades_superficieInspeccionada" ).keyup(function(e) {
+        if( $(this).val() > 300) {
+          if ($( "#appbundle_actividades_tipoActividad" ).val() == 1 ||
+              $( "#appbundle_actividades_tipoActividad" ).val() == 4 ||
+              $( "#appbundle_actividades_tipoActividad" ).val() == 5) {
+                if (confirm('Esta Actividad tiene más de 300ha. inspeccionadas y el movimiento no tiene Estabilidad Fiscal seleccionado, ¿Desea activar la Estabilidad Fiscal?')) {
+                    $( "#appbundle_actividades_estabilidadFiscal" ).val(true);
+                }
+          }
+        }
+      });
+    }
+    </script>
     <script src="{{ asset('js/actividades.js') }}"></script>
 {% endblock %}
