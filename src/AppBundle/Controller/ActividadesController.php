@@ -29,11 +29,13 @@ class ActividadesController extends Controller
       $actividad = new Actividades();
       $form = $this->createForm('AppBundle\Form\ActividadesType', $actividad);
       $form->handleRequest($request);
-
+      $em = $this->getDoctrine()->getManager();
+      $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
+      $estabilidadFiscal = $movimiento->getEstabilidadFiscal();
       if ($form->isSubmitted() && $form->isValid()) {
-
-          $em = $this->getDoctrine()->getManager();
-          $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
+          if ( $form->get("estabilidadFiscal")->getData() === true ){
+            $movimiento->setEstabilidadFiscal(true);
+          }
           $actividad->setMovimiento($movimiento);
           $em->persist($actividad);
           foreach ($actividad->getPlantaciones() as $key => $actividad_plantacion) {
@@ -45,6 +47,7 @@ class ActividadesController extends Controller
 
       return $this->render('actividades/new.html.twig', array(
           'actividade' => $actividad,
+          'estabilidadFiscal' => $estabilidadFiscal,
           'form' => $form->createView(),
       ));
   }
