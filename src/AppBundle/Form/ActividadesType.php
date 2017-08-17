@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 
@@ -22,6 +23,7 @@ class ActividadesType extends AbstractType
         ->add('superficieCertificada')
         ->add('superficieInspeccionada')
         ->add('superficieRegistrada',TextType::class, array('disabled'=>true,'required'=>false))
+        ->add('estabilidadFiscal', HiddenType::class, array('mapped'=>false))
         ->add('plantaciones', CollectionType::class, array(
             'entry_type'    => ActividadesPlantacionesType::class,
             'allow_add'     => true,
