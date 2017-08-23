@@ -48,7 +48,7 @@ $(document).ready(function () {
               return tr.find('[id$=superficieRegistrada]').val(data['1']);
             }
           }).fail(function(){
-            alert('La plantación ' + plantacion_id + ' no existe.');
+            return tr.find('[id$=plantacion]').parent().addClass('has-error');
           }).always(function() {
             input.prop('disabled', false);
             return button.prop('disabled', false);
