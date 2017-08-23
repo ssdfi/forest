@@ -34,29 +34,29 @@ class TitularesController extends Controller
 
         $wheres=array();
 
-         if($param['nombre']){
+        if ($param['nombre']) {
             $nombre=$param['nombre'];
             $wheres[]="lower(a.nombre) like lower('%$nombre%')";
-          }
-         if($param['dni']){
+        }
+        if ($param['dni']) {
             $dni=$param['dni'];
             $wheres[]="a.dni like '%$dni%'";
-         }
-         if($param['cuit']){
+        }
+        if ($param['cuit']) {
             $cuit=$param['cuit'];
             $wheres[]="a.cuit like '%$cuit%'";
-         }
+        }
         $filter = '';
         foreach ($wheres as $key => $value) {
-          $filter = $filter .' '.$value;
-          if(count($wheres) > 1 && $value != end($wheres)) {
-            $filter = $filter .' AND';
-          }
+            $filter = $filter .' '.$value;
+            if (count($wheres) > 1 && $value != end($wheres)) {
+                $filter = $filter .' AND';
+            }
         }
         $em    = $this->get('doctrine.orm.entity_manager');
         $dql   = "SELECT a FROM AppBundle:Titulares a";
-        if(!empty($wheres)) {
-          $dql = $dql .' WHERE '.$filter;
+        if (!empty($wheres)) {
+            $dql = $dql .' WHERE '.$filter;
         }
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
@@ -66,8 +66,7 @@ class TitularesController extends Controller
                 15,
                 array('defaultSortFieldName' => 'a.nombre', 'defaultSortDirection' => 'asc')
             );
-        return $this->render('titulares/index.html.twig',array('titulares' => $titulares, 'search_form'=>$search_form->createView(),'param' => $param));
-
+        return $this->render('titulares/index.html.twig', array('titulares' => $titulares, 'search_form'=>$search_form->createView(),'param' => $param));
     }
 
     /**
@@ -78,37 +77,42 @@ class TitularesController extends Controller
      */
     public function jsonAction(Request $request)
     {
-
-      $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         $param=$request->query->get('titular');
         $wheres=array();
 
-       if($param['nombre']){
-          $nombre=$param['nombre'];
-          $wheres[]="a.nombre = $nombre";
+        if ($param['nombre']) {
+            $nombre=$param['nombre'];
+            $wheres[]="a.nombre like '%$nombre%'";
         }
-        if($param['dni']){
-           $dni=$param['dni'];
-           $wheres[]="a.dni = $dni";
-         }
-        $titulare = new Titulares();
-
-        $titulares = $this->getDoctrine()->getRepository('AppBundle:Titulares');
-        $query = $titulares->createQueryBuilder('p')
-                ->where("p.nombre like :nombre")
-                ->setParameter('nombre', '%'.$param['nombre'].'%')
-                ->getQuery();
-      $result=$query->getResult((\Doctrine\ORM\Query::HYDRATE_ARRAY));
-
-      //$dql   = "SELECT a FROM AppBundle:Titulares a where a.nombre like '%tincho%'";
-        if(!empty($wheres)){
-          //$dql=implode("and",$wheres);
+        if ($param['dni']) {
+            $dni=$param['dni'];
+            $wheres[]="a.dni like '%$dni%'";
         }
-      $response = new Response();
-      $response->setContent(json_encode($result));
-      $response->headers->set('Content-Type', 'application/json');
+        if ($param['cuit']) {
+            $cuit=$param['cuit'];
+            $wheres[]="a.cuit like '%$cuit%'";
+        }
+        $dql   = "SELECT a FROM AppBundle:Titulares a";
+        $filter = '';
+        foreach ($wheres as $key => $value) {
+            $filter = $filter .' '.$value;
+            if (count($wheres) > 1 && $value != end($wheres)) {
+                $filter = $filter .' AND';
+            }
+        }
+        if (!empty($wheres)) {
+            $dql = $dql .' WHERE '.$filter;
+        }
 
-      return $response;
+        $result = $em->createQuery($dql)
+                      ->setMaxResults(50)
+                      ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        $response = new Response();
+        $response->setContent(json_encode($result));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
     public function getRequest()
