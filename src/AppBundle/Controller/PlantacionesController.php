@@ -274,10 +274,10 @@ class PlantacionesController extends Controller
                     WHERE p.id=:id";
           $plantacion=$em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult();
           $response = new Response();
-          if($plantacion[0][1]) {
+          if(!empty($plantacion)) {
             $plantacion[0][1] = round($plantacion[0][1],1,PHP_ROUND_HALF_UP);
+            $response->setContent(json_encode($plantacion[0]));
           }
-          $response->setContent(json_encode($plantacion[0]));
           $response->headers->set('Content-Type', 'application/json');
           return $response;
       }
