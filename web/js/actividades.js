@@ -47,6 +47,8 @@ $(document).ready(function () {
             if (data) {
               return tr.find('[id$=superficieRegistrada]').val(data['1']);
             }
+          }).fail(function(){
+            alert('La plantación ' + plantacion_id + ' no existe.');
           }).always(function() {
             input.prop('disabled', false);
             return button.prop('disabled', false);
@@ -64,13 +66,13 @@ $(document).ready(function () {
             tr = $('#plantaciones').find('tr').last();
             tr.find('[id$=plantacion]').val($.trim(plantacion_id));
             tr.find('[id$=fecha]').val($('#fecha').val());
-            tr.find('[id$=numero_plantas]').val($('#numero_plantas').val());
+            tr.find('[id$=numeroPlantas]').val($('#numero_plantas').val());
             if ($('#superficie_registrada').val()) {
-              tr.find('[id$=superficie_registrada]').val($('#superficie_registrada').val());
+              tr.find('[id$=superficieRegistrada]').val($('#superficie_registrada').val());
             } else {
               tr.find('.hectareas').click();
             }
-            tr.find('[id$=estado_aprobacion_id]').val($('#_estado_aprobacion_id').val());
+            tr.find('[id$=estadoAprobacion]').val($('#_estado_aprobacion_id').val());
             tr.find('[id$=observaciones]').val($('#observaciones').val());
           }
         }
