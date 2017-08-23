@@ -1,5 +1,4 @@
 <?php
-// src/AppBundle/Form/EventListener/AddEmailFieldListener.php
 namespace AppBundle\Form\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
