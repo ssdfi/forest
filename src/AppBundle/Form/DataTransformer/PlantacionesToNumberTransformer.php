@@ -47,8 +47,7 @@ class PlantacionesToNumberTransformer implements DataTransformerInterface
             ->getRepository('AppBundle:Plantaciones')
             ->findById($issueNumber)
         ;
-
-        if (null === $issue) {
+        if (empty($issue)) {
             throw new TransformationFailedException(sprintf(
                 'An issue with number "%s" does not exist!',
                 $issueNumber
