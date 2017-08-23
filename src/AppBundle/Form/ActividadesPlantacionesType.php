@@ -39,7 +39,7 @@ class ActividadesPlantacionesType extends AbstractType
           ->add('observaciones',TextareaType::class,array('label' => false,'required'=>false,'attr' => array('class' => 'form-control')));
 
          $builder->add(
-            $builder->create('plantacion', IntegerType::class, array('label' => false,'required'=>true))
+            $builder->create('plantacion', IntegerType::class, array('label' => false,'required'=>true,'invalid_message' => 'La plantación {{ value }} no existe'))
                 ->addModelTransformer($transformer)
         );
     }
