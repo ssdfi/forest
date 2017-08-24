@@ -45,6 +45,7 @@ $(document).ready(function () {
             url: "/plantaciones/json/" + plantacion_id
           }).done(function(data) {
             if (data) {
+              tr.find('[id$=plantacion]').parent().removeClass('has-error');
               return tr.find('[id$=superficieRegistrada]').val(data['1']);
             }
           }).fail(function(){
