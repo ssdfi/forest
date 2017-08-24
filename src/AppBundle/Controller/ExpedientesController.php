@@ -30,104 +30,103 @@ class ExpedientesController extends Controller
      */
     public function listExpedientes(Request $request)
     {
-      $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
 
-      $expediente = new Expedientes();
-      $search_form = $this->createForm('AppBundle\Form\ExpedientesSearchType', $expediente, array(
+        $expediente = new Expedientes();
+        $search_form = $this->createForm('AppBundle\Form\ExpedientesSearchType', $expediente, array(
         'action' => '/',
         'method' => 'get'
       ));
-      $param=$request->query->get('expedientes_search');
+        $param=$request->query->get('expedientes_search');
 
-      $wheres=array();
-      $join=array();
-      if($param['numeroInterno']){
-        $numeroInterno = $param['numeroInterno'];
-        $wheres[]="lower(a.numeroInterno) like lower('%$numeroInterno%')";
-      }
-      if($param['numeroExpediente']){
-         $numeroExpediente = $param['numeroExpediente'];
-         $wheres[]="lower(a.numeroExpediente) like lower('%$numeroExpediente%')";
-       }
-      if($param['zona']){
-        $zona = $param['zona'];
-        $wheres[]="a.zona = $zona";
-      }
-      if($param['anio']){
-        $anio = $param['anio'];
-        $wheres[]="a.anio = $anio OR m.etapa = $anio";
-      }
-      if($param['tecnico']){
-        $tecnico = $param['tecnico'];
-        $wheres[]="a.tecnico = $tecnico";
-      }
-      if($param['activo']){
-        $activo = $param['activo'] == 1 ? 'TRUE' : 'FALSE';
-        $wheres[]="a.activo = $activo";
-      }
-      if($param['plurianual']){
-        $plurianual = $param['plurianual'] == 1 ? 'TRUE' : 'FALSE';
-        $wheres[]="a.plurianual = $plurianual";
-      }
-      if($param['agrupado']){
-        $agrupado = $param['agrupado'] == 1 ? 'TRUE' : 'FALSE';
-        $wheres[]="a.agrupado = $agrupado";
-      }
-
-      if($param['responsable']){
-        $responsable = $param['responsable'];
-        $wheres[]="m.responsable = $responsable";
-      }
-      if($param['validador']){
-        $validador = $param['validador'];
-        $wheres[]="m.validador = $validador";
-      }
-      if($param['fechaEntradaDesde']){
-
-        $fechaEntradaDesde = $param['fechaEntradaDesde'];
-        $wheres[]="m.fechaEntrada > '$fechaEntradaDesde'";
-      }
-      if($param['fechaEntradaHasta']){
-        $fechaEntradaHasta = $param['fechaEntradaHasta'];
-        $wheres[]="m.fechaEntrada <= '$fechaEntradaHasta'";
-      }
-      if($param['fechaSalidaDesde']){
-        $fechaSalidaaDesde = $param['fechaSalidaDesde'];
-        $wheres[]="m.fechaSalida >= '$fechaSalidaaDesde'";
-      }
-      if($param['fechaSalidaHasta']){
-        $fechaSalidaHasta = $param['fechaSalidaHasta'];
-        $wheres[]="m.fechaSalida <= '$fechaSalidaHasta'";
-      }
-      if($param['estabilidad_fiscal']){
-        $estabilidad_fiscal = $param['estabilidad_fiscal'] == 1 ? 'true' : 'false';
-        $wheres[]="m.estabilidadFiscal = $estabilidad_fiscal";
-      }
-      $dql   = "SELECT a FROM AppBundle:Expedientes a
-                INNER JOIN AppBundle:Movimientos m WITH a.id = m.expediente";
-      $filter = '';
-      foreach ($wheres as $key => $value) {
-        $filter = $filter .' '.$value;
-        if(count($wheres) > 1 && $value != end($wheres)) {
-          $filter = $filter .' AND';
+        $wheres=array();
+        $join=array();
+        if ($param['numeroInterno']) {
+            $numeroInterno = $param['numeroInterno'];
+            $wheres[]="lower(a.numeroInterno) like lower('%$numeroInterno%')";
         }
-      }
-      if(!empty($wheres)) {
-        $dql = $dql .' WHERE '.$filter;
-      }
-      $query = $em->createQuery($dql);
-      $paginator = $this->get('knp_paginator');
-      $expedientes = $paginator->paginate(
+        if ($param['numeroExpediente']) {
+            $numeroExpediente = $param['numeroExpediente'];
+            $wheres[]="lower(a.numeroExpediente) like lower('%$numeroExpediente%')";
+        }
+        if ($param['zona']) {
+            $zona = $param['zona'];
+            $wheres[]="a.zona = $zona";
+        }
+        if ($param['anio']) {
+            $anio = $param['anio'];
+            $wheres[]="a.anio = $anio OR m.etapa = $anio";
+        }
+        if ($param['tecnico']) {
+            $tecnico = $param['tecnico'];
+            $wheres[]="a.tecnico = $tecnico";
+        }
+        if ($param['activo']) {
+            $activo = $param['activo'] == 1 ? 'TRUE' : 'FALSE';
+            $wheres[]="a.activo = $activo";
+        }
+        if ($param['plurianual']) {
+            $plurianual = $param['plurianual'] == 1 ? 'TRUE' : 'FALSE';
+            $wheres[]="a.plurianual = $plurianual";
+        }
+        if ($param['agrupado']) {
+            $agrupado = $param['agrupado'] == 1 ? 'TRUE' : 'FALSE';
+            $wheres[]="a.agrupado = $agrupado";
+        }
+
+        if ($param['responsable']) {
+            $responsable = $param['responsable'];
+            $wheres[]="m.responsable = $responsable";
+        }
+        if ($param['validador']) {
+            $validador = $param['validador'];
+            $wheres[]="m.validador = $validador";
+        }
+        if ($param['fechaEntradaDesde']) {
+            $fechaEntradaDesde = $param['fechaEntradaDesde'];
+            $wheres[]="m.fechaEntrada > '$fechaEntradaDesde'";
+        }
+        if ($param['fechaEntradaHasta']) {
+            $fechaEntradaHasta = $param['fechaEntradaHasta'];
+            $wheres[]="m.fechaEntrada <= '$fechaEntradaHasta'";
+        }
+        if ($param['fechaSalidaDesde']) {
+            $fechaSalidaaDesde = $param['fechaSalidaDesde'];
+            $wheres[]="m.fechaSalida >= '$fechaSalidaaDesde'";
+        }
+        if ($param['fechaSalidaHasta']) {
+            $fechaSalidaHasta = $param['fechaSalidaHasta'];
+            $wheres[]="m.fechaSalida <= '$fechaSalidaHasta'";
+        }
+        if ($param['estabilidad_fiscal']) {
+            $estabilidad_fiscal = $param['estabilidad_fiscal'] == 1 ? 'true' : 'false';
+            $wheres[]="m.estabilidadFiscal = $estabilidad_fiscal";
+        }
+        $dql   = "SELECT a FROM AppBundle:Expedientes a
+                INNER JOIN AppBundle:Movimientos m WITH a.id = m.expediente";
+        $filter = '';
+        foreach ($wheres as $key => $value) {
+            $filter = $filter .' '.$value;
+            if (count($wheres) > 1 && $value != end($wheres)) {
+                $filter = $filter .' AND';
+            }
+        }
+        if (!empty($wheres)) {
+            $dql = $dql .' WHERE '.$filter;
+        }
+        $query = $em->createQuery($dql);
+        $paginator = $this->get('knp_paginator');
+        $expedientes = $paginator->paginate(
               $query,
               $request->query->getInt('page', 1),
               15,
               array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'desc')
           );
-      $search_form->handleRequest($request);
-      if ($search_form->get('exportar')->isClicked()) {
-        $this->exportCSV($dql);
-      }
-      return $this->render('expedientes/list.html.twig',array('expedientes' => $expedientes, 'search_form'=>$search_form->createView(),'param' => $param,'dql'=>$dql));
+        $search_form->handleRequest($request);
+        if ($search_form->get('exportar')->isClicked()) {
+            return $this->render('expedientes/export.csv.twig', array('data' => $this->exportCSV($dql)));
+        }
+        return $this->render('expedientes/list.html.twig', array('expedientes' => $expedientes, 'search_form'=>$search_form->createView(),'param' => $param,'dql'=>$dql));
     }
 
     /**
@@ -144,41 +143,37 @@ class ExpedientesController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-          if($expediente->getTitulares()){
-              foreach ($expediente->getTitulares() as $key => $array) {
-                foreach ($array as $key => $titulares) {
-                  $titu= $em->getRepository('AppBundle:Titulares')->findOneBy(array('id'=>$titulares));
-                  $expediente->addTitular($titu);
-                  unset($expediente->getTitulares()[0][$key]);
+            if ($expediente->getTitulares()) {
+                foreach ($expediente->getTitulares() as $key => $array) {
+                    foreach ($array as $key => $titulares) {
+                        $titu= $em->getRepository('AppBundle:Titulares')->findOneBy(array('id'=>$titulares));
+                        $expediente->addTitular($titu);
+                        unset($expediente->getTitulares()[0][$key]);
+                    }
                 }
-              }
             }
             $zona= $em->getRepository('AppBundle:Zonas')->findOneBy(array('codigo'=>$expediente->getZonaSplit()));
-            if($zona != null){
+            if ($zona != null) {
                 $expediente->setZona($zona);
                 $zona_depto= $em->getRepository('AppBundle:ZonaDepartamentos')->findOneBy(array('zona'=>$expediente->getZonaSplit(),'codigo'=>$expediente->getZonaDeptoSplit()));
-                if($zona_depto==null){
-                }else {
-                  $expediente->setZonaDepartamento($zona_depto);
+                if ($zona_depto==null) {
+                } else {
+                    $expediente->setZonaDepartamento($zona_depto);
                 }
-            }else{
-
+            } else {
             }
             $expediente->setAnio($expediente->getAnioSplit());
 
-            try{
-              $em->persist($expediente);
-              $em->flush();
-              $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Expediente creado satisfactoriamente.'));
-              return $this->redirectToRoute('expedientes_show', array('id' => $expediente->getId()));
-
-            } catch(\Doctrine\ORM\ORMException $e){
-              dump('hola');
-              $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al guardar los datos');
-              $this->get('logger')->error($e->getMessage());
-              return $this->redirect('expedientes_show', array('id' => $expediente->getId()));
+            try {
+                $em->persist($expediente);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Expediente creado satisfactoriamente.'));
+                return $this->redirectToRoute('expedientes_show', array('id' => $expediente->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al guardar los datos');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirect('expedientes_show', array('id' => $expediente->getId()));
             }
-
         }
 
         return $this->render('expedientes/new.html.twig', array(
@@ -195,14 +190,14 @@ class ExpedientesController extends Controller
      */
     public function showAction(Expedientes $expediente, $id)
     {
-      $em = $this->getDoctrine()->getManager();
-      $dql_m   = "SELECT m
+        $em = $this->getDoctrine()->getManager();
+        $dql_m   = "SELECT m
                   FROM AppBundle:Movimientos m
                   WHERE m.expediente=:id";
-      $movimientos=$em->createQuery($dql_m)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
-      $deleteForm = $this->createDeleteForm($expediente);
+        $movimientos=$em->createQuery($dql_m)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+        $deleteForm = $this->createDeleteForm($expediente);
 
-      return $this->render('expedientes/show.html.twig', array(
+        return $this->render('expedientes/show.html.twig', array(
           'expediente' => $expediente,
           'movimientos' => $movimientos,
           'delete_form' => $deleteForm->createView(),
@@ -225,31 +220,30 @@ class ExpedientesController extends Controller
 
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-          if($expediente->getTitulares()){
-              foreach ($expediente->getTitulares() as $key => $array) {
-                foreach ($array as $key => $titulares) {
-                  $titu= $em->getRepository('AppBundle:Titulares')->findOneBy(array('id'=>$titulares));
-                  $expediente->addTitular($titu);
+            if ($expediente->getTitulares()) {
+                foreach ($expediente->getTitulares() as $key => $array) {
+                    foreach ($array as $key => $titulares) {
+                        $titu= $em->getRepository('AppBundle:Titulares')->findOneBy(array('id'=>$titulares));
+                        $expediente->addTitular($titu);
+                    }
                 }
-              }
-              foreach ($expediente->getTitulares()[0] as $key => $value) {
-                if (gettype($value) != "object"){
-                  unset($expediente->getTitulares()[0][$key]);
+                foreach ($expediente->getTitulares()[0] as $key => $value) {
+                    if (gettype($value) != "object") {
+                        unset($expediente->getTitulares()[0][$key]);
+                    }
                 }
-              }
             }
             $expediente->setUpdatedAt(new DateTime());
 
-            try{
-              $em->persist($expediente);
-              $em->flush();
-              $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Expediente actualizado satisfactoriamente.'));
-              return $this->redirectToRoute('expedientes_show', array('id' => $expediente->getId()));
-
-            } catch(\Doctrine\ORM\ORMException $e){
-              $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el expediente');
-              $this->get('logger')->error($e->getMessage());
-              return $this->redirect('expedientes_show', array('id' => $expediente->getId()));
+            try {
+                $em->persist($expediente);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Expediente actualizado satisfactoriamente.'));
+                return $this->redirectToRoute('expedientes_show', array('id' => $expediente->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el expediente');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirect('expedientes_show', array('id' => $expediente->getId()));
             }
         }
 
@@ -287,24 +281,24 @@ class ExpedientesController extends Controller
      * @return \Symfony\Component\Form\Form The form
      * @Route("/expedientes.csv", name="expedientes_export")
      */
-    public function exportCSV ($dql) {
-      $filename = 'expedientes';
-      $em = $this->getDoctrine()->getManager();
-      $filepath = $_SERVER["DOCUMENT_ROOT"] . $filename.'.csv';
-      $output = fopen($filepath, 'w+');
+    public function exportCSV($dql)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $filename = 'expedientes';
+        $filepath = $_SERVER["DOCUMENT_ROOT"] . $filename.'.csv';
+        $output = fopen($filepath, 'w+');
+        ob_end_clean();
 
-      fputcsv($output, array('Número Interno', 'Número Expediente','Titular', 'Zona','Zona departamento','Técnico','Responsable'));
-      $result = $em->createQuery($dql)->getResult();
-      foreach ($result as $key => $value) {
-        fputcsv($output, array($value->getNumeroInterno(), $value->getNumeroExpediente(), $value->getTitularesGroup(), $value->getZona()? $value->getZona()->getDescripcion(): '', $value->getZonaDepartamento()? $value->getZonaDepartamento()->getDescripcion() : '',$value->getTecnico()? $value->getTecnico()->getNombre() : '',$value->getResponsablesGroup()));
-      }
-      header("Pragma: public");
-    	header("Expires: 0");
-    	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-    	header("Cache-Control: private",false);
-    	header("Content-Type: 'text/csv'");
-    	header("Content-Disposition: attachment; filename=\"$filename.csv\";" );
-      echo readfile($filepath);
+        $fp = fopen('php://output', 'w');
+        fputcsv($output, array('Número Interno', 'Número Expediente','Titular', 'Zona','Zona departamento','Técnico','Responsable'));
+        $result = $em->createQuery($dql)->getResult();
+        foreach ($result as $key => $value) {
+            fputcsv($output, array($value->getNumeroInterno(), $value->getNumeroExpediente(), $value->getTitularesGroup(), $value->getZona()? $value->getZona()->getDescripcion(): '', $value->getZonaDepartamento()? $value->getZonaDepartamento()->getDescripcion() : '',$value->getTecnico()? $value->getTecnico()->getNombre() : '',$value->getResponsablesGroup()));
+        }
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=expedientes.csv');
+        readfile($filepath);
+        exit();
     }
     /**
      * Creates a form to delete a Expedientes entity.
@@ -321,5 +315,4 @@ class ExpedientesController extends Controller
             ->getForm()
         ;
     }
-
 }
