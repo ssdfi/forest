@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -21,6 +20,7 @@ use AppBundle\Entity\PlantacionesHistorico;
 use AppBundle\Entity\Especies;
 
 use Doctrine\ORM\Query;
+
 /**
  * Plantaciones controller.
  *
@@ -40,9 +40,9 @@ class PlantacionesController extends Controller
         $param=$request->query->get('plantacion');
         $datos = null;
         if ($param['ids']) {
-          $str = $param['ids'];
-          $param = explode("\r\n", $str);
-          $datos = $em->getRepository('AppBundle:Plantaciones')->findBy(array('id'=>array_filter($param)));
+            $str = $param['ids'];
+            $param = explode("\r\n", $str);
+            $datos = $em->getRepository('AppBundle:Plantaciones')->findBy(array('id'=>array_filter($param)));
         }
         $dql   = "SELECT a FROM AppBundle:Plantaciones a";
         $query = $em->createQuery($dql);
@@ -54,7 +54,7 @@ class PlantacionesController extends Controller
                 array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'asc')
             );
 
-        return $this->render('plantaciones/index.html.twig',array('plantaciones' => $plantaciones, 'param'=> $param));
+        return $this->render('plantaciones/index.html.twig', array('plantaciones' => $plantaciones, 'param'=> $param));
     }
 
     /**
@@ -77,54 +77,53 @@ class PlantacionesController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-          $copiarDatos = $form->get("copiarDatos")->getData();
-          $activarNuevas = $form->get("activarNuevas")->getData();
-          foreach ($originalHistoricos as $key => $value) {
-            if (false == $plantacione->getHistorico()->contains($value->getPlantacionNueva()->getId())){
-              $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
-              $plantacione->removeHistorico($value);
-              $em->remove($value);
+            $copiarDatos = $form->get("copiarDatos")->getData();
+            $activarNuevas = $form->get("activarNuevas")->getData();
+            foreach ($originalHistoricos as $key => $value) {
+                if (false == $plantacione->getHistorico()->contains($value->getPlantacionNueva()->getId())) {
+                    $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
+                    $plantacione->removeHistorico($value);
+                    $em->remove($value);
+                }
             }
-          }
-          foreach ($plantacione->getHistorico() as $key => $value) {
-            $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findOneBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
-            $plantacione->setHistorico($historico);
-            if (is_integer($value)) {
-              $plantacione->getHistorico()->removeElement($value);
+            foreach ($plantacione->getHistorico() as $key => $value) {
+                $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findOneBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
+                $plantacione->setHistorico($historico);
+                if (is_integer($value)) {
+                    $plantacione->getHistorico()->removeElement($value);
+                }
             }
-          }
 
-          if (count($plantacione->getHistorico()) > 0) {
-            $plantacione->setActivo(false);
-          }
-
-          if ($copiarDatos === true) {
-            foreach ($plantacione->getHistorico() as $key => $plantacionNueva) {
-              $plantacionNueva->getPlantacionNueva()->setActivo($activarNuevas);
-              $plantacionNueva->getPlantacionNueva()->setTitular($plantacione->getTitular());
-              $plantacionNueva->getPlantacionNueva()->setEspecie($plantacione->getEspecie());
-              $plantacionNueva->getPlantacionNueva()->setAnioPlantacion($plantacione->getAnioPlantacion());
-              $plantacionNueva->getPlantacionNueva()->setTipoPlantacion($plantacione->getTipoPlantacion());
-              $plantacionNueva->getPlantacionNueva()->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
-              $plantacionNueva->getPlantacionNueva()->setProvincia($plantacione->getProvincia());
-              $plantacionNueva->getPlantacionNueva()->setDepartamento($plantacione->getDepartamento());
-              $plantacionNueva->getPlantacionNueva()->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
-              $plantacionNueva->getPlantacionNueva()->setUsoForestal($plantacione->getUsoForestal());
-              $plantacionNueva->getPlantacionNueva()->setUsoAnterior($plantacione->getUsoAnterior());
-              $plantacionNueva->getPlantacionNueva()->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
+            if (count($plantacione->getHistorico()) > 0) {
+                $plantacione->setActivo(false);
             }
-          }
-          try{
-            $em->persist($plantacione);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha editado correctamente la plantación.'));
-            return $this->redirectToRoute('plantaciones_show', array('id' => $plantacione->getId()));
 
-          } catch(\Doctrine\ORM\ORMException $e){
-            $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar la plantación');
-            $this->get('logger')->error($e->getMessage());
-            return $this->redirect('plantaciones_show', array('id' => $plantacione->getId()));
-          }
+            if ($copiarDatos === true) {
+                foreach ($plantacione->getHistorico() as $key => $plantacionNueva) {
+                    $plantacionNueva->getPlantacionNueva()->setActivo($activarNuevas);
+                    $plantacionNueva->getPlantacionNueva()->setTitular($plantacione->getTitular());
+                    $plantacionNueva->getPlantacionNueva()->setEspecie($plantacione->getEspecie());
+                    $plantacionNueva->getPlantacionNueva()->setAnioPlantacion($plantacione->getAnioPlantacion());
+                    $plantacionNueva->getPlantacionNueva()->setTipoPlantacion($plantacione->getTipoPlantacion());
+                    $plantacionNueva->getPlantacionNueva()->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
+                    $plantacionNueva->getPlantacionNueva()->setProvincia($plantacione->getProvincia());
+                    $plantacionNueva->getPlantacionNueva()->setDepartamento($plantacione->getDepartamento());
+                    $plantacionNueva->getPlantacionNueva()->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
+                    $plantacionNueva->getPlantacionNueva()->setUsoForestal($plantacione->getUsoForestal());
+                    $plantacionNueva->getPlantacionNueva()->setUsoAnterior($plantacione->getUsoAnterior());
+                    $plantacionNueva->getPlantacionNueva()->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
+                }
+            }
+            try {
+                $em->persist($plantacione);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha editado correctamente la plantación.'));
+                return $this->redirectToRoute('plantaciones_show', array('id' => $plantacione->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar la plantación');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirect('plantaciones_show', array('id' => $plantacione->getId()));
+            }
         }
 
         return $this->render('plantaciones/new.html.twig', array(
@@ -142,38 +141,38 @@ class PlantacionesController extends Controller
      */
     public function showAction(Plantaciones $plantacione, $id)
     {
-      $em = $this->getDoctrine()->getManager();
-      $dql_m   = "SELECT m
+        $em = $this->getDoctrine()->getManager();
+        $dql_m   = "SELECT m
                 FROM AppBundle:Plantaciones p
                 JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
                 JOIN AppBundle:Actividades a WITH a.id=ap.actividad
                 JOIN AppBundle:Movimientos m WITH m.id=a.movimiento
                 JOIN AppBundle:Expedientes e WITH e.id=m.expediente
                 WHERE p.id=:id";
-      $movimientos=$em->createQuery($dql_m)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+        $movimientos=$em->createQuery($dql_m)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
 
-      $dql_e   = "SELECT e
+        $dql_e   = "SELECT e
                 FROM AppBundle:Plantaciones p
                 JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
                 JOIN AppBundle:Actividades a WITH a.id=ap.actividad
                 JOIN AppBundle:Movimientos m WITH m.id=a.movimiento
                 JOIN AppBundle:Expedientes e WITH e.id=m.expediente
                 WHERE p.id=:id";
-      $expedientes=$em->createQuery($dql_e)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+        $expedientes=$em->createQuery($dql_e)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
 
-      $dql_a   = "SELECT a
+        $dql_a   = "SELECT a
                 FROM AppBundle:Plantaciones p
                 JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
                 JOIN AppBundle:Actividades a WITH a.id=ap.actividad
                 JOIN AppBundle:Movimientos m WITH m.id=a.movimiento
                 JOIN AppBundle:Expedientes e WITH e.id=m.expediente
                 WHERE p.id=:id";
-      //SELECT a , st_area(a.geom)/10000 FROM AppBundle:Plantaciones a";
-      $actividades=$em->createQuery($dql_a)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+        //SELECT a , st_area(a.geom)/10000 FROM AppBundle:Plantaciones a";
+        $actividades=$em->createQuery($dql_a)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
 
-      //historico_anterior
-      $deleteForm = $this->createDeleteForm($plantacione);
-      return $this->render('plantaciones/show.html.twig', array(
+        //historico_anterior
+        $deleteForm = $this->createDeleteForm($plantacione);
+        return $this->render('plantaciones/show.html.twig', array(
             'plantacione' => $plantacione,
             'movimientos' => $movimientos,
             'actividades' => $actividades,
@@ -201,55 +200,53 @@ class PlantacionesController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-          $copiarDatos = $editForm->get("copiarDatos")->getData();
-          $activarNuevas = $editForm->get("activarNuevas")->getData();
-          foreach ($originalHistoricos as $key => $value) {
-            if (false == $plantacione->getHistorico()->contains($value->getPlantacionNueva()->getId())){
-              $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
-              $plantacione->removeHistorico($value);
-              $em->remove($value);
+            $copiarDatos = $editForm->get("copiarDatos")->getData();
+            $activarNuevas = $editForm->get("activarNuevas")->getData();
+            foreach ($originalHistoricos as $key => $value) {
+                if (false == $plantacione->getHistorico()->contains($value->getPlantacionNueva()->getId())) {
+                    $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
+                    $plantacione->removeHistorico($value);
+                    $em->remove($value);
+                }
             }
-          }
-          foreach ($plantacione->getHistorico() as $key => $value) {
-            $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findOneBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
-            $plantacione->setHistorico($historico);
-            if (is_integer($value)) {
-              $plantacione->getHistorico()->removeElement($value);
+            foreach ($plantacione->getHistorico() as $key => $value) {
+                $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findOneBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
+                $plantacione->setHistorico($historico);
+                if (is_integer($value)) {
+                    $plantacione->getHistorico()->removeElement($value);
+                }
             }
-          }
 
-          if (count($plantacione->getHistorico()) > 0) {
-            $plantacione->setActivo(false);
-          }
-
-          if ($copiarDatos === true) {
-            foreach ($plantacione->getHistorico() as $key => $plantacionNueva) {
-              $plantacionNueva->getPlantacionNueva()->setActivo($activarNuevas);
-              $plantacionNueva->getPlantacionNueva()->setTitular($plantacione->getTitular());
-              $plantacionNueva->getPlantacionNueva()->setEspecie($plantacione->getEspecie());
-              $plantacionNueva->getPlantacionNueva()->setAnioPlantacion($plantacione->getAnioPlantacion());
-              $plantacionNueva->getPlantacionNueva()->setTipoPlantacion($plantacione->getTipoPlantacion());
-              $plantacionNueva->getPlantacionNueva()->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
-              $plantacionNueva->getPlantacionNueva()->setProvincia($plantacione->getProvincia());
-              $plantacionNueva->getPlantacionNueva()->setDepartamento($plantacione->getDepartamento());
-              $plantacionNueva->getPlantacionNueva()->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
-              $plantacionNueva->getPlantacionNueva()->setUsoForestal($plantacione->getUsoForestal());
-              $plantacionNueva->getPlantacionNueva()->setUsoAnterior($plantacione->getUsoAnterior());
-              $plantacionNueva->getPlantacionNueva()->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
+            if (count($plantacione->getHistorico()) > 0) {
+                $plantacione->setActivo(false);
             }
-          }
-          try{
-            $em->persist($plantacione);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha editado correctamente la plantación.'));
-            return $this->redirectToRoute('plantaciones_show', array('id' => $plantacione->getId()));
 
-          } catch(\Doctrine\ORM\ORMException $e){
-            $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar la plantación');
-            $this->get('logger')->error($e->getMessage());
-            return $this->redirect('plantaciones_show', array('id' => $plantacione->getId()));
-          }
-
+            if ($copiarDatos === true) {
+                foreach ($plantacione->getHistorico() as $key => $plantacionNueva) {
+                    $plantacionNueva->getPlantacionNueva()->setActivo($activarNuevas);
+                    $plantacionNueva->getPlantacionNueva()->setTitular($plantacione->getTitular());
+                    $plantacionNueva->getPlantacionNueva()->setEspecie($plantacione->getEspecie());
+                    $plantacionNueva->getPlantacionNueva()->setAnioPlantacion($plantacione->getAnioPlantacion());
+                    $plantacionNueva->getPlantacionNueva()->setTipoPlantacion($plantacione->getTipoPlantacion());
+                    $plantacionNueva->getPlantacionNueva()->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
+                    $plantacionNueva->getPlantacionNueva()->setProvincia($plantacione->getProvincia());
+                    $plantacionNueva->getPlantacionNueva()->setDepartamento($plantacione->getDepartamento());
+                    $plantacionNueva->getPlantacionNueva()->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
+                    $plantacionNueva->getPlantacionNueva()->setUsoForestal($plantacione->getUsoForestal());
+                    $plantacionNueva->getPlantacionNueva()->setUsoAnterior($plantacione->getUsoAnterior());
+                    $plantacionNueva->getPlantacionNueva()->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
+                }
+            }
+            try {
+                $em->persist($plantacione);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha editado correctamente la plantación.'));
+                return $this->redirectToRoute('plantaciones_show', array('id' => $plantacione->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar la plantación');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirect('plantaciones_show', array('id' => $plantacione->getId()));
+            }
         }
 
         return $this->render('plantaciones/edit.html.twig', array(
@@ -260,119 +257,122 @@ class PlantacionesController extends Controller
         ));
     }
 
-      /* Obtengo Plantacion*/
-      /**
-       * Finds and displays a Plantaciones entity.
-       *
-       * @Route("/json/{id}", name="sjson_plantacion")
-       * @Method("GET")
-       */
-      public function jsonAction($id) {
-          $em = $this->getDoctrine()->getManager();
-          $dql_p   = "SELECT st_area(p.geom)/10000
+    /* Obtengo Plantacion*/
+    /**
+     * Finds and displays a Plantaciones entity.
+     *
+     * @Route("/json/{id}", name="sjson_plantacion")
+     * @Method("GET")
+     */
+    public function jsonAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dql_p   = "SELECT st_area(p.geom)/10000
                     FROM AppBundle:Plantaciones p
                     WHERE p.id=:id";
-          $plantacion=$em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult();
-          $response = new Response();
-          if(!empty($plantacion)) {
-            $plantacion[0][1] = round($plantacion[0][1],1,PHP_ROUND_HALF_UP);
+        $plantacion=$em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult();
+        $response = new Response();
+        if (!empty($plantacion)) {
+            $plantacion[0][1] = round($plantacion[0][1], 1, PHP_ROUND_HALF_UP);
             $response->setContent(json_encode($plantacion[0]));
-          }
-          $response->headers->set('Content-Type', 'application/json');
-          return $response;
-      }
-      /* Obtengo Plantacion*/
-      /**
-       * Finds and displays a Plantaciones entity.
-       *
-       * @Route("/geojson/{id}", name="geojson_plantacion")
-       * @Method("GET")
-       */
-      public function getGeoJSON($id){
+        }
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+    /* Obtengo Plantacion*/
+    /**
+     * Finds and displays a Plantaciones entity.
+     *
+     * @Route("/geojson/{id}", name="geojson_plantacion")
+     * @Method("GET")
+     */
+    public function getGeoJSON($id)
+    {
         $em    = $this->getDoctrine()->getManager();
         $dql_plantacion ="SELECT ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as plantacion
                   FROM AppBundle:Plantaciones p
                   WHERE p.id=:id";
         $plantacion=$em->createQuery($dql_plantacion)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
         return $plantacion;
-      }
+    }
 
-      /* Obtengo Especies*/
-      /**
-       * Finds and displays a Plantaciones entity.
-       *
-       * @Route("/especie_json/", name="json_especies")
-       * @Method("GET")
-       */
-      public function jsonEspeciesAction(Request $request) {
+    /* Obtengo Especies*/
+    /**
+     * Finds and displays a Plantaciones entity.
+     *
+     * @Route("/especie_json/", name="json_especies")
+     * @Method("GET")
+     */
+    public function jsonEspeciesAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $param=$request->query->get('especie');
         $wheres=array();
 
-        if($param['genero_id']){
-           $genero=$param['genero_id'];
-           $wheres[]="a.genero = $genero";
-         }
-       if($param['codigo_sp']){
-          $codigo_sp=$param['codigo_sp'];
-          $wheres[]="lower(a.codigoSp) like lower('%$codigo_sp%')";
+        if ($param['genero_id']) {
+            $genero=$param['genero_id'];
+            $wheres[]="a.genero = $genero";
         }
-        if($param['nombre_cientifico']){
-           $nombre_cientifico=$param['nombre_cientifico'];
-           $wheres[]="lower(a.nombreCientifico) like lower('%$nombre_cientifico%')";
-         }
-         if($param['nombre_comun']){
+        if ($param['codigo_sp']) {
+            $codigo_sp=$param['codigo_sp'];
+            $wheres[]="lower(a.codigoSp) like lower('%$codigo_sp%')";
+        }
+        if ($param['nombre_cientifico']) {
+            $nombre_cientifico=$param['nombre_cientifico'];
+            $wheres[]="lower(a.nombreCientifico) like lower('%$nombre_cientifico%')";
+        }
+        if ($param['nombre_comun']) {
             $nombre_comun=$param['nombre_comun'];
             $wheres[]="lower(a.nombreComun) like lower('%$nombre_comun%')";
-          }
+        }
         $filter = '';
         foreach ($wheres as $key => $value) {
-          $filter = $filter .' '.$value;
-          if(count($wheres) > 1 && $value != end($wheres)) {
-            $filter = $filter .' AND';
-          }
+            $filter = $filter .' '.$value;
+            if (count($wheres) > 1 && $value != end($wheres)) {
+                $filter = $filter .' AND';
+            }
         }
         $dql   = "SELECT a FROM AppBundle:Especies a";
-        if(!empty($wheres)) {
-          $dql = $dql .' WHERE '.$filter;
+        if (!empty($wheres)) {
+            $dql = $dql .' WHERE '.$filter;
         }
         $query = $em->createQuery($dql);
 
         $result=$query->getResult((\Doctrine\ORM\Query::HYDRATE_ARRAY));
 
-        if(!empty($wheres)){
-          //$dql=implode("and",$wheres);
+        if (!empty($wheres)) {
+            //$dql=implode("and",$wheres);
         }
         $response = new Response();
         $response->setContent(json_encode($result));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
-      }
-      /**
-       * Finds and displays a Plantaciones entity's Map.
-       *
-       * @Route("/{id}/mapa", name="json_plantacion")
-       * @Method("GET")
-       */
-        public function mapAction($id)
-        {
-            $em = $this->getDoctrine()->getManager();
-            // $dql_p   = "SELECT st_area(p.geom)/10000
-            //           FROM AppBundle:Plantaciones p
-            //           WHERE p.id=:id";
-            // $plantacion=$em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult();
-            // $response = new Response();
-            // if($plantacion[0][1]) {
-            //   $plantacion[0][1] = round($plantacion[0][1],1,PHP_ROUND_HALF_UP);
-            // }
-            $plantacion = $this->getGeoJSON($id);
+    }
+    /**
+     * Finds and displays a Plantaciones entity's Map.
+     *
+     * @Route("/{id}/mapa", name="json_plantacion")
+     * @Method("GET")
+     */
+    public function mapAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        // $dql_p   = "SELECT st_area(p.geom)/10000
+        //           FROM AppBundle:Plantaciones p
+        //           WHERE p.id=:id";
+        // $plantacion=$em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult();
+        // $response = new Response();
+        // if($plantacion[0][1]) {
+        //   $plantacion[0][1] = round($plantacion[0][1],1,PHP_ROUND_HALF_UP);
+        // }
+        $plantacion = $this->getGeoJSON($id);
 
-            return $this->render('map.html.twig', array('plantacion'=>$plantacion));
-            // $response->setContent(json_encode($plantacion[0]));
+        return $this->render('map.html.twig', array('plantacion'=>$plantacion));
+        // $response->setContent(json_encode($plantacion[0]));
             // $response->headers->set('Content-Type', 'application/json');
             // return $response;
-        }
+    }
 
     /**
      * Deletes a Plantaciones entity.

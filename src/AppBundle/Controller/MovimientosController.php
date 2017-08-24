@@ -12,6 +12,7 @@ use AppBundle\Entity\Expedientes;
 use AppBundle\Form\MovimientosType;
 use Doctrine;
 use Doctrine\ORM\Query;
+
 /**
  * Movimientos controller.
  *
@@ -26,33 +27,40 @@ class MovimientosController extends Controller
    * @Route("/expedientes/{id}/movimientos/new", name="movimientos_new")
    * @Method({"GET", "POST"})
    */
-  public function newAction(Request $request, $id)
-  {
-      $movimiento = new Movimientos();
-      $form = $this->createForm('AppBundle\Form\MovimientosType', $movimiento);
-      $form->handleRequest($request);
+    public function newAction(Request $request, $id)
+    {
+        $movimiento = new Movimientos();
+        $form = $this->createForm('AppBundle\Form\MovimientosType', $movimiento);
+        $form->handleRequest($request);
 
-      if ($form->isSubmitted() && $form->isValid()) {
-          $em = $this->getDoctrine()->getManager();
-          $expediente = $em->getRepository('AppBundle:Expedientes')->findOneById($id);
-          $movimiento->setExpediente($expediente);
-          $em->persist($movimiento);
-          $em->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
 
-          return $this->redirectToRoute('list_movimientos', array('id'=>$id,'idMov' => $movimiento->getId()));
-      }
+            try {
+                $expediente = $em->getRepository('AppBundle:Expedientes')->findOneById($id);
+                $movimiento->setExpediente($expediente);
+                $em->persist($movimiento);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Movimiento creado satisfactoriamente.'));
+                return $this->redirectToRoute('list_movimientos', array('id'=>$id,'idMov' => $movimiento->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al crear el movimiento');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+            }
+        }
 
-      return $this->render('movimientos/new.html.twig', array(
+        return $this->render('movimientos/new.html.twig', array(
           'movimiento' => $movimiento,
           'form' => $form->createView(),
       ));
-  }
-  /**
-   * List Movimientos.
-   *
-   * @Route("/expedientes/{id}/movimientos/{idMov}", name="list_movimientos")
-   * @Method("GET")
-   */
+    }
+    /**
+     * List Movimientos.
+     *
+     * @Route("/expedientes/{id}/movimientos/{idMov}", name="list_movimientos")
+     * @Method("GET")
+     */
 
     public function indexAction($id, $idMov)
     {
@@ -74,12 +82,12 @@ class MovimientosController extends Controller
      * @Method("GET")
      */
 
-      public function reportAction($id, $idMov)
-      {
-          $em = $this->getDoctrine()->getManager();
-          $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
-          $actividades = $em->getRepository('AppBundle:Actividades')->findByMovimiento($idMov);
-          $dql_p   = "SELECT SUM(ap.superficieRegistrada), IDENTITY(ap.actividad) as id, IDENTITY(p.titular), IDENTITY(p.tipoPlantacion), IDENTITY(ep.especie)
+    public function reportAction($id, $idMov)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
+        $actividades = $em->getRepository('AppBundle:Actividades')->findByMovimiento($idMov);
+        $dql_p   = "SELECT SUM(ap.superficieRegistrada), IDENTITY(ap.actividad) as id, IDENTITY(p.titular), IDENTITY(p.tipoPlantacion), IDENTITY(ep.especie)
                       FROM AppBundle:ActividadesPlantaciones ap
                       INNER JOIN AppBundle:Plantaciones p WITH p.id = ap.plantacion
                       INNER JOIN AppBundle:Actividades a WITH a.id = ap.actividad
@@ -88,45 +96,48 @@ class MovimientosController extends Controller
                       WHERE a.movimiento = :id
                       GROUP BY ap.actividad, p.titular, p.tipoPlantacion, ep.especie
                       ORDER BY ap.actividad DESC ";
-          $plantaciones = $em->createQuery($dql_p)->setParameters(array('id' => $idMov))->getResult(Query::HYDRATE_OBJECT);
-          return $this->render('movimientos/report.html.twig', array(
+        $plantaciones = $em->createQuery($dql_p)->setParameters(array('id' => $idMov))->getResult(Query::HYDRATE_OBJECT);
+        return $this->render('movimientos/report.html.twig', array(
               'expediente' => $id,
               'movimiento' => $movimiento,
               'actividades' => $actividades,
               'plantaciones' => $plantaciones
           ));
-      }
+    }
 
-      public function getActividadAction($id){
+    public function getActividadAction($id)
+    {
         $em = $this->getDoctrine()->getManager();
         $actividad = $em->getRepository('AppBundle:Actividades')->findById($id);
         return $this->render('movimientos/data.html.twig', array(
             'data' => $actividad[0]->getTipoActividad()->getDescripcion()
         ));
-
-      }
-      public function getTitularAction($id){
+    }
+    public function getTitularAction($id)
+    {
         $em = $this->getDoctrine()->getManager();
         $titular = $em->getRepository('AppBundle:Titulares')->findById($id);
         return $this->render('movimientos/data.html.twig', array(
             'data' => $titular[0]->getNombre()
         ));
-      }
-      public function getTipoPlantacionAction($id){
+    }
+    public function getTipoPlantacionAction($id)
+    {
         $em = $this->getDoctrine()->getManager();
         $actividad = $em->getRepository('AppBundle:TiposPlantacion')->findById($id);
         return $this->render('movimientos/data.html.twig', array(
             'data' => $actividad[0]->getDescripcion()
         ));
-      }
+    }
 
-      public function getEspecieAction($id){
+    public function getEspecieAction($id)
+    {
         $em = $this->getDoctrine()->getManager();
         $especie = $em->getRepository('AppBundle:Especies')->findById($id);
         return $this->render('movimientos/data.html.twig', array(
             'data' => $especie[0]->getNombreCientifico()
         ));
-      }
+    }
     /**
      * Displays a form to edit an existing Movimientos entity.
      *
@@ -142,19 +153,17 @@ class MovimientosController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-          $em = $this->getDoctrine()->getManager();
-
-          try{
-            $em->persist($movimiento);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Movimiento actualizado satisfactoriamente.'));
-            return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
-          } catch(\Doctrine\ORM\ORMException $e){
-            $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el movimiento');
-            $this->get('logger')->error($e->getMessage());
-            return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
-          }
-
+            $em = $this->getDoctrine()->getManager();
+            try {
+                $em->persist($movimiento);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Movimiento actualizado satisfactoriamente.'));
+                return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el movimiento');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+            }
         }
 
         return $this->render('movimientos/edit.html.twig', array(

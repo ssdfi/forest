@@ -18,46 +18,53 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class ActividadesController extends Controller
 {
-  /**
-   * Creates a new Actividades entity.
-   *
-   * @Route("/expedientes/{idExp}/movimientos/{idMov}/actividades/new", name="actividades_new")
-   * @Method({"GET", "POST"})
-   */
-  public function newAction(Request $request,$idExp,$idMov)
-  {
-      $actividad = new Actividades();
-      $form = $this->createForm('AppBundle\Form\ActividadesType', $actividad);
-      $form->handleRequest($request);
-      $em = $this->getDoctrine()->getManager();
-      $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
-      $estabilidadFiscal = $movimiento->getEstabilidadFiscal();
-      if ($form->isSubmitted() && $form->isValid()) {
-          if ( $form->get("estabilidadFiscal")->getData() === true ){
-            $movimiento->setEstabilidadFiscal(true);
-          }
-          $actividad->setMovimiento($movimiento);
-          $em->persist($actividad);
-          foreach ($actividad->getPlantaciones() as $key => $actividad_plantacion) {
-            $actividad_plantacion->setActividad($actividad);
-          }
-          $em->flush();
-          return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividad->getId()));
-      }
+    /**
+     * Creates a new Actividades entity.
+     *
+     * @Route("/expedientes/{idExp}/movimientos/{idMov}/actividades/new", name="actividades_new")
+     * @Method({"GET", "POST"})
+     */
+    public function newAction(Request $request, $idExp, $idMov)
+    {
+        $actividad = new Actividades();
+        $form = $this->createForm('AppBundle\Form\ActividadesType', $actividad);
+        $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+        $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
+        $estabilidadFiscal = $movimiento->getEstabilidadFiscal();
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                if ($form->get("estabilidadFiscal")->getData() === true) {
+                    $movimiento->setEstabilidadFiscal(true);
+                }
+                $actividad->setMovimiento($movimiento);
+                $em->persist($actividad);
+                foreach ($actividad->getPlantaciones() as $key => $actividad_plantacion) {
+                    $actividad_plantacion->setActividad($actividad);
+                }
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Actividad creada satisfactoriamente.'));
+                return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividad->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al crear la actividad');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+            }
+        }
 
-      return $this->render('actividades/new.html.twig', array(
+        return $this->render('actividades/new.html.twig', array(
           'actividade' => $actividad,
           'estabilidadFiscal' => $estabilidadFiscal,
           'form' => $form->createView(),
       ));
-  }
-  /**
-   * Finds and displays a Actividades entity.
-   *
-   * @Route("/expedientes/{id}/movimientos/{idMov}/actividades/{idAct}", name="list_actividades")
-   * @Method("GET")
-   */
-    public function indexAction($id, $idMov,$idAct)
+    }
+    /**
+     * Finds and displays a Actividades entity.
+     *
+     * @Route("/expedientes/{id}/movimientos/{idMov}/actividades/{idAct}", name="list_actividades")
+     * @Method("GET")
+     */
+    public function indexAction($id, $idMov, $idAct)
     {
         $em = $this->getDoctrine()->getManager();
         $actividades = $em->getRepository('AppBundle:Actividades')->findOneById($idAct);
@@ -105,7 +112,7 @@ class ActividadesController extends Controller
         $actividades_plantaciones = $em->getRepository('AppBundle:Actividades')->find($actividade->getId());
 
         if (!$actividades_plantaciones) {
-          throw $this->createNotFoundException('No task found for id '.$id);
+            throw $this->createNotFoundException('No task found for id '.$id);
         }
         $originalActs = new ArrayCollection();
 
@@ -116,23 +123,22 @@ class ActividadesController extends Controller
         $editForm = $this->createForm('AppBundle\Form\ActividadesType', $actividade);
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-          foreach ($originalActs as $act) {
-            if (false === $editForm->get('plantaciones')->getData()->contains($act)) {
-                $act->setActividad(null);
-                $em->persist($act);
+            foreach ($originalActs as $act) {
+                if (false === $editForm->get('plantaciones')->getData()->contains($act)) {
+                    $act->setActividad(null);
+                    $em->persist($act);
+                }
             }
-        }
 
-        try{
-          $this->getDoctrine()->getManager()->flush();
-          $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Actividad actualizada satisfactoriamente.'));
-          return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividade->getId()));
-        } catch(\Doctrine\ORM\ORMException $e){
-          $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar la actividad');
-          $this->get('logger')->error($e->getMessage());
-          return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividade->getId()));
-        }
-
+            try {
+                $this->getDoctrine()->getManager()->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Actividad actualizada satisfactoriamente.'));
+                return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividade->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar la actividad');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('list_actividades', array('id'=>$idExp,'idMov'=>$idMov,'idAct' => $actividade->getId()));
+            }
         }
 
         return $this->render('actividades/edit.html.twig', array(

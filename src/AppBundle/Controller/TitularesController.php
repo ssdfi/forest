@@ -132,11 +132,17 @@ class TitularesController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($titulare);
-            $em->flush();
-
-            return $this->redirectToRoute('titulares_show', array('id' => $titulare->getId()));
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($titulare);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Titular creado satisfactoriamente.'));
+                return $this->redirectToRoute('titulares_show', array('id' => $titulare->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al crear el titular');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('titulares_new');
+            }
         }
 
         return $this->render('titulares/new.html.twig', array(
@@ -199,11 +205,17 @@ class TitularesController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($titulare);
-            $em->flush();
-
-            return $this->redirectToRoute('titulares_show', array('id' => $titulare->getId()));
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($titulare);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Titular editado satisfactoriamente.'));
+                return $this->redirectToRoute('titulares_show', array('id' => $titulare->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar el titular');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('titulares_new');
+            }
         }
 
         return $this->render('titulares/edit.html.twig', array(

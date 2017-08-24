@@ -26,54 +26,53 @@ class TecnicosController extends Controller
      */
     public function indexAction(Request $request)
     {
-      $tecnico = new Tecnicos();
-      $search_form = $this->createForm('AppBundle\Form\TecnicosType', $tecnico);
-      $search_form->handleRequest($request);
-      $param=$request->query->get('tecnico');
+        $tecnico = new Tecnicos();
+        $search_form = $this->createForm('AppBundle\Form\TecnicosType', $tecnico);
+        $search_form->handleRequest($request);
+        $param=$request->query->get('tecnico');
 
-      $wheres=array();
+        $wheres=array();
 
-      if($param['nombre']){
-        $nombre=$param['nombre'];
-        $wheres[]="lower(a.nombre) like lower('%$nombre%')";
-      }
-      if($param['dni']){
-        $dni=$param['dni'];
-        $wheres[]="a.dni like '%$dni%'";
-      }
-      if($param['cuit']){
-        $cuit=$param['cuit'];
-        $wheres[]="a.cuit like '%$cuit%'";
-      }
-      if($param['activo']){
-        $activo=$param['activo'];
-        $wheres[]="a.activo = '$activo'";
-      }
-
-      $filter = '';
-      foreach ($wheres as $key => $value) {
-        $filter = $filter .' '.$value;
-        if(count($wheres) > 1 && $value != end($wheres)) {
-          $filter = $filter .' AND';
+        if ($param['nombre']) {
+            $nombre=$param['nombre'];
+            $wheres[]="lower(a.nombre) like lower('%$nombre%')";
         }
-      }
+        if ($param['dni']) {
+            $dni=$param['dni'];
+            $wheres[]="a.dni like '%$dni%'";
+        }
+        if ($param['cuit']) {
+            $cuit=$param['cuit'];
+            $wheres[]="a.cuit like '%$cuit%'";
+        }
+        if ($param['activo']) {
+            $activo=$param['activo'];
+            $wheres[]="a.activo = '$activo'";
+        }
 
-      $em    = $this->get('doctrine.orm.entity_manager');
-      $dql   = "SELECT a FROM AppBundle:Tecnicos a";
-      if(!empty($wheres)) {
-        $dql = $dql .' WHERE '.$filter;
-      }
-      $query = $em->createQuery($dql);
-      $paginator = $this->get('knp_paginator');
-      $tecnicos = $paginator->paginate(
+        $filter = '';
+        foreach ($wheres as $key => $value) {
+            $filter = $filter .' '.$value;
+            if (count($wheres) > 1 && $value != end($wheres)) {
+                $filter = $filter .' AND';
+            }
+        }
+
+        $em    = $this->get('doctrine.orm.entity_manager');
+        $dql   = "SELECT a FROM AppBundle:Tecnicos a";
+        if (!empty($wheres)) {
+            $dql = $dql .' WHERE '.$filter;
+        }
+        $query = $em->createQuery($dql);
+        $paginator = $this->get('knp_paginator');
+        $tecnicos = $paginator->paginate(
               $query,
               $request->query->getInt('page', 1),
               15,
               array('defaultSortFieldName' => 'a.nombre', 'defaultSortDirection' => 'asc')
           );
 
-      return $this->render('tecnicos/index.html.twig',array('tecnicos' => $tecnicos, 'search_form' => $search_form->createView(),'param' => $param));
-
+        return $this->render('tecnicos/index.html.twig', array('tecnicos' => $tecnicos, 'search_form' => $search_form->createView(),'param' => $param));
     }
 
     /**
@@ -89,11 +88,17 @@ class TecnicosController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($tecnico);
-            $em->flush();
-
-            return $this->redirectToRoute('tecnicos_show', array('id' => $tecnico->getId()));
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($tecnico);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Técnico creado satisfactoriamente.'));
+                return $this->redirectToRoute('tecnicos_show', array('id' => $tecnico->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al crear el técnico');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('tecnicos_new');
+            }
         }
 
         return $this->render('tecnicos/new.html.twig', array(
@@ -108,23 +113,24 @@ class TecnicosController extends Controller
      * @Route("/{id}", name="tecnicos_show")
      * @Method("GET")
      */
-    public function showAction(Tecnicos $tecnico, $id, Request $request){
-      $paginator = $this->get('knp_paginator');
+    public function showAction(Tecnicos $tecnico, $id, Request $request)
+    {
+        $paginator = $this->get('knp_paginator');
 
-      $em = $this->getDoctrine()->getManager();
-      $dql_e   = "SELECT e
+        $em = $this->getDoctrine()->getManager();
+        $dql_e   = "SELECT e
                 FROM AppBundle:Tecnicos t
                 JOIN AppBundle:Expedientes e WITH e.tecnico=t.id
                 WHERE e.tecnico=:id";
-      $query=$em->createQuery($dql_e)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+        $query=$em->createQuery($dql_e)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
 
-      $expedientes = $paginator->paginate(
+        $expedientes = $paginator->paginate(
               $query,
               $request->query->getInt('page', 1),
               15,
               array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'desc')
           );
-      $deleteForm = $this->createDeleteForm($tecnico);
+        $deleteForm = $this->createDeleteForm($tecnico);
         return $this->render('tecnicos/show.html.twig', array(
             'tecnico' => $tecnico,
             'expedientes' => $expedientes,
@@ -145,11 +151,17 @@ class TecnicosController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($tecnico);
-            $em->flush();
-
-            return $this->redirectToRoute('tecnicos_edit', array('id' => $tecnico->getId()));
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($tecnico);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Técnico editado satisfactoriamente.'));
+                return $this->redirectToRoute('tecnicos_show', array('id' => $tecnico->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar el técnico');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('tecnicos_edit', array('id' => $tecnico->getId()));
+            }
         }
 
         return $this->render('tecnicos/edit.html.twig', array(

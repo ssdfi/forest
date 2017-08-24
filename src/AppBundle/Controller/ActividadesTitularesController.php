@@ -5,7 +5,8 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\ActividadesTitulares;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Actividadestitulares controller.
@@ -23,20 +24,26 @@ class ActividadesTitularesController extends Controller
 
     public function newAction(Request $request, $idExp, $idMov, $idAct)
     {
-      $actividadesTitulares = new Actividadestitulares();
-      $form = $this->createForm('AppBundle\Form\ActividadesTitularesType', $actividadesTitulares);
-      $form->handleRequest($request);
+        $actividadesTitulares = new Actividadestitulares();
+        $form = $this->createForm('AppBundle\Form\ActividadesTitularesType', $actividadesTitulares);
+        $form->handleRequest($request);
 
-      if ($form->isSubmitted() && $form->isValid()) {
-        $em = $this->getDoctrine()->getManager();
-        $actividadesTitulares->setActividad($em->getRepository('AppBundle:Actividades')->findOneById($idAct));
-        $em->persist($actividadesTitulares);
-        $em->flush($actividadesTitulares);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            try {
+                $actividadesTitulares->setActividad($em->getRepository('AppBundle:Actividades')->findOneById($idAct));
+                $em->persist($actividadesTitulares);
+                $em->flush($actividadesTitulares);
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Productor creado satisfactoriamente.'));
+                return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al crear el productor');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
+            }
+        }
 
-        return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
-      }
-
-      return $this->render('actividadestitulares/new.html.twig', array(
+        return $this->render('actividadestitulares/new.html.twig', array(
         'actividadesTitulare' => $actividadesTitulares,
         'form' => $form->createView(),
       ));
@@ -81,7 +88,7 @@ class ActividadesTitularesController extends Controller
      * @Route("/expedientes/{idExp}/movimientos/{idMov}/actividades/{idAct}/actividadesTitular/{id}/edit", name="actividadestitulares_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction( $idExp, $idMov, $idAct, $id, Request $request)
+    public function editAction($idExp, $idMov, $idAct, $id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $actividadesTitulares = $em->getRepository('AppBundle:ActividadesTitulares')->findOneById($id);
@@ -89,17 +96,15 @@ class ActividadesTitularesController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            try{
-              $this->getDoctrine()->getManager()->flush();
-              $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Productor actualizado satisfactoriamente.'));
-              return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
-            } catch(\Doctrine\ORM\ORMException $e){
-              $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el productor');
-              $this->get('logger')->error($e->getMessage());
-              return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
+            try {
+                $this->getDoctrine()->getManager()->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Productor actualizado satisfactoriamente.'));
+                return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el productor');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('list_actividades', array('id'=>$idExp, 'idMov'=> $idMov, 'idAct'=>$idAct));
             }
-
-
         }
 
         return $this->render('actividadestitulares/edit.html.twig', array(
