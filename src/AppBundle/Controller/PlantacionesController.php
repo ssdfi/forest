@@ -142,41 +142,28 @@ class PlantacionesController extends Controller
     public function showAction(Plantaciones $plantacione, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $dql_m   = "SELECT m
+        $dql_pr   = "SELECT p as plantacione, ap as actividadPlantacion, a as actividades, m as movimientos, e as expedientes
                 FROM AppBundle:Plantaciones p
                 JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
                 JOIN AppBundle:Actividades a WITH a.id=ap.actividad
                 JOIN AppBundle:Movimientos m WITH m.id=a.movimiento
                 JOIN AppBundle:Expedientes e WITH e.id=m.expediente
                 WHERE p.id=:id";
-        $movimientos=$em->createQuery($dql_m)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
-
-        $dql_e   = "SELECT e
-                FROM AppBundle:Plantaciones p
-                JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
-                JOIN AppBundle:Actividades a WITH a.id=ap.actividad
-                JOIN AppBundle:Movimientos m WITH m.id=a.movimiento
-                JOIN AppBundle:Expedientes e WITH e.id=m.expediente
-                WHERE p.id=:id";
-        $expedientes=$em->createQuery($dql_e)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
-
-        $dql_a   = "SELECT a
-                FROM AppBundle:Plantaciones p
-                JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
-                JOIN AppBundle:Actividades a WITH a.id=ap.actividad
-                JOIN AppBundle:Movimientos m WITH m.id=a.movimiento
-                JOIN AppBundle:Expedientes e WITH e.id=m.expediente
-                WHERE p.id=:id";
-        //SELECT a , st_area(a.geom)/10000 FROM AppBundle:Plantaciones a";
-        $actividades=$em->createQuery($dql_a)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
-
-        //historico_anterior
+        $query = $em->createQuery($dql_pr)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+        $arr_query = array();
+        foreach ($query as $item) {
+            foreach ($item as $key => $value) {
+                $arr_query[$key][] = $value;
+            }
+        }
+        $plantacion_anterior = $em->getRepository('AppBundle:PlantacionesHistorico')->findByPlantacionNueva($plantacione->getId());
         $deleteForm = $this->createDeleteForm($plantacione);
         return $this->render('plantaciones/show.html.twig', array(
             'plantacione' => $plantacione,
-            'movimientos' => $movimientos,
-            'actividades' => $actividades,
-            'expedientes' => $expedientes,
+            'movimientos' => ($arr_query) ? $arr_query['movimientos'] : null,
+            'actividades' => ($arr_query) ? $arr_query['actividades'] : null,
+            'expedientes' => ($arr_query) ? $arr_query['expedientes'] : null,
+            'plantacionAnterior' => $plantacion_anterior,
             'delete_form' => $deleteForm->createView(),
         ));
     }
