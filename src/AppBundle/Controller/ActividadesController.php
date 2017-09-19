@@ -164,7 +164,6 @@ class ActividadesController extends Controller
             $em->remove($actividade);
             $em->flush($actividade);
         }
-
         return $this->redirectToRoute('list_movimientos', array('id'=>$actividade->getMovimiento()->getExpediente()->getId(), 'idMov'=>$actividade->getMovimiento()->getId()));
     }
 
