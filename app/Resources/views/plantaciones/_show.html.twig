@@ -1,94 +1,181 @@
 <ul class="nav nav-tabs" role="tablist">
-  <li class="active" role="presentation">
-    <a data-toggle="tab" href="#expedientes-tab">Expedientes</a>
-  </li>
-  <li class="" role="presentation">
-    <a data-toggle="tab" href="#historial-tab">Historial</a>
-  </li>
+	<li class="active" role="presentation">
+		<a data-toggle="tab" href="#expedientes-tab">Expedientes</a>
+	</li>
+	<li class="" role="presentation">
+		<a data-toggle="tab" href="#historial-tab">Historial</a>
+	</li>
 </ul>
 <div class="tab-content">
-  <div id="expedientes-tab" class="tab-pane fade in active">
-    <h4>Expedientes</h4>
-    {{ include('expedientes/show_list.html.twig', {'expedientes': expedientes}) }}
-    <h4>Movimientos</h4>
-    <table id="movimientos" class="table table-hover table-grid">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th nowrap="">Expediente</th>
-          <th nowrap="">Ficha</th>
-          <th>Etapa</th>
-          <th>Entrada</th>
-          <th>Salida</th>
-          <th class="icon">E.Fiscal</th>
-          <th class="icon">Auditar</th>
-          <th class="icon">Validado</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for movimiento in movimientos %}
-        <tr>
-          <td>{{movimiento.id}}</td>
-          <td>{{movimiento.expediente.id}}</td>
-          <td>{{movimiento.numeroFicha}}</td>
-          <td>{{movimiento.etapa}}</td>
-          <td>{{movimiento.fechaEntrada|date('d-m-Y')}}</td>
-          <td>{{movimiento.fechaSalida|date('d-m-Y')}}</td>
-          <td class="icon">
-            {% if movimiento.estabilidadFiscal %}
-              <span class="glyphicon glyphicon-ok"></span>
-            {% else %}
-              <span class="glyphicon glyphicon-remove"></span>
-            {% endif %}
-          </td>
-          <td class="icon">
-            {% if movimiento.auditar %}
-              <span class="glyphicon glyphicon-ok"></span>
-            {% else %}
-              <span class="glyphicon glyphicon-remove"></span>
-            {% endif %}
-          </td>
-          <td class="icon">
-            {% if movimiento.validador %}
-              <span class="glyphicon glyphicon-ok"></span>
-            {% else %}
-              <span class="glyphicon glyphicon-remove"></span>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <h4>Actividades</h4>
-    <table id="actividades" class="table table-hover table-grid">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th nowrap="">Movimiento</th>
-          <th nowrap="">Expediente</th>
-          <th>Tipo actividad</th>
-          <th>Presentado</th>
-          <th>Certificado</th>
-          <th>Inspeccionado</th>
-          <th>Registrado</th>
-          <th class="icon">Mapa</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for actividad in actividades %}
-        <tr>
-          <td>{{actividad.id}}</td>
-          <td>{{actividad.movimiento.id}}</td>
-          <td>{{actividad.movimiento.expediente.id}}</td>
-          <td>{{actividad.tipoActividad.descripcion}}</td>
-          <td>{{actividad.superficiePresentada}}</td>
-          <td>{{actividad.superficieCertificada}}</td>
-          <td>{{actividad.superficieInspeccionada}}</td>
-          <td>{{actividad.superficieRegistrada}}</td>
-          <td class="icon icon-lg hidden-print"><span class="glyphicon glyphicon-globe"></span></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+	<div id="expedientes-tab" class="tab-pane fade in active">
+		<h4>Expedientes</h4>
+		{{ include('expedientes/show_list.html.twig', {'expedientes': expedientes}) }}
+		<h4>Movimientos</h4>
+		<table id="movimientos" class="table table-hover table-grid">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th nowrap="">Expediente</th>
+					<th nowrap="">Ficha</th>
+					<th>Etapa</th>
+					<th>Entrada</th>
+					<th>Salida</th>
+					<th class="icon">E.Fiscal</th>
+					<th class="icon">Auditar</th>
+					<th class="icon">Validado</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for movimiento in movimientos %}
+					<tr>
+						<td>{{movimiento.id}}</td>
+						<td>{{movimiento.expediente.id}}</td>
+						<td>{{movimiento.numeroFicha}}</td>
+						<td>{{movimiento.etapa}}</td>
+						<td>{{movimiento.fechaEntrada|date('d-m-Y')}}</td>
+						<td>{{movimiento.fechaSalida|date('d-m-Y')}}</td>
+						<td class="icon">
+							{% if movimiento.estabilidadFiscal %}
+								<span class="glyphicon glyphicon-ok"></span>
+							{% else %}
+								<span class="glyphicon glyphicon-remove"></span>
+							{% endif %}
+						</td>
+						<td class="icon">
+							{% if movimiento.auditar %}
+								<span class="glyphicon glyphicon-ok"></span>
+							{% else %}
+								<span class="glyphicon glyphicon-remove"></span>
+							{% endif %}
+						</td>
+						<td class="icon">
+							{% if movimiento.validador %}
+								<span class="glyphicon glyphicon-ok"></span>
+							{% else %}
+								<span class="glyphicon glyphicon-remove"></span>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<h4>Actividades</h4>
+		<table id="actividades" class="table table-hover table-grid">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th nowrap="">Movimiento</th>
+					<th nowrap="">Expediente</th>
+					<th>Tipo actividad</th>
+					<th>Presentado</th>
+					<th>Certificado</th>
+					<th>Inspeccionado</th>
+					<th>Registrado</th>
+					<th class="icon">Mapa</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for actividad in actividades %}
+					<tr>
+						<td>{{actividad.id}}</td>
+						<td>{{actividad.movimiento.id}}</td>
+						<td>{{actividad.movimiento.expediente.id}}</td>
+						<td>{{actividad.tipoActividad.descripcion}}</td>
+						<td>{{actividad.superficiePresentada}}</td>
+						<td>{{actividad.superficieCertificada}}</td>
+						<td>{{actividad.superficieInspeccionada}}</td>
+						<td>{{actividad.superficieRegistrada}}</td>
+						<td class="icon icon-lg hidden-print">
+							<span class="glyphicon glyphicon-globe"></span>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div id="historial-tab" class="tab-pane active" role="tabpanel">
+		{% if plantacione.getHistorico() is not empty%}
+			<h4>Nuevas Plantaciones</h4>
+			<table id="plantaciones_nuevas" class="table table-hover table-grid">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Titular</th>
+						<th>Especie</th>
+						<th>Tipo</th>
+						<th>Superficie</th>
+						<th>Activo</th>
+						<th class="icon">Mapa</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in plantacione.getHistorico() %}
+						<tr data-link="/plantaciones/{{item.plantacionNueva.getId()}}">
+							<td>{{item.plantacionNueva.getId()}}</td>
+							<td>
+								<a href="/titulares/{{item.plantacionNueva.getTitular().getId()}}">{{item.plantacionNueva.getTitular()}}</a>
+							</td>
+							<td>
+								{% if item.plantacionNueva.getEspecie() %}
+									{{ item.plantacionNueva.getEspecie().first.nombreCientifico }}
+								{% endif %}
+							</td>
+							<td>{{item.plantacionNueva.getTipoPlantacion().descripcion}}</td>
+							<td>35.6</td>
+							<td class="icon">
+								<span class="icon icon-lg"></span>
+							</td>
+							<td class="icon icon-lg">
+								<a href="/plantaciones/{{item.plantacionNueva.getId()}}/mapa" onclick="event.stopPropagation()" target="_blank">
+									<span class="glyphicon glyphicon-globe"></span>
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+
+
+		{% if plantacionAnterior is not empty %}
+		<table id="plantaciones_anteriores" class="table table-hover table-grid">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Titular</th>
+					<th>Especie</th>
+					<th>Tipo</th>
+					<th>Superficie</th>
+					<th>Activo</th>
+					<th class="icon">Mapa</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in plantacionAnterior %}
+					<tr data-link="/plantaciones/{{item.plantacionNueva.getId()}}">
+						<td>{{item.plantacionAnterior.getId()}}</td>
+						<td>
+							<a href="/titulares/{{item.plantacionAnterior.getTitular().getId()}}">{{item.plantacionAnterior.getTitular()}}</a>
+						</td>
+						<td>
+							{% if item.plantacionAnterior.getEspecie() %}
+								{{ item.plantacionAnterior.getEspecie().first.nombreCientifico }}
+							{% endif %}
+						</td>
+						<td>{{item.plantacionAnterior.getTipoPlantacion().descripcion}}</td>
+						<td>35.6</td>
+						<td class="icon">
+							<span class="icon icon-lg"></span>
+						</td>
+						<td class="icon icon-lg">
+							<a href="/plantaciones/{{item.plantacionAnterior.getId()}}/mapa" onclick="event.stopPropagation()" target="_blank">
+								<span class="glyphicon glyphicon-globe"></span>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% endif %}
+	</div>
 </div>
