@@ -185,13 +185,10 @@
     </a>
   </li>
   <li>
-    <a id="nav-delete-expediente" data-confirm="¿Está seguro que desea eliminar la Actividad?" value="Delete"  rel="nofollow">
-    {{ form_start(delete) }}
-        <button type="submit">
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-          Eliminar Actividad
-        </button>
-    {{ form_end(delete) }}
+    <a id="nav-delete-expediente" href="{{ path('actividades_delete', {'idExp': actividad.movimiento.expediente.getId(), 'idMov': actividad.movimiento.getId() ,'id':actividad.getId() }) }}" onclick="return confirm('¿Está seguro que desea eliminar la Actividad?')" data-confirm="¿Está seguro que desea eliminar la Actividad?" value="Delete"  method="delete" rel="nofollow">
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        Eliminar Actividad
+    {{ form_widget(delete) }}
   </a>
   </li>
   <li>
