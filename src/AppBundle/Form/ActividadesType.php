@@ -8,7 +8,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormError;
 
 class ActividadesType extends AbstractType
 {
@@ -31,8 +33,16 @@ class ActividadesType extends AbstractType
             'prototype'     => true,
             'label'         => false,
             'by_reference'  => false
-          ))
-        ;
+          ));
+
+
+        $builder->addEventListener(
+            FormEvents::PRE_SUBMIT,
+            function(FormEvent $event){
+              $form=$event->getForm();
+              $data=$event->getData();
+
+          });
     }
 
     /**
