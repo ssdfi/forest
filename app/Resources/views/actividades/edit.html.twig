@@ -45,23 +45,26 @@
                 </tr>
               </thead>
               <tbody class="actividadesPlantaciones" data-index="{{ edit_form.plantaciones|length }}" data-prototype="{% filter escape %}{% include 'actividades/prototypeActividades.html.twig' with {'form': edit_form.plantaciones.vars.prototype } %}{% endfilter %}">
+                {{ form_errors(edit_form.plantaciones) }}
                 {% if edit_form.plantaciones %}
                   {% for tag in edit_form.plantaciones %}
                   <tr class="fields">
                     <td>
                     	<div class="col-sm-12">
                     		{{ form_row(tag.plantacion) }}
+                        {{ form_errors(tag.plantacion) }}
                     	</div>
-
                     </td>
                     <td>
                     		<div class="col-sm-12">
                     			{{ form_row(tag.fecha) }}
+                          {{ form_errors(tag.fecha) }}
                     		</div>
                     </td>
                     <td>
                     		<div class="col-sm-12">
                     			{{ form_row(tag.numeroPlantas) }}
+                          {{ form_errors(tag.numeroPlantas) }}
                     		</div>
                     </td>
                     <td width="200px">
@@ -70,6 +73,7 @@
                         	<div class="col-sm-12">
                         		<div class="input-group">
                               {{ form_row(tag.superficieRegistrada) }}
+                              {{ form_errors(tag.superficieRegistrada) }}
                         			<span class="input-group-btn">
                         				<button class="btn btn-default hectareas" name="button" type="button">
                         					<span class="glyphicon glyphicon-circle-arrow-down"></span>
@@ -82,11 +86,13 @@
                     <td>
                       	<div class="col-sm-12">
                     			{{ form_row(tag.estadoAprobacion) }}
+                          {{ form_errors(tag.estadoAprobacion) }}
                     		</div>
                     </td>
                     <td>
                     		<div class="col-sm-12">
                     			{{ form_row(tag.observaciones) }}
+                          {{ form_errors(tag.observaciones) }}
                     		</div>
                     </td>
                     <td>

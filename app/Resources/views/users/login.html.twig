@@ -1,0 +1,51 @@
+{% if error %}
+	<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>ForestApp</title>
+		<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/bootstrap-switch.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/body.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/public.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/leaflet.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/Control.MiniMap.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/L.Control.ZoomBox.css') }}"/>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<h1>
+						<i class="glyphicon glyphicon-tree-deciduous"></i>
+						ForestApp
+					</h1>
+					<div class="panel panel-primary panel-login">
+						<div class="panel-heading">
+							<h2>Inicio de sesión</h2>
+						</div>
+						<div class="panel-body">
+							<form accept-charset="UTF-8" action="{{ path('login_index') }}" method="post" role="form">
+								<div style="display:none"><input name="utf8" type="hidden" value="&#x2713;"/>
+									<input name="authenticity_token" type="hidden" value="{{ csrf_token('authenticate') }}"/></div>
+								<div class="form-group">
+									<label class="sr-only control-label" for="username">Username</label>
+									<input class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="Nombre de usuario MAGyP" type="text"/></div>
+								<div class="form-group">
+									<label class="sr-only control-label" for="password">Password</label>
+									<input class="form-control" id="password" name="_password" placeholder="Contraseña" type="password"/></div>
+								<button id='login' type="submit" class="btn btn-success pull-right">
+									<i class="glyphicon glyphicon-log-in"></i>
+									Entrar
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+      {{dump()}}
+		</div>
+	</body>
+</html>

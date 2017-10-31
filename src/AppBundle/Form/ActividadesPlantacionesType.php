@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Form\DataTransformer\PlantacionesToNumberTransformer;
+use Symfony\Component\Form\FormError;
 
 class ActividadesPlantacionesType extends AbstractType
 {

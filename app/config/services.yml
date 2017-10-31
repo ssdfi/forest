@@ -4,9 +4,6 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
      plantaciones_manager:
         class: AppBundle\Controller\PlantacionesController
         arguments: [ "@doctrine.orm.entity_manager" ]
@@ -28,3 +25,7 @@ services:
        arguments: [ "@doctrine.orm.entity_manager" ]
        tags:
          -  { name: form.type }
+
+     app.ldap:
+        class: Symfony\Component\Ldap\LdapClient
+        arguments: [%ldap_server%]

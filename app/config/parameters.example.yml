@@ -9,4 +9,5 @@ parameters:
     mailer_host:
     mailer_user: null
     mailer_password: null
-    secret: 7b0fad2743ded779e2d58aae9fef4a6e
+    secret:
+    ldap_server:

@@ -2,16 +2,19 @@
 	<td>
 		<div class="col-sm-12">
 			{{ form_row(form.plantacion) }}
+      {{ form_errors(form.plantacion) }}
 		</div>
 	</td>
 	<td>
 			<div class="col-sm-12">
 				{{ form_row(form.fecha) }}
+				{{ form_errors(form.fecha) }}
 			</div>
 	</td>
 	<td>
 			<div class="col-sm-12">
 				{{ form_row(form.numeroPlantas) }}
+				{{ form_errors(form.numeroPlantas) }}
 			</div>
 		</td>
 	<td width="200px">
@@ -20,6 +23,7 @@
 				<div class="col-sm-12">
 					<div class="input-group">
 						{{ form_row(form.superficieRegistrada) }}
+			      {{ form_errors(form.superficieRegistrada) }}
 						<span class="input-group-btn">
 							<button id="hectareas" class="btn btn-default hectareas" name="button" type="button">
 								<span class="glyphicon glyphicon-circle-arrow-down"></span>
@@ -32,11 +36,13 @@
 	<td>
 	  	<div class="col-sm-12">
 				{{ form_row(form.estadoAprobacion) }}
+	      {{ form_errors(form.estadoAprobacion) }}
 			</div>
 	</td>
 	<td>
 			<div class="col-sm-12">
 				{{ form_row(form.observaciones) }}
+	      {{ form_errors(form.observaciones) }}
 			</div>
 	</td>
 	<td>
