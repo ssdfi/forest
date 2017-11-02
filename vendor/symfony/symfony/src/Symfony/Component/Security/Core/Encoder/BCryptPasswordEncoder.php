@@ -27,8 +27,6 @@ class BCryptPasswordEncoder extends BasePasswordEncoder
     private $cost;
 
     /**
-     * Constructor.
-     *
      * @param int $cost The algorithmic cost that should be used
      *
      * @throws \RuntimeException         When no BCrypt encoder is available
@@ -62,7 +60,7 @@ class BCryptPasswordEncoder extends BasePasswordEncoder
      *
      * @throws BadCredentialsException when the given password is too long
      *
-     * @link http://lxr.php.net/xref/PHP_5_5/ext/standard/password.c#111
+     * @see http://lxr.php.net/xref/PHP_5_5/ext/standard/password.c#111
      */
     public function encodePassword($raw, $salt)
     {

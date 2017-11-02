@@ -70,7 +70,7 @@ abstract class Guess
      *
      * @param Guess[] $guesses An array of guesses
      *
-     * @return Guess|null The guess with the highest confidence
+     * @return self|null
      */
     public static function getBestGuess(array $guesses)
     {
@@ -88,8 +88,6 @@ abstract class Guess
     }
 
     /**
-     * Constructor.
-     *
      * @param int $confidence The confidence
      *
      * @throws InvalidArgumentException if the given value of confidence is unknown

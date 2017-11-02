@@ -73,8 +73,6 @@ abstract class AnnotationClassLoader implements LoaderInterface
     protected $defaultRouteIndex = 0;
 
     /**
-     * Constructor.
-     *
      * @param Reader $reader
      */
     public function __construct(Reader $reader)
@@ -127,6 +125,11 @@ abstract class AnnotationClassLoader implements LoaderInterface
             }
         }
 
+        if (0 === $collection->count() && $class->hasMethod('__invoke') && $annot = $this->reader->getClassAnnotation($class, $this->routeAnnotationClass)) {
+            $globals['path'] = '';
+            $this->addRoute($collection, $annot, $globals, $class, $class->getMethod('__invoke'));
+        }
+
         return $collection;
     }
 
@@ -139,7 +142,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
 
         $defaults = array_replace($globals['defaults'], $annot->getDefaults());
         foreach ($method->getParameters() as $param) {
-            if (!isset($defaults[$param->getName()]) && $param->isDefaultValueAvailable()) {
+            if (false !== strpos($globals['path'].$annot->getPath(), sprintf('{%s}', $param->getName())) && !isset($defaults[$param->getName()]) && $param->isDefaultValueAvailable()) {
                 $defaults[$param->getName()] = $param->getDefaultValue();
             }
         }

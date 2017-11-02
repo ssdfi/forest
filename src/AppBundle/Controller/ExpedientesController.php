@@ -114,6 +114,7 @@ class ExpedientesController extends Controller
         if (!empty($wheres)) {
             $dql = $dql .' WHERE '.$filter;
         }
+        dump($this->get('security.authentication.provider.ldap_bind.main'));
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $expedientes = $paginator->paginate(

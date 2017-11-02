@@ -43,8 +43,6 @@ class PhpEngine implements EngineInterface, \ArrayAccess
     private $evalParameters;
 
     /**
-     * Constructor.
-     *
      * @param TemplateNameParserInterface $parser  A TemplateNameParserInterface instance
      * @param LoaderInterface             $loader  A loader instance
      * @param HelperInterface[]           $helpers An array of helper instances
@@ -142,6 +140,7 @@ class PhpEngine implements EngineInterface, \ArrayAccess
             throw new \InvalidArgumentException('Invalid parameter (view)');
         }
 
+        // the view variable is exposed to the require file below
         $view = $this;
         if ($this->evalTemplate instanceof FileStorage) {
             extract($this->evalParameters, EXTR_SKIP);

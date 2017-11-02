@@ -11,12 +11,14 @@
 
 namespace Symfony\Component\Form\Tests\ChoiceList;
 
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
 use Symfony\Component\Form\ChoiceList\LazyChoiceList;
 
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class LazyChoiceListTest extends \PHPUnit_Framework_TestCase
+class LazyChoiceListTest extends TestCase
 {
     /**
      * @var LazyChoiceList
@@ -26,7 +28,7 @@ class LazyChoiceListTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $innerList;
+    private $loadedList;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -37,20 +39,21 @@ class LazyChoiceListTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->innerList = $this->getMock('Symfony\Component\Form\ChoiceList\ChoiceListInterface');
-        $this->loader = $this->getMock('Symfony\Component\Form\ChoiceList\Loader\ChoiceLoaderInterface');
+        $this->loadedList = $this->getMockBuilder('Symfony\Component\Form\ChoiceList\ChoiceListInterface')->getMock();
+        $this->loader = $this->getMockBuilder('Symfony\Component\Form\ChoiceList\Loader\ChoiceLoaderInterface')->getMock();
         $this->value = function () {};
         $this->list = new LazyChoiceList($this->loader, $this->value);
     }
 
-    public function testGetChoicesLoadsInnerListOnFirstCall()
+    public function testGetChoiceLoadersLoadsLoadedListOnFirstCall()
     {
-        $this->loader->expects($this->once())
+        $this->loader->expects($this->exactly(2))
             ->method('loadChoiceList')
             ->with($this->value)
-            ->will($this->returnValue($this->innerList));
+            ->will($this->returnValue($this->loadedList));
 
-        $this->innerList->expects($this->exactly(2))
+        // The same list is returned by the loader
+        $this->loadedList->expects($this->exactly(2))
             ->method('getChoices')
             ->will($this->returnValue('RESULT'));
 
@@ -58,14 +61,39 @@ class LazyChoiceListTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('RESULT', $this->list->getChoices());
     }
 
-    public function testGetValuesLoadsInnerListOnFirstCall()
+    /**
+     * @group legacy
+     */
+    public function testGetChoicesUsesLoadedListWhenLoaderDoesNotCacheChoiceListOnFirstCall()
     {
-        $this->loader->expects($this->once())
+        $this->loader->expects($this->at(0))
             ->method('loadChoiceList')
             ->with($this->value)
-            ->will($this->returnValue($this->innerList));
+            ->willReturn($this->loadedList);
 
-        $this->innerList->expects($this->exactly(2))
+        $this->loader->expects($this->at(1))
+            ->method('loadChoiceList')
+            ->with($this->value)
+            ->willReturn(new ArrayChoiceList(array('a', 'b')));
+
+        // The same list is returned by the lazy choice list
+        $this->loadedList->expects($this->exactly(2))
+            ->method('getChoices')
+            ->will($this->returnValue('RESULT'));
+
+        $this->assertSame('RESULT', $this->list->getChoices());
+        $this->assertSame('RESULT', $this->list->getChoices());
+    }
+
+    public function testGetValuesLoadsLoadedListOnFirstCall()
+    {
+        $this->loader->expects($this->exactly(2))
+            ->method('loadChoiceList')
+            ->with($this->value)
+            ->will($this->returnValue($this->loadedList));
+
+        // The same list is returned by the loader
+        $this->loadedList->expects($this->exactly(2))
             ->method('getValues')
             ->will($this->returnValue('RESULT'));
 
@@ -73,14 +101,15 @@ class LazyChoiceListTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('RESULT', $this->list->getValues());
     }
 
-    public function testGetStructuredValuesLoadsInnerListOnFirstCall()
+    public function testGetStructuredValuesLoadsLoadedListOnFirstCall()
     {
-        $this->loader->expects($this->once())
+        $this->loader->expects($this->exactly(2))
             ->method('loadChoiceList')
             ->with($this->value)
-            ->will($this->returnValue($this->innerList));
+            ->will($this->returnValue($this->loadedList));
 
-        $this->innerList->expects($this->exactly(2))
+        // The same list is returned by the loader
+        $this->loadedList->expects($this->exactly(2))
             ->method('getStructuredValues')
             ->will($this->returnValue('RESULT'));
 
@@ -88,14 +117,15 @@ class LazyChoiceListTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('RESULT', $this->list->getStructuredValues());
     }
 
-    public function testGetOriginalKeysLoadsInnerListOnFirstCall()
+    public function testGetOriginalKeysLoadsLoadedListOnFirstCall()
     {
-        $this->loader->expects($this->once())
+        $this->loader->expects($this->exactly(2))
             ->method('loadChoiceList')
             ->with($this->value)
-            ->will($this->returnValue($this->innerList));
+            ->will($this->returnValue($this->loadedList));
 
-        $this->innerList->expects($this->exactly(2))
+        // The same list is returned by the loader
+        $this->loadedList->expects($this->exactly(2))
             ->method('getOriginalKeys')
             ->will($this->returnValue('RESULT'));
 
@@ -116,15 +146,17 @@ class LazyChoiceListTest extends \PHPUnit_Framework_TestCase
 
     public function testGetChoicesForValuesUsesLoadedList()
     {
-        $this->loader->expects($this->once())
+        $this->loader->expects($this->exactly(3))
             ->method('loadChoiceList')
             ->with($this->value)
-            ->will($this->returnValue($this->innerList));
+            // For BC, the same choice loaded list is returned 3 times
+            // It should only twice in 4.0
+            ->will($this->returnValue($this->loadedList));
 
         $this->loader->expects($this->never())
             ->method('loadChoicesForValues');
 
-        $this->innerList->expects($this->exactly(2))
+        $this->loadedList->expects($this->exactly(2))
             ->method('getChoicesForValues')
             ->with(array('a', 'b'))
             ->will($this->returnValue('RESULT'));
@@ -136,6 +168,9 @@ class LazyChoiceListTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('RESULT', $this->list->getChoicesForValues(array('a', 'b')));
     }
 
+    /**
+     * @group legacy
+     */
     public function testGetValuesForChoicesForwardsCallIfListNotLoaded()
     {
         $this->loader->expects($this->exactly(2))
@@ -149,15 +184,17 @@ class LazyChoiceListTest extends \PHPUnit_Framework_TestCase
 
     public function testGetValuesForChoicesUsesLoadedList()
     {
-        $this->loader->expects($this->once())
+        $this->loader->expects($this->exactly(3))
             ->method('loadChoiceList')
             ->with($this->value)
-            ->will($this->returnValue($this->innerList));
+            // For BC, the same choice loaded list is returned 3 times
+            // It should only twice in 4.0
+            ->will($this->returnValue($this->loadedList));
 
         $this->loader->expects($this->never())
             ->method('loadValuesForChoices');
 
-        $this->innerList->expects($this->exactly(2))
+        $this->loadedList->expects($this->exactly(2))
             ->method('getValuesForChoices')
             ->with(array('a', 'b'))
             ->will($this->returnValue('RESULT'));

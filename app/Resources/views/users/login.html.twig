@@ -27,9 +27,8 @@
 							<h2>Inicio de sesión</h2>
 						</div>
 						<div class="panel-body">
-							<form accept-charset="UTF-8" action="{{ path('login_index') }}" method="post" role="form">
-								<div style="display:none"><input name="utf8" type="hidden" value="&#x2713;"/>
-									<input name="authenticity_token" type="hidden" value="{{ csrf_token('authenticate') }}"/></div>
+							<form accept-charset="UTF-8" action="{{ path('login') }}" method="post" role="form">
+								<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" >
 								<div class="form-group">
 									<label class="sr-only control-label" for="username">Username</label>
 									<input class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="Nombre de usuario MAGyP" type="text"/></div>
@@ -45,7 +44,6 @@
 					</div>
 				</div>
 			</div>
-      {{dump()}}
 		</div>
 	</body>
 </html>

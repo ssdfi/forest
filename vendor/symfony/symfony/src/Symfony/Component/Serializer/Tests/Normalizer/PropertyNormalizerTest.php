@@ -12,6 +12,7 @@
 namespace Symfony\Component\Serializer\Tests\Normalizer;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
@@ -19,10 +20,11 @@ use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Tests\Fixtures\GroupDummy;
+use Symfony\Component\Serializer\Tests\Fixtures\MaxDepthDummy;
 use Symfony\Component\Serializer\Tests\Fixtures\PropertyCircularReferenceDummy;
 use Symfony\Component\Serializer\Tests\Fixtures\PropertySiblingHolder;
 
-class PropertyNormalizerTest extends \PHPUnit_Framework_TestCase
+class PropertyNormalizerTest extends TestCase
 {
     /**
      * @var PropertyNormalizer
@@ -35,7 +37,7 @@ class PropertyNormalizerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->serializer = $this->getMock('Symfony\Component\Serializer\SerializerInterface');
+        $this->serializer = $this->getMockBuilder('Symfony\Component\Serializer\SerializerInterface')->getMock();
         $this->normalizer = new PropertyNormalizer();
         $this->normalizer->setSerializer($this->serializer);
     }
@@ -348,11 +350,11 @@ class PropertyNormalizerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Symfony\Component\Serializer\Exception\LogicException
-     * @expectedExceptionMessage Cannot normalize attribute "bar" because injected serializer is not a normalizer
+     * @expectedExceptionMessage Cannot normalize attribute "bar" because the injected serializer is not a normalizer
      */
     public function testUnableToNormalizeObjectAttribute()
     {
-        $serializer = $this->getMock('Symfony\Component\Serializer\SerializerInterface');
+        $serializer = $this->getMockBuilder('Symfony\Component\Serializer\SerializerInterface')->getMock();
         $this->normalizer->setSerializer($serializer);
 
         $obj = new PropertyDummy();
@@ -370,6 +372,42 @@ class PropertyNormalizerTest extends \PHPUnit_Framework_TestCase
     public function testNoStaticPropertySupport()
     {
         $this->assertFalse($this->normalizer->supportsNormalization(new StaticPropertyDummy()));
+    }
+
+    public function testMaxDepth()
+    {
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $this->normalizer = new PropertyNormalizer($classMetadataFactory);
+        $serializer = new Serializer(array($this->normalizer));
+        $this->normalizer->setSerializer($serializer);
+
+        $level1 = new MaxDepthDummy();
+        $level1->foo = 'level1';
+
+        $level2 = new MaxDepthDummy();
+        $level2->foo = 'level2';
+        $level1->child = $level2;
+
+        $level3 = new MaxDepthDummy();
+        $level3->foo = 'level3';
+        $level2->child = $level3;
+
+        $result = $serializer->normalize($level1, null, array(PropertyNormalizer::ENABLE_MAX_DEPTH => true));
+
+        $expected = array(
+            'foo' => 'level1',
+            'child' => array(
+                    'foo' => 'level2',
+                    'child' => array(
+                            'child' => null,
+                            'bar' => null,
+                        ),
+                    'bar' => null,
+                ),
+            'bar' => null,
+        );
+
+        $this->assertEquals($expected, $result);
     }
 }
 

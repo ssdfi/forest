@@ -28,10 +28,9 @@ class StreamedResponse extends Response
 {
     protected $callback;
     protected $streamed;
+    private $headersSent;
 
     /**
-     * Constructor.
-     *
      * @param callable|null $callback A valid PHP callback or null to set it later
      * @param int           $status   The response status code
      * @param array         $headers  An array of response headers
@@ -44,6 +43,7 @@ class StreamedResponse extends Response
             $this->setCallback($callback);
         }
         $this->streamed = false;
+        $this->headersSent = false;
     }
 
     /**
@@ -53,7 +53,7 @@ class StreamedResponse extends Response
      * @param int           $status   The response status code
      * @param array         $headers  An array of response headers
      *
-     * @return StreamedResponse
+     * @return static
      */
     public static function create($callback = null, $status = 200, $headers = array())
     {
@@ -68,6 +68,22 @@ class StreamedResponse extends Response
     public function setCallback(callable $callback)
     {
         $this->callback = $callback;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * This method only sends the headers once.
+     */
+    public function sendHeaders()
+    {
+        if ($this->headersSent) {
+            return;
+        }
+
+        $this->headersSent = true;
+
+        parent::sendHeaders();
     }
 
     /**

@@ -42,15 +42,15 @@ class SvnRepository
      * @param string $url       The URL to download from
      * @param string $targetDir The directory in which to store the repository
      *
-     * @return SvnRepository The directory where the data is stored
+     * @return static
      *
-     * @throws RuntimeException If an error occurs during the download.
+     * @throws RuntimeException if an error occurs during the download
      */
     public static function download($url, $targetDir)
     {
         exec('which svn', $output, $result);
 
-        if ($result !== 0) {
+        if (0 !== $result) {
             throw new RuntimeException('The command "svn" is not installed.');
         }
 
@@ -62,7 +62,7 @@ class SvnRepository
 
             exec('svn checkout '.$url.' '.$targetDir, $output, $result);
 
-            if ($result !== 0) {
+            if (0 !== $result) {
                 throw new RuntimeException('The SVN checkout of '.$url.'failed.');
             }
         }
@@ -119,7 +119,7 @@ class SvnRepository
      *
      * @return \SimpleXMLElement The XML result from the "svn info" command
      *
-     * @throws RuntimeException If the "svn info" command failed.
+     * @throws RuntimeException if the "svn info" command failed
      */
     private function getSvnInfo()
     {
@@ -128,7 +128,7 @@ class SvnRepository
 
             $svnInfo = simplexml_load_string(implode("\n", $output));
 
-            if ($result !== 0) {
+            if (0 !== $result) {
                 throw new RuntimeException('svn info failed');
             }
 

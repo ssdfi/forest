@@ -11,15 +11,18 @@
 
 namespace Symfony\Component\PropertyInfo\Extractor;
 
+use Symfony\Component\Inflector\Inflector;
 use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
- * Extracts PHP informations using the reflection API.
+ * Extracts data using the reflection API.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
+ *
+ * @final since version 3.3
  */
 class ReflectionExtractor implements PropertyListExtractorInterface, PropertyTypeExtractorInterface, PropertyAccessExtractorInterface
 {
@@ -44,6 +47,13 @@ class ReflectionExtractor implements PropertyListExtractorInterface, PropertyTyp
      */
     public static $arrayMutatorPrefixes = array('add', 'remove');
 
+    private $supportsParameterType;
+
+    public function __construct()
+    {
+        $this->supportsParameterType = method_exists('ReflectionParameter', 'getType');
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -51,27 +61,35 @@ class ReflectionExtractor implements PropertyListExtractorInterface, PropertyTyp
     {
         try {
             $reflectionClass = new \ReflectionClass($class);
-        } catch (\ReflectionException $reflectionException) {
+        } catch (\ReflectionException $e) {
             return;
         }
 
+        $reflectionProperties = $reflectionClass->getProperties();
+
         $properties = array();
-        foreach ($reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
-            $properties[$reflectionProperty->name] = true;
+        foreach ($reflectionProperties as $reflectionProperty) {
+            if ($reflectionProperty->isPublic()) {
+                $properties[$reflectionProperty->name] = $reflectionProperty->name;
+            }
         }
 
         foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
-            $propertyName = $this->getPropertyName($reflectionMethod->name);
+            if ($reflectionMethod->isStatic()) {
+                continue;
+            }
+
+            $propertyName = $this->getPropertyName($reflectionMethod->name, $reflectionProperties);
             if (!$propertyName || isset($properties[$propertyName])) {
                 continue;
             }
-            if (!preg_match('/^[A-Z]{2,}/', $propertyName)) {
+            if (!$reflectionClass->hasProperty($propertyName) && !preg_match('/^[A-Z]{2,}/', $propertyName)) {
                 $propertyName = lcfirst($propertyName);
             }
-            $properties[$propertyName] = true;
+            $properties[$propertyName] = $propertyName;
         }
 
-        return array_keys($properties);
+        return array_values($properties);
     }
 
     /**
@@ -134,68 +152,33 @@ class ReflectionExtractor implements PropertyListExtractorInterface, PropertyTyp
         $reflectionParameters = $reflectionMethod->getParameters();
         $reflectionParameter = $reflectionParameters[0];
 
-        $arrayMutator = in_array($prefix, self::$arrayMutatorPrefixes);
-
-        if (method_exists($reflectionParameter, 'getType') && $reflectionType = $reflectionParameter->getType()) {
-            $fromReflectionType = $this->extractFromReflectionType($reflectionType);
-
-            if (!$arrayMutator) {
-                return array($fromReflectionType);
+        if ($this->supportsParameterType) {
+            if (!$reflectionType = $reflectionParameter->getType()) {
+                return;
             }
+            $type = $this->extractFromReflectionType($reflectionType);
 
-            $phpType = Type::BUILTIN_TYPE_ARRAY;
-            $collectionKeyType = new Type(Type::BUILTIN_TYPE_INT);
-            $collectionValueType = $fromReflectionType;
-        }
-
-        if ($reflectionParameter->isArray()) {
-            $phpType = Type::BUILTIN_TYPE_ARRAY;
-            $collection = true;
-        }
-
-        if ($arrayMutator) {
-            $collection = true;
-            $nullable = false;
-            $collectionNullable = $reflectionParameter->allowsNull();
-        } else {
-            $nullable = $reflectionParameter->allowsNull();
-            $collectionNullable = false;
-        }
-
-        if (!isset($collection)) {
-            $collection = false;
-        }
-
-        if (method_exists($reflectionParameter, 'isCallable') && $reflectionParameter->isCallable()) {
-            $phpType = Type::BUILTIN_TYPE_CALLABLE;
-        }
-
-        if ($typeHint = $reflectionParameter->getClass()) {
-            if ($collection) {
-                $phpType = Type::BUILTIN_TYPE_ARRAY;
-                $collectionKeyType = new Type(Type::BUILTIN_TYPE_INT);
-                $collectionValueType = new Type(Type::BUILTIN_TYPE_OBJECT, $collectionNullable, $typeHint->name);
+            // HHVM reports variadics with "array" but not builtin type hints
+            if (!$reflectionType->isBuiltin() && Type::BUILTIN_TYPE_ARRAY === $type->getBuiltinType()) {
+                return;
+            }
+        } elseif (preg_match('/^(?:[^ ]++ ){4}([a-zA-Z_\x7F-\xFF][^ ]++)/', $reflectionParameter, $info)) {
+            if (Type::BUILTIN_TYPE_ARRAY === $info[1]) {
+                $type = new Type(Type::BUILTIN_TYPE_ARRAY, $reflectionParameter->allowsNull(), null, true);
+            } elseif (Type::BUILTIN_TYPE_CALLABLE === $info[1]) {
+                $type = new Type(Type::BUILTIN_TYPE_CALLABLE, $reflectionParameter->allowsNull());
             } else {
-                $phpType = Type::BUILTIN_TYPE_OBJECT;
-                $typeClass = $typeHint->name;
+                $type = new Type(Type::BUILTIN_TYPE_OBJECT, $reflectionParameter->allowsNull(), $info[1]);
             }
-        }
-
-        // Nothing useful extracted
-        if (!isset($phpType)) {
+        } else {
             return;
         }
 
-        return array(
-            new Type(
-                $phpType,
-                $nullable,
-                isset($typeClass) ? $typeClass : null,
-                $collection,
-                isset($collectionKeyType) ? $collectionKeyType : null,
-                isset($collectionValueType) ? $collectionValueType : null
-            ),
-        );
+        if (in_array($prefix, self::$arrayMutatorPrefixes)) {
+            $type = new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), $type);
+        }
+
+        return array($type);
     }
 
     /**
@@ -213,7 +196,7 @@ class ReflectionExtractor implements PropertyListExtractorInterface, PropertyTyp
             return;
         }
 
-        if (method_exists($reflectionMethod, 'getReturnType') && $reflectionType = $reflectionMethod->getReturnType()) {
+        if ($this->supportsParameterType && $reflectionType = $reflectionMethod->getReturnType()) {
             return array($this->extractFromReflectionType($reflectionType));
         }
 
@@ -231,15 +214,15 @@ class ReflectionExtractor implements PropertyListExtractorInterface, PropertyTyp
      */
     private function extractFromReflectionType(\ReflectionType $reflectionType)
     {
-        $phpTypeOrClass = (string) $reflectionType;
+        $phpTypeOrClass = $reflectionType instanceof \ReflectionNamedType ? $reflectionType->getName() : $reflectionType->__toString();
         $nullable = $reflectionType->allowsNull();
 
-        if ($reflectionType->isBuiltin()) {
-            if (Type::BUILTIN_TYPE_ARRAY === $phpTypeOrClass) {
-                $type = new Type(Type::BUILTIN_TYPE_ARRAY, $nullable, null, true);
-            } else {
-                $type = new Type($phpTypeOrClass, $nullable);
-            }
+        if (Type::BUILTIN_TYPE_ARRAY === $phpTypeOrClass) {
+            $type = new Type(Type::BUILTIN_TYPE_ARRAY, $nullable, null, true);
+        } elseif ('void' === $phpTypeOrClass) {
+            $type = new Type(Type::BUILTIN_TYPE_NULL, $nullable);
+        } elseif ($reflectionType->isBuiltin()) {
+            $type = new Type($phpTypeOrClass, $nullable);
         } else {
             $type = new Type(Type::BUILTIN_TYPE_OBJECT, $nullable, $phpTypeOrClass);
         }
@@ -261,7 +244,7 @@ class ReflectionExtractor implements PropertyListExtractorInterface, PropertyTyp
             $reflectionProperty = new \ReflectionProperty($class, $property);
 
             return $reflectionProperty->isPublic();
-        } catch (\ReflectionException $reflectionExcetion) {
+        } catch (\ReflectionException $e) {
             // Return false if the property doesn't exist
         }
 
@@ -286,11 +269,14 @@ class ReflectionExtractor implements PropertyListExtractorInterface, PropertyTyp
         foreach (self::$accessorPrefixes as $prefix) {
             try {
                 $reflectionMethod = new \ReflectionMethod($class, $prefix.$ucProperty);
+                if ($reflectionMethod->isStatic()) {
+                    continue;
+                }
 
                 if (0 === $reflectionMethod->getNumberOfRequiredParameters()) {
                     return array($reflectionMethod, $prefix);
                 }
-            } catch (\ReflectionException $reflectionException) {
+            } catch (\ReflectionException $e) {
                 // Return null if the property doesn't exist
             }
         }
@@ -310,17 +296,28 @@ class ReflectionExtractor implements PropertyListExtractorInterface, PropertyTyp
     private function getMutatorMethod($class, $property)
     {
         $ucProperty = ucfirst($property);
+        $ucSingulars = (array) Inflector::singularize($ucProperty);
 
         foreach (self::$mutatorPrefixes as $prefix) {
-            try {
-                $reflectionMethod = new \ReflectionMethod($class, $prefix.$ucProperty);
+            $names = array($ucProperty);
+            if (in_array($prefix, self::$arrayMutatorPrefixes)) {
+                $names = array_merge($names, $ucSingulars);
+            }
 
-                // Parameter can be optional to allow things like: method(array $foo = null)
-                if ($reflectionMethod->getNumberOfParameters() >= 1) {
-                    return array($reflectionMethod, $prefix);
+            foreach ($names as $name) {
+                try {
+                    $reflectionMethod = new \ReflectionMethod($class, $prefix.$name);
+                    if ($reflectionMethod->isStatic()) {
+                        continue;
+                    }
+
+                    // Parameter can be optional to allow things like: method(array $foo = null)
+                    if ($reflectionMethod->getNumberOfParameters() >= 1) {
+                        return array($reflectionMethod, $prefix);
+                    }
+                } catch (\ReflectionException $e) {
+                    // Try the next prefix if the method doesn't exist
                 }
-            } catch (\ReflectionException $reflectionException) {
-                // Try the next prefix if the method doesn't exist
             }
         }
     }
@@ -328,15 +325,28 @@ class ReflectionExtractor implements PropertyListExtractorInterface, PropertyTyp
     /**
      * Extracts a property name from a method name.
      *
-     * @param string $methodName
+     * @param string                $methodName
+     * @param \ReflectionProperty[] $reflectionProperties
      *
      * @return string
      */
-    private function getPropertyName($methodName)
+    private function getPropertyName($methodName, array $reflectionProperties)
     {
         $pattern = implode('|', array_merge(self::$accessorPrefixes, self::$mutatorPrefixes));
 
         if (preg_match('/^('.$pattern.')(.+)$/i', $methodName, $matches)) {
+            if (!in_array($matches[1], self::$arrayMutatorPrefixes)) {
+                return $matches[2];
+            }
+
+            foreach ($reflectionProperties as $reflectionProperty) {
+                foreach ((array) Inflector::singularize($reflectionProperty->name) as $name) {
+                    if (strtolower($name) === strtolower($matches[2])) {
+                        return $reflectionProperty->name;
+                    }
+                }
+            }
+
             return $matches[2];
         }
     }

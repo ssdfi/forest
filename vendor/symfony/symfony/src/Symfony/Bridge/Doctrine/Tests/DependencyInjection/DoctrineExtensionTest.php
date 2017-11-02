@@ -11,6 +11,7 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 /**
  * @author  Fabio B. Silva <fabio.bat.silva@gmail.com>
  */
-class DoctrineExtensionTest extends \PHPUnit_Framework_TestCase
+class DoctrineExtensionTest extends TestCase
 {
     /**
      * @var \Symfony\Bridge\Doctrine\DependencyInjection\AbstractDoctrineExtension
@@ -44,7 +45,7 @@ class DoctrineExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->expects($this->any())
             ->method('getObjectManagerElementName')
             ->will($this->returnCallback(function ($name) {
-                 return 'doctrine.orm.'.$name;
+                return 'doctrine.orm.'.$name;
             }));
     }
 
@@ -174,6 +175,7 @@ class DoctrineExtensionTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array('doctrine.orm.cache.apc.class',       array('type' => 'apc')),
+            array('doctrine.orm.cache.apcu.class',      array('type' => 'apcu')),
             array('doctrine.orm.cache.array.class',     array('type' => 'array')),
             array('doctrine.orm.cache.xcache.class',    array('type' => 'xcache')),
             array('doctrine.orm.cache.wincache.class',  array('type' => 'wincache')),

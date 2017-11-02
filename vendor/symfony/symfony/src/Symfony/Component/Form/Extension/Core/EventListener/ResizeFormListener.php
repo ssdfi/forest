@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Resize a collection form element based on the data sent from the client.
@@ -102,6 +103,10 @@ class ResizeFormListener implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
 
+        if ($data instanceof \Traversable && $data instanceof \ArrayAccess) {
+            @trigger_error('Support for objects implementing both \Traversable and \ArrayAccess is deprecated since version 3.1 and will be removed in 4.0. Use an array instead.', E_USER_DEPRECATED);
+        }
+
         if (!is_array($data) && !($data instanceof \Traversable && $data instanceof \ArrayAccess)) {
             $data = array();
         }
@@ -146,6 +151,7 @@ class ResizeFormListener implements EventSubscriberInterface
 
         if ($this->deleteEmpty) {
             $previousData = $event->getForm()->getData();
+            /** @var FormInterface $child */
             foreach ($form as $name => $child) {
                 $isNew = !isset($previousData[$name]);
 

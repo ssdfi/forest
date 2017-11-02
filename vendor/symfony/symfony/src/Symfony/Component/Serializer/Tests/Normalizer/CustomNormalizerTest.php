@@ -11,11 +11,12 @@
 
 namespace Symfony\Component\Serializer\Tests\Normalizer;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Tests\Fixtures\ScalarDummy;
 use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-class CustomNormalizerTest extends \PHPUnit_Framework_TestCase
+class CustomNormalizerTest extends TestCase
 {
     /**
      * @var CustomNormalizer
@@ -32,6 +33,7 @@ class CustomNormalizerTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Symfony\Component\Serializer\Normalizer\NormalizerInterface', $this->normalizer);
         $this->assertInstanceOf('Symfony\Component\Serializer\Normalizer\DenormalizerInterface', $this->normalizer);
+        $this->assertInstanceOf('Symfony\Component\Serializer\SerializerAwareInterface', $this->normalizer);
     }
 
     public function testSerialize()

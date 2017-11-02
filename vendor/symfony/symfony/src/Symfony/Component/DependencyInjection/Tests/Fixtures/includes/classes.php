@@ -1,5 +1,9 @@
 <?php
 
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\LazyProxy\PhpDumper\DumperInterface as ProxyDumper;
+use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
+
 function sc_configure($instance)
 {
     $instance->configure();
@@ -57,5 +61,52 @@ class BarUserClass
     public function __construct(BarClass $bar)
     {
         $this->bar = $bar;
+    }
+}
+
+class MethodCallClass
+{
+    public $simple;
+    public $complex;
+    private $callPassed = false;
+
+    public function callMe()
+    {
+        $this->callPassed = is_scalar($this->simple) && is_object($this->complex);
+    }
+
+    public function callPassed()
+    {
+        return $this->callPassed;
+    }
+}
+
+class DummyProxyDumper implements ProxyDumper
+{
+    public function isProxyCandidate(Definition $definition)
+    {
+        return false;
+    }
+
+    public function getProxyFactoryCode(Definition $definition, $id, $methodName = null)
+    {
+        return '';
+    }
+
+    public function getProxyCode(Definition $definition)
+    {
+        return '';
+    }
+}
+
+class LazyContext
+{
+    public $lazyValues;
+    public $lazyEmptyValues;
+
+    public function __construct($lazyValues, $lazyEmptyValues)
+    {
+        $this->lazyValues = $lazyValues;
+        $this->lazyEmptyValues = $lazyEmptyValues;
     }
 }

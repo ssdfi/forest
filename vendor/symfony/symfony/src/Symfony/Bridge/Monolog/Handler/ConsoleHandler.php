@@ -49,6 +49,7 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
      * @var array
      */
     private $verbosityLevelMap = array(
+        OutputInterface::VERBOSITY_QUIET => Logger::ERROR,
         OutputInterface::VERBOSITY_NORMAL => Logger::WARNING,
         OutputInterface::VERBOSITY_VERBOSE => Logger::NOTICE,
         OutputInterface::VERBOSITY_VERY_VERBOSE => Logger::INFO,
@@ -56,8 +57,6 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
     );
 
     /**
-     * Constructor.
-     *
      * @param OutputInterface|null $output            The console output to use (the handler remains disabled when passing null
      *                                                until the output is set, e.g. by using console events)
      * @param bool                 $bubble            Whether the messages that are handled can bubble up the stack
@@ -154,7 +153,8 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
      */
     protected function write(array $record)
     {
-        $this->output->write((string) $record['formatted']);
+        // at this point we've determined for sure that we want to output the record, so use the output's own verbosity
+        $this->output->write((string) $record['formatted'], false, $this->output->getVerbosity());
     }
 
     /**
@@ -162,7 +162,14 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
      */
     protected function getDefaultFormatter()
     {
-        return new ConsoleFormatter();
+        if (!$this->output) {
+            return new ConsoleFormatter();
+        }
+
+        return new ConsoleFormatter(array(
+            'colors' => $this->output->isDecorated(),
+            'multiline' => OutputInterface::VERBOSITY_DEBUG <= $this->output->getVerbosity(),
+        ));
     }
 
     /**
@@ -172,10 +179,11 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
      */
     private function updateLevel()
     {
-        if (null === $this->output || OutputInterface::VERBOSITY_QUIET === $verbosity = $this->output->getVerbosity()) {
+        if (null === $this->output) {
             return false;
         }
 
+        $verbosity = $this->output->getVerbosity();
         if (isset($this->verbosityLevelMap[$verbosity])) {
             $this->setLevel($this->verbosityLevelMap[$verbosity]);
         } else {

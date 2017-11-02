@@ -10,8 +10,10 @@ $container->loadFromExtension('framework', array(
         ),
     ),
     'http_method_override' => false,
-    'trusted_proxies' => array('127.0.0.1', '10.0.0.1'),
     'esi' => array(
+        'enabled' => true,
+    ),
+    'ssi' => array(
         'enabled' => true,
     ),
     'profiler' => array(
@@ -56,7 +58,6 @@ $container->loadFromExtension('framework', array(
     ),
     'validation' => array(
         'enabled' => true,
-        'cache' => 'validator.mapping.cache.doctrine.apc',
     ),
     'annotations' => array(
         'cache' => 'file',
@@ -66,9 +67,9 @@ $container->loadFromExtension('framework', array(
     'serializer' => array(
         'enabled' => true,
         'enable_annotations' => true,
-        'cache' => 'serializer.mapping.cache.apc',
         'name_converter' => 'serializer.name_converter.camel_case_to_snake_case',
     ),
+    'property_info' => true,
     'ide' => 'file%%link%%format',
     'request' => array(
         'formats' => array(

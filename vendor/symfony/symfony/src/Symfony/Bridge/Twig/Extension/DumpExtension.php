@@ -14,25 +14,31 @@ namespace Symfony\Bridge\Twig\Extension;
 use Symfony\Bridge\Twig\TokenParser\DumpTokenParser;
 use Symfony\Component\VarDumper\Cloner\ClonerInterface;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\Template;
+use Twig\TwigFunction;
 
 /**
  * Provides integration of the dump() function with Twig.
  *
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class DumpExtension extends \Twig_Extension
+class DumpExtension extends AbstractExtension
 {
     private $cloner;
+    private $dumper;
 
-    public function __construct(ClonerInterface $cloner)
+    public function __construct(ClonerInterface $cloner, HtmlDumper $dumper = null)
     {
         $this->cloner = $cloner;
+        $this->dumper = $dumper ?: new HtmlDumper();
     }
 
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('dump', array($this, 'dump'), array('is_safe' => array('html'), 'needs_context' => true, 'needs_environment' => true)),
+            new TwigFunction('dump', array($this, 'dump'), array('is_safe' => array('html'), 'needs_context' => true, 'needs_environment' => true)),
         );
     }
 
@@ -46,7 +52,7 @@ class DumpExtension extends \Twig_Extension
         return 'dump';
     }
 
-    public function dump(\Twig_Environment $env, $context)
+    public function dump(Environment $env, $context)
     {
         if (!$env->isDebug()) {
             return;
@@ -55,7 +61,7 @@ class DumpExtension extends \Twig_Extension
         if (2 === func_num_args()) {
             $vars = array();
             foreach ($context as $key => $value) {
-                if (!$value instanceof \Twig_Template) {
+                if (!$value instanceof Template) {
                     $vars[$key] = $value;
                 }
             }
@@ -67,13 +73,12 @@ class DumpExtension extends \Twig_Extension
         }
 
         $dump = fopen('php://memory', 'r+b');
-        $dumper = new HtmlDumper($dump);
+        $this->dumper->setCharset($env->getCharset());
 
         foreach ($vars as $value) {
-            $dumper->dump($this->cloner->cloneVar($value));
+            $this->dumper->dump($this->cloner->cloneVar($value), $dump);
         }
-        rewind($dump);
 
-        return stream_get_contents($dump);
+        return stream_get_contents($dump, -1, 0);
     }
 }

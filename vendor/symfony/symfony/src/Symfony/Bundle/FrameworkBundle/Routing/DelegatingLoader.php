@@ -20,7 +20,7 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
  * DelegatingLoader delegates route loading to other loaders using a loader resolver.
  *
  * This implementation resolves the _controller attribute from the short notation
- * to the fully-qualified form (from a:b:c to class:method).
+ * to the fully-qualified form (from a:b:c to class::method).
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
@@ -30,8 +30,6 @@ class DelegatingLoader extends BaseDelegatingLoader
     private $loading = false;
 
     /**
-     * Constructor.
-     *
      * @param ControllerNameParser    $parser   A ControllerNameParser instance
      * @param LoaderResolverInterface $resolver A LoaderResolverInterface instance
      */
@@ -64,7 +62,7 @@ class DelegatingLoader extends BaseDelegatingLoader
             // - this handles the case and prevents the second fatal error
             //   by triggering an exception beforehand.
 
-            throw new FileLoaderLoadException($resource);
+            throw new FileLoaderLoadException($resource, null, null, null, $type);
         }
         $this->loading = true;
 
@@ -75,15 +73,17 @@ class DelegatingLoader extends BaseDelegatingLoader
         }
 
         foreach ($collection->all() as $route) {
-            if ($controller = $route->getDefault('_controller')) {
-                try {
-                    $controller = $this->parser->parse($controller);
-                } catch (\InvalidArgumentException $e) {
-                    // unable to optimize unknown notation
-                }
-
-                $route->setDefault('_controller', $controller);
+            if (!is_string($controller = $route->getDefault('_controller')) || !$controller) {
+                continue;
             }
+
+            try {
+                $controller = $this->parser->parse($controller);
+            } catch (\InvalidArgumentException $e) {
+                // unable to optimize unknown notation
+            }
+
+            $route->setDefault('_controller', $controller);
         }
 
         return $collection;

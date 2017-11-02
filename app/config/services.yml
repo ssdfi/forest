@@ -26,6 +26,13 @@ services:
        tags:
          -  { name: form.type }
 
-     app.ldap:
-        class: Symfony\Component\Ldap\LdapClient
-        arguments: [%ldap_server%]
+     Symfony\Component\Ldap\Ldap:
+        arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
+     Symfony\Component\Ldap\Adapter\ExtLdap\Adapter:
+        arguments:
+            -   host: "%ldap_server%"
+                port: 389
+                # encryption: tls
+                options:
+                    protocol_version: 3
+                    referrals: false

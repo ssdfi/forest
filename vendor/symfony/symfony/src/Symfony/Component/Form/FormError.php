@@ -61,8 +61,6 @@ class FormError implements \Serializable
     private $origin;
 
     /**
-     * Constructor.
-     *
      * Any array key in $messageParameters will be used as a placeholder in
      * $messageTemplate.
      *
@@ -185,6 +183,10 @@ class FormError implements \Serializable
      */
     public function unserialize($serialized)
     {
-        list($this->message, $this->messageTemplate, $this->messageParameters, $this->messagePluralization, $this->cause) = unserialize($serialized);
+        if (\PHP_VERSION_ID >= 70000) {
+            list($this->message, $this->messageTemplate, $this->messageParameters, $this->messagePluralization, $this->cause) = unserialize($serialized, array('allowed_classes' => false));
+        } else {
+            list($this->message, $this->messageTemplate, $this->messageParameters, $this->messagePluralization, $this->cause) = unserialize($serialized);
+        }
     }
 }

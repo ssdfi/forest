@@ -25,8 +25,6 @@ class FixUrlProtocolListener implements EventSubscriberInterface
     private $defaultProtocol;
 
     /**
-     * Constructor.
-     *
      * @param string|null $defaultProtocol The URL scheme to add when there is none or null to not modify the data
      */
     public function __construct($defaultProtocol = 'http')
@@ -38,7 +36,7 @@ class FixUrlProtocolListener implements EventSubscriberInterface
     {
         $data = $event->getData();
 
-        if ($this->defaultProtocol && $data && !preg_match('~^\w+://~', $data)) {
+        if ($this->defaultProtocol && $data && !preg_match('~^[\w+.-]+://~', $data)) {
             $event->setData($this->defaultProtocol.'://'.$data);
         }
     }
