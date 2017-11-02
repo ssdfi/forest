@@ -84,21 +84,21 @@ class ActividadesController extends Controller
         ));
     }
 
-    /**
-     * Finds and displays a actividade entity.
-     *
-     * @Route("/{id}", name="actividades_show")
-     * @Method("GET")
-     */
-    public function showAction(Actividades $actividade)
-    {
-        $deleteForm = $this->createDeleteForm($actividade);
-
-        return $this->render('actividades/show.html.twig', array(
-            'actividade' => $actividade,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
+    // /**
+    //  * Finds and displays a actividade entity.
+    //  *
+    //  * @Route("/{id}", name="actividades_show")
+    //  * @Method("GET")
+    //  */
+    // public function showAction(Actividades $actividade)
+    // {
+    //     $deleteForm = $this->createDeleteForm($actividade);
+    //
+    //     return $this->render('actividades/show.html.twig', array(
+    //         'actividade' => $actividade,
+    //         'delete_form' => $deleteForm->createView(),
+    //     ));
+    // }
 
     /**
      * Finds and edit a Actividad entity.

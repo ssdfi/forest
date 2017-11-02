@@ -38,7 +38,6 @@ class ExpedientesController extends Controller
         'method' => 'get'
       ));
         $param=$request->query->get('expedientes_search');
-
         $wheres=array();
         $join=array();
         if ($param['numeroInterno']) {
@@ -190,6 +189,11 @@ class ExpedientesController extends Controller
      */
     public function showAction(Expedientes $expediente, $id)
     {
+      dump('hoa');
+      if (is_number($id)){
+        dump($id);
+      }else{
+      }
         $em = $this->getDoctrine()->getManager();
         $dql_m   = "SELECT m
                   FROM AppBundle:Movimientos m
