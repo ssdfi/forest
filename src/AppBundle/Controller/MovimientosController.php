@@ -171,21 +171,21 @@ class MovimientosController extends Controller
             'edit_form' => $editForm->createView()
         ));
     }
-    /**
-     * Finds and displays a Movimientos entity.
-     *
-     * @Route("/{id_mov}", name="movimientos_show")
-     * @Method("GET")
-     */
-    public function showAction(Expedientes $expediente, Movimientos $movimiento)
-    {
-        $deleteForm = $this->createDeleteForm($movimiento);
-
-        return $this->render('movimientos/show.html.twig', array(
-            'movimiento' => $movimiento,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
+    // /**
+    //  * Finds and displays a Movimientos entity.
+    //  *
+    //  * @Route("/{id_mov}", name="movimientos_show")
+    //  * @Method("GET")
+    //  */
+    // public function showAction(Expedientes $expediente, Movimientos $movimiento)
+    // {
+    //     $deleteForm = $this->createDeleteForm($movimiento);
+    //
+    //     return $this->render('movimientos/show.html.twig', array(
+    //         'movimiento' => $movimiento,
+    //         'delete_form' => $deleteForm->createView(),
+    //     ));
+    // }
 
     /**
      * Deletes a Movimientos entity.
