@@ -4,8 +4,7 @@ Public and private services with tag `tag1`
 Definitions
 -----------
 
-definition_2
-~~~~~~~~~~~~
+### definition_2
 
 - Class: `Full\Qualified\Class2`
 - Public: no
@@ -14,9 +13,11 @@ definition_2
 - Shared: yes
 - Abstract: no
 - Autowired: no
+- Autoconfigured: no
 - File: `/path/to/file`
 - Factory Service: `factory.service`
 - Factory Method: `get`
+- Call: `setMailer`
 - Tag: `tag1`
     - Attr1: val1
     - Attr2: val2

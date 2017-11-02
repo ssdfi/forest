@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Serializer\Tests\Mapping\Loader;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Mapping\Loader\XmlFileLoader;
 use Symfony\Component\Serializer\Mapping\ClassMetadata;
 use Symfony\Component\Serializer\Tests\Mapping\TestClassMetadataFactory;
@@ -18,7 +19,7 @@ use Symfony\Component\Serializer\Tests\Mapping\TestClassMetadataFactory;
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
+class XmlFileLoaderTest extends TestCase
 {
     /**
      * @var XmlFileLoader
@@ -50,5 +51,15 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->loader->loadClassMetadata($this->metadata);
 
         $this->assertEquals(TestClassMetadataFactory::createXmlCLassMetadata(), $this->metadata);
+    }
+
+    public function testMaxDepth()
+    {
+        $classMetadata = new ClassMetadata('Symfony\Component\Serializer\Tests\Fixtures\MaxDepthDummy');
+        $this->loader->loadClassMetadata($classMetadata);
+
+        $attributesMetadata = $classMetadata->getAttributesMetadata();
+        $this->assertEquals(2, $attributesMetadata['foo']->getMaxDepth());
+        $this->assertEquals(3, $attributesMetadata['bar']->getMaxDepth());
     }
 }

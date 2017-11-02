@@ -13,13 +13,15 @@ namespace Symfony\Bridge\Twig\Extension;
 
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use Symfony\Component\Yaml\Yaml;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 /**
  * Provides integration of the Yaml component with Twig.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class YamlExtension extends \Twig_Extension
+class YamlExtension extends AbstractExtension
 {
     /**
      * {@inheritdoc}
@@ -27,12 +29,12 @@ class YamlExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('yaml_encode', array($this, 'encode')),
-            new \Twig_SimpleFilter('yaml_dump', array($this, 'dump')),
+            new TwigFilter('yaml_encode', array($this, 'encode')),
+            new TwigFilter('yaml_dump', array($this, 'dump')),
         );
     }
 
-    public function encode($input, $inline = 0, $dumpObjects = false)
+    public function encode($input, $inline = 0, $dumpObjects = 0)
     {
         static $dumper;
 
@@ -41,7 +43,15 @@ class YamlExtension extends \Twig_Extension
         }
 
         if (defined('Symfony\Component\Yaml\Yaml::DUMP_OBJECT')) {
-            return $dumper->dump($input, $inline, 0, is_bool($dumpObjects) ? Yaml::DUMP_OBJECT : 0);
+            if (is_bool($dumpObjects)) {
+                @trigger_error('Passing a boolean flag to toggle object support is deprecated since version 3.1 and will be removed in 4.0. Use the Yaml::DUMP_OBJECT flag instead.', E_USER_DEPRECATED);
+
+                $flags = $dumpObjects ? Yaml::DUMP_OBJECT : 0;
+            } else {
+                $flags = $dumpObjects;
+            }
+
+            return $dumper->dump($input, $inline, 0, $flags);
         }
 
         return $dumper->dump($input, $inline, 0, false, $dumpObjects);

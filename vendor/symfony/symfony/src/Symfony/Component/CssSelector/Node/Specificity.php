@@ -45,8 +45,6 @@ class Specificity
     private $c;
 
     /**
-     * Constructor.
-     *
      * @param int $a
      * @param int $b
      * @param int $c
@@ -61,7 +59,7 @@ class Specificity
     /**
      * @param Specificity $specificity
      *
-     * @return Specificity
+     * @return self
      */
     public function plus(Specificity $specificity)
     {

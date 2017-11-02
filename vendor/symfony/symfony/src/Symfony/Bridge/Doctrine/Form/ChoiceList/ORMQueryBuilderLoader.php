@@ -70,14 +70,14 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
             // Filter out non-integer values (e.g. ""). If we don't, some
             // databases such as PostgreSQL fail.
             $values = array_values(array_filter($values, function ($v) {
-                return (string) $v === (string) (int) $v;
+                return (string) $v === (string) (int) $v || ctype_digit($v);
             }));
-        } elseif ('guid' === $metadata->getTypeOfField($identifier)) {
+        } elseif (in_array($metadata->getTypeOfField($identifier), array('uuid', 'guid'))) {
             $parameterType = Connection::PARAM_STR_ARRAY;
 
             // Like above, but we just filter out empty strings.
             $values = array_values(array_filter($values, function ($v) {
-                return (string) $v !== '';
+                return '' !== (string) $v;
             }));
         } else {
             $parameterType = Connection::PARAM_STR_ARRAY;

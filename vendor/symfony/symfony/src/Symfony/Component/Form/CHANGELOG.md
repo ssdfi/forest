@@ -1,6 +1,32 @@
 CHANGELOG
 =========
 
+3.3.0
+-----
+
+ * deprecated using "choices" option in ``CountryType``, ``CurrencyType``, ``LanguageType``, ``LocaleType``, and
+   ``TimezoneType`` when "choice_loader" is not ``null``
+ * added `Symfony\Component\Form\FormErrorIterator::findByCodes()`
+ * added `getTypedExtensions`, `getTypes`, and `getTypeGuessers` to `Symfony\Component\Form\Test\FormIntegrationTestCase`
+ * added `FormPass`
+
+3.2.0
+-----
+
+ * added `CallbackChoiceLoader`
+ * implemented `ChoiceLoaderInterface` in children of `ChoiceType`
+
+3.1.0
+-----
+
+ * deprecated the "choices_as_values" option of ChoiceType
+ * deprecated support for data objects that implements both `Traversable` and
+   `ArrayAccess` in `ResizeFormListener::preSubmit` method
+ * Using callable strings as choice options in `ChoiceType` has been deprecated
+   and will be used as `PropertyPath` instead of callable in Symfony 4.0.
+ * implemented `DataTransformerInterface` in `TextType`
+ * deprecated caching loaded choice list in `LazyChoiceList::$loadedList`
+
 3.0.0
 -----
 

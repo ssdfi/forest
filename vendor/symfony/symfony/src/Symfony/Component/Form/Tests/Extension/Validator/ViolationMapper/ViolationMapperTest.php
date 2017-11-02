@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Validator\ViolationMapper;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Validator\ViolationMapper\ViolationMapper;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\CallbackTransformer;
@@ -25,7 +26,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class ViolationMapperTest extends \PHPUnit_Framework_TestCase
+class ViolationMapperTest extends TestCase
 {
     const LEVEL_0 = 0;
 
@@ -62,7 +63,7 @@ class ViolationMapperTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        $this->dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
         $this->mapper = new ViolationMapper();
         $this->message = 'Message';
         $this->messageTemplate = 'Message template';
@@ -95,7 +96,7 @@ class ViolationMapperTest extends \PHPUnit_Framework_TestCase
      */
     private function getDataMapper()
     {
-        return $this->getMock('Symfony\Component\Form\DataMapperInterface');
+        return $this->getMockBuilder('Symfony\Component\Form\DataMapperInterface')->getMock();
     }
 
     /**
@@ -212,7 +213,7 @@ class ViolationMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $grandChild->getErrors(), $grandChild->getName().' should not have an error, but has one');
     }
 
-    public function testMappingIfNotSubmitted()
+    public function testAbortMappingIfNotSubmitted()
     {
         $violation = $this->getConstraintViolation('children[address].data.street');
         $parent = $this->getForm('parent');
@@ -230,12 +231,12 @@ class ViolationMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->mapper->mapViolation($violation, $parent);
 
-        $this->assertCount(0, $parent->getErrors(), $parent->getName().' should not have an error');
-        $this->assertCount(0, $child->getErrors(), $child->getName().' should not have an error');
-        $this->assertCount(1, $grandChild->getErrors(), $grandChild->getName().' should have one error');
+        $this->assertCount(0, $parent->getErrors(), $parent->getName().' should not have an error, but has one');
+        $this->assertCount(0, $child->getErrors(), $child->getName().' should not have an error, but has one');
+        $this->assertCount(0, $grandChild->getErrors(), $grandChild->getName().' should not have an error, but has one');
     }
 
-    public function testDotRuleMappingIfNotSubmitted()
+    public function testAbortDotRuleMappingIfNotSubmitted()
     {
         $violation = $this->getConstraintViolation('data.address');
         $parent = $this->getForm('parent');
@@ -255,9 +256,9 @@ class ViolationMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->mapper->mapViolation($violation, $parent);
 
-        $this->assertCount(0, $parent->getErrors(), $parent->getName().' should not have an error');
-        $this->assertCount(0, $child->getErrors(), $child->getName().' should not have an error');
-        $this->assertCount(1, $grandChild->getErrors(), $grandChild->getName().' should have an error');
+        $this->assertCount(0, $parent->getErrors(), $parent->getName().' should not have an error, but has one');
+        $this->assertCount(0, $child->getErrors(), $child->getName().' should not have an error, but has one');
+        $this->assertCount(0, $grandChild->getErrors(), $grandChild->getName().' should not have an error, but has one');
     }
 
     public function provideDefaultTests()
@@ -1259,7 +1260,7 @@ class ViolationMapperTest extends \PHPUnit_Framework_TestCase
         // Only add it if we expect the error to come up on a different
         // level than LEVEL_0, because in this case the error would
         // (correctly) be mapped to the distraction field
-        if ($target !== self::LEVEL_0) {
+        if (self::LEVEL_0 !== $target) {
             $mapFromPath = new PropertyPath($mapFrom);
             $mapFromPrefix = $mapFromPath->isIndex(0)
                 ? '['.$mapFromPath->getElement(0).']'
@@ -1273,7 +1274,7 @@ class ViolationMapperTest extends \PHPUnit_Framework_TestCase
 
         $this->mapper->mapViolation($violation, $parent);
 
-        if ($target !== self::LEVEL_0) {
+        if (self::LEVEL_0 !== $target) {
             $this->assertCount(0, $distraction->getErrors(), 'distraction should not have an error, but has one');
         }
 

@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\CallbackValidator;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class CallbackValidatorTest_Class
 {
@@ -43,7 +44,7 @@ class CallbackValidatorTest_Object
     }
 }
 
-class CallbackValidatorTest extends AbstractConstraintValidatorTest
+class CallbackValidatorTest extends ConstraintValidatorTestCase
 {
     protected function createValidator()
     {
@@ -210,7 +211,9 @@ class CallbackValidatorTest extends AbstractConstraintValidatorTest
     // Should succeed. Needed when defining constraints as annotations.
     public function testNoConstructorArguments()
     {
-        new Callback();
+        $constraint = new Callback();
+
+        $this->assertSame(array(Constraint::CLASS_CONSTRAINT, Constraint::PROPERTY_CONSTRAINT), $constraint->getTargets());
     }
 
     public function testAnnotationInvocationSingleValued()
@@ -225,5 +228,29 @@ class CallbackValidatorTest extends AbstractConstraintValidatorTest
         $constraint = new Callback(array('value' => array(__CLASS__.'_Class', 'validateCallback')));
 
         $this->assertEquals(new Callback(array(__CLASS__.'_Class', 'validateCallback')), $constraint);
+    }
+
+    public function testPayloadIsPassedToCallback()
+    {
+        $object = new \stdClass();
+        $payloadCopy = null;
+
+        $constraint = new Callback(array(
+            'callback' => function ($object, ExecutionContextInterface $constraint, $payload) use (&$payloadCopy) {
+                $payloadCopy = $payload;
+            },
+            'payload' => 'Hello world!',
+        ));
+        $this->validator->validate($object, $constraint);
+        $this->assertEquals('Hello world!', $payloadCopy);
+
+        $payloadCopy = null;
+        $constraint = new Callback(array(
+            'callback' => function ($object, ExecutionContextInterface $constraint, $payload) use (&$payloadCopy) {
+                $payloadCopy = $payload;
+            },
+        ));
+        $this->validator->validate($object, $constraint);
+        $this->assertNull($payloadCopy);
     }
 }

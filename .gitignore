@@ -15,6 +15,10 @@
 /app/config/parameters.yml
 /app/config/parameters.ini
 
+# Security
+/app/config/security.yml
+/app/config/security.ini
+
 # Managed by Composer
 /app/bootstrap.php.cache
 /var/bootstrap.php.cache
