@@ -189,11 +189,6 @@ class ExpedientesController extends Controller
      */
     public function showAction(Expedientes $expediente, $id)
     {
-      dump('hoa');
-      if (is_number($id)){
-        dump($id);
-      }else{
-      }
         $em = $this->getDoctrine()->getManager();
         $dql_m   = "SELECT m
                   FROM AppBundle:Movimientos m
