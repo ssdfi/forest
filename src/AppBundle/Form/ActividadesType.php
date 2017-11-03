@@ -8,12 +8,19 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormError;
 
 class ActividadesType extends AbstractType
 {
+    private $manager;
+
+    public function __construct(ObjectManager $manager) {
+       $this->manager = $manager;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -39,25 +46,12 @@ class ActividadesType extends AbstractType
               function(FormEvent $event){
                 $form=$event->getForm();
                 $data=$event->getData();
-                $plantacion = $form->get('plantaciones');
-                dump($plantacion);
-                $form->get('plantaciones')->addError(new FormError('error message'));
-
+                if(array_key_exists('plantaciones',$data)){
+                  $input_array=$data['plantaciones'];
+                  $data['plantaciones'] = array_unique($input_array, SORT_REGULAR);
+                  $event->setData($data);
+                }
             });
-      /*
-      function array_has_dupes($array) {
-         // streamline per @Felix
-         return count($array) !== count(array_unique($array));
-      }
-      */
-
-        $builder->addEventListener(
-            FormEvents::PRE_SUBMIT,
-            function(FormEvent $event){
-              $form=$event->getForm();
-              $data=$event->getData();
-
-          });
     }
 
     /**
