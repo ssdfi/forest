@@ -21,7 +21,7 @@ class TitularesController extends Controller
     /**
      * Lists all Titulares entities.
      *
-     * @Route("/", name="titulares_index")
+     * @Route("", name="titulares_index")
      * @Method("GET")
      */
     public function indexAction(Request $request)

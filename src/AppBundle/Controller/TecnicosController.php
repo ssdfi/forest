@@ -21,7 +21,7 @@ class TecnicosController extends Controller
     /**
      * Lists all Tecnicos entities.
      *
-     * @Route("/", name="tecnicos_index")
+     * @Route("", name="tecnicos_index")
      * @Method("GET")
      */
     public function indexAction(Request $request)
