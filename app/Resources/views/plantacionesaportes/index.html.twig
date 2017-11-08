@@ -1,18 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-      <div class="col-md-12">
+      <div class="col-md-9">
         <h4>Plantaciones Aportes</h4>
         <table id="plantaciones" class="table table-hover table-grid">
           <thead>
             <tr>
               <th>ID</th>
               <th>Titular</th>
-              <th>Especie</th>
+              <!-- <th>Especie</th> -->
               <th>Tipo</th>
-              <th>Superficie</th>
               <th>Activo</th>
-              <th class="icon">Mapa</th>
+              <th>Usuario</th>
             </tr>
           </thead>
           <tbody>
@@ -21,7 +20,6 @@
               <td>{{ plantacion.id }}</td>
               <td>{% if plantacion.titular %}<a href="/titulares/{{ plantacion.titular.id }}"> {{ plantacion.titular.nombre }} </a> {% else %} {% endif %} </td>
               <td>{% if plantacion.tipoPlantacion %}{{ plantacion.tipoPlantacion.descripcion }}{% else %} {% endif %} </td>
-              <td></td>
               <td class="icon">
                 {% if plantacion.activo %}
                   <span class="glyphicon glyphicon-ok"></span>
@@ -29,7 +27,7 @@
                   <span class="glyphicon glyphicon-remove"></span>
                 {% endif %}
               </td>
-              <td></td>
+              <td>{{plantacion.usuario}}</td>
               <td class="icon icon-lg"></td>
             </tr>
             {% endfor %}
