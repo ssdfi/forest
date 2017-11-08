@@ -67,3 +67,8 @@ ul, ol {
   color: white!important;
   font-weight: bold;
 }
+
+.inner {
+  width: 50%;
+  margin: 0 auto;
+}
