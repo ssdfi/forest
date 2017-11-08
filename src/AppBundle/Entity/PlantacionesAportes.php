@@ -136,9 +136,12 @@ class PlantacionesAportes
     private $geom;
 
     /**
-     * @var integer
+     * @var \BasesGeometricas
      *
-     * @ORM\Column(name="base_geometrica_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="BasesGeometricas", fetch="LAZY")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="base_geometrica_id", referencedColumnName="id")
+     * })
      */
     private $baseGeometricaId;
 
@@ -166,7 +169,7 @@ class PlantacionesAportes
     /**
      * @var \ObjetivosPlantacion
      *
-     * @ORM\ManyToOne(targetEntity="ObjetivosPlantacion")
+     * @ORM\ManyToOne(targetEntity="ObjetivosPlantacion", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="objetivo_plantacion_id", referencedColumnName="id")
      * })
@@ -176,7 +179,7 @@ class PlantacionesAportes
     /**
      * @var \FuentesInformacion
      *
-     * @ORM\ManyToOne(targetEntity="FuentesInformacion")
+     * @ORM\ManyToOne(targetEntity="FuentesInformacion", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="fuente_informacion_id", referencedColumnName="id")
      * })
@@ -186,7 +189,7 @@ class PlantacionesAportes
     /**
      * @var \Provincias
      *
-     * @ORM\ManyToOne(targetEntity="Provincias")
+     * @ORM\ManyToOne(targetEntity="Provincias", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="provincia_id", referencedColumnName="id")
      * })
@@ -196,7 +199,7 @@ class PlantacionesAportes
     /**
      * @var \Departamentos
      *
-     * @ORM\ManyToOne(targetEntity="Departamentos")
+     * @ORM\ManyToOne(targetEntity="Departamentos", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="departamento_id", referencedColumnName="id")
      * })
@@ -206,7 +209,7 @@ class PlantacionesAportes
     /**
      * @var \UsosAnteriores
      *
-     * @ORM\ManyToOne(targetEntity="UsosAnteriores")
+     * @ORM\ManyToOne(targetEntity="UsosAnteriores", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="uso_anterior_id", referencedColumnName="id")
      * })
@@ -216,7 +219,7 @@ class PlantacionesAportes
     /**
      * @var \Errores
      *
-     * @ORM\ManyToOne(targetEntity="Errores")
+     * @ORM\ManyToOne(targetEntity="Errores", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="error_id", referencedColumnName="id")
      * })
@@ -226,7 +229,7 @@ class PlantacionesAportes
     /**
      * @var \FuentesImagen
      *
-     * @ORM\ManyToOne(targetEntity="FuentesImagen")
+     * @ORM\ManyToOne(targetEntity="FuentesImagen", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="fuente_imagen_id", referencedColumnName="id")
      * })
@@ -236,7 +239,7 @@ class PlantacionesAportes
     /**
      * @var \EstratosDesarrollo
      *
-     * @ORM\ManyToOne(targetEntity="EstratosDesarrollo")
+     * @ORM\ManyToOne(targetEntity="EstratosDesarrollo", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="estrato_desarrollo_id", referencedColumnName="id")
      * })
@@ -246,7 +249,7 @@ class PlantacionesAportes
     /**
      * @var \TiposPlantacion
      *
-     * @ORM\ManyToOne(targetEntity="TiposPlantacion")
+     * @ORM\ManyToOne(targetEntity="TiposPlantacion", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="tipo_plantacion_id", referencedColumnName="id")
      * })
@@ -256,7 +259,7 @@ class PlantacionesAportes
     /**
      * @var \UsosForestales
      *
-     * @ORM\ManyToOne(targetEntity="UsosForestales")
+     * @ORM\ManyToOne(targetEntity="UsosForestales", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="uso_forestal_id", referencedColumnName="id")
      * })
@@ -266,7 +269,7 @@ class PlantacionesAportes
     /**
      * @var \EstadosPlantacion
      *
-     * @ORM\ManyToOne(targetEntity="EstadosPlantacion")
+     * @ORM\ManyToOne(targetEntity="EstadosPlantacion", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="estado_plantacion_id", referencedColumnName="id")
      * })
@@ -276,7 +279,7 @@ class PlantacionesAportes
     /**
      * @var \Titulares
      *
-     * @ORM\ManyToOne(targetEntity="Titulares")
+     * @ORM\ManyToOne(targetEntity="Titulares", fetch="LAZY")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="titular_id", referencedColumnName="id")
      * })
