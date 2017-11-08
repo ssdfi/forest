@@ -13,7 +13,8 @@ class LdapUserProvider extends SymfonyLdapUserProvider
     /** @var array maps ldap groups to roles */
     private $groupMapping = [   // Definitely requires modification for your setup
         'forestapp_editor' => 'ROLE_EDITOR',
-        'forestapp_admin' => 'ROLE_ADMIN'
+        'forestapp_admin' => 'ROLE_ADMIN',
+        'forestapp_tecnicoregional' => 'ROLE_TECNICO_REGIONAL'
     ];
     /** @var string extracts group name from dn string */
     private $groupNameRegExp = '/^CN=(?P<group>[^,]+),ou.*$/i'; // You might want to change it to match your ldap server
