@@ -17,6 +17,7 @@ use CrEOF\Spatial\Tests\Fixtures\PolygonEntity;
 use CrEOF\Spatial\Tests\OrmTestCase;
 
 use Doctrine\ORM\Query;
+
 /**
  * Plantacionesaporte controller.
  *
@@ -32,18 +33,17 @@ class PlantacionesAportesController extends Controller
      */
     public function indexAction(Request $request)
     {
-      $em    = $this->get('doctrine.orm.entity_manager');
-      $dql   = "SELECT a FROM AppBundle:PlantacionesAportes a";
-      $query = $em->createQuery($dql);
-      $paginator = $this->get('knp_paginator');
-      $plantaciones = $paginator->paginate(
+        $em    = $this->get('doctrine.orm.entity_manager');
+        $dql   = "SELECT a FROM AppBundle:PlantacionesAportes a";
+        $query = $em->createQuery($dql);
+        $paginator = $this->get('knp_paginator');
+        $plantaciones = $paginator->paginate(
               $query,
               $request->query->getInt('page', 1),
               15,
               array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'asc')
           );
-
-      return $this->render('plantacionesaportes/index.html.twig',array('plantaciones' => $plantaciones));
+        return $this->render('plantacionesaportes/index.html.twig', array('plantaciones' => $plantaciones));
     }
 
     /**
@@ -80,26 +80,29 @@ class PlantacionesAportesController extends Controller
      */
     public function showAction(PlantacionesAportes $aporte, $id)
     {
-      $em    = $this->get('doctrine.orm.entity_manager');
-      $plantacione = $em->getRepository('AppBundle:Plantaciones')->findOneBy(array('id'=>$id));
-      //$deleteForm = $this->createDeleteForm($plantacione);
-      $plantacion = $this->getGeoJSON($id);
-      return $this->render('plantacionesaportes/show.html.twig', array(
+        $em    = $this->get('doctrine.orm.entity_manager');
+        $plantacione = $em->getRepository('AppBundle:Plantaciones')->findOneBy(array('id'=>$aporte->getIdOrig()));
+        $plantacion = $this->getGeoJSON($id);
+        return $this->render('plantacionesaportes/show.html.twig', array(
             'plantacione' => $plantacione,
             'plantacion' => $plantacion,
-            'aporte' => $aporte,
-            //'delete_form' => $deleteForm->createView(),
+            'aporte' => $aporte
         ));
     }
     /* Obtengo Plantacion, Aporte y Diferencia*/
-    public function getGeoJSON($id){
-      $em    = $this->get('doctrine.orm.entity_manager');
-      $dql_plantacion ="SELECT ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as plantacion,ST_AsGeoJson(ST_TRANSFORM(pa.geom,4326))as plantacion_aporte, ST_EQUALS(pa.geom,p.geom) as diff
+    public function getGeoJSON($id)
+    {
+        $em    = $this->get('doctrine.orm.entity_manager');
+        $dql_plantacion ="SELECT ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as plantacion,
+                        ST_AsGeoJson(ST_TRANSFORM(pa.geom,4326)) as plantacion_aporte,
+                        ST_EQUALS(pa.geom,p.geom) as diff,
+                        ST_AREA(p.geom)/10000 as superficieOriginal,
+                        ST_AREA(pa.geom)/10000 as superficieAporte
                 FROM AppBundle:Plantaciones p
                 JOIN AppBundle:PlantacionesAportes pa WITH pa.idOrig=p.id
                 WHERE pa.id=:id";
-      $plantacion=$em->createQuery($dql_plantacion)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
-      return $plantacion;
+        $plantacion=$em->createQuery($dql_plantacion)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+        return $plantacion;
     }
 
     /**
@@ -115,9 +118,16 @@ class PlantacionesAportesController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            try {
+              $this->getDoctrine()->getManager()->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Aporte editado satisfactoriamente.'));
+                return $this->redirectToRoute('plantacionesaportes_show', array('id' => $plantacionesAporte->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar el aporte');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('plantacionesaportes_index');
+            }
 
-            return $this->redirectToRoute('plantacionesaportes_edit', array('id' => $plantacionesAporte->getId()));
         }
 
         return $this->render('plantacionesaportes/edit.html.twig', array(
