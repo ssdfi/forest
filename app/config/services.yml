@@ -25,6 +25,11 @@ services:
        arguments: [ "@doctrine.orm.entity_manager" ]
        tags:
          -  { name: form.type }
+     app.form.type.plantaciones_aportes:
+       class: AppBundle\Form\PlantacionesAportesType
+       arguments: [ "@doctrine.orm.entity_manager" ]
+       tags:
+         -  { name: form.type }
 
      Symfony\Component\Ldap\Ldap:
         arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
