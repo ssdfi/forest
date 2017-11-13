@@ -142,7 +142,7 @@ class Expedientes
      /**
       * @var \Movimiento
       *
-      * @ORM\OneToMany(targetEntity="Movimientos",mappedBy="expediente")
+      * @ORM\OneToMany(targetEntity="Movimientos",mappedBy="expediente",orphanRemoval=true)
       */
      private $movimientos;
     /**
