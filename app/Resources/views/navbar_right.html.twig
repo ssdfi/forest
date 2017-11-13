@@ -4,7 +4,7 @@
 {# ----------------------------EXPEDIENTES---------------------------- #}
 {% if route == "list_expedientes" %}
 	<li>
-		<a id="nav-new-expediente" href="/expedientes/new">
+		<a id="nav-new-expediente" href="{{path('expedientes_new')}}">
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 			Nuevo Expediente
 		</a>
@@ -13,31 +13,37 @@
 
 {% if route == "expedientes_show" %}
 	<li>
-		<a id="nav-new-expediente" href="/expedientes/{{expediente.id}}/edit">
+		<a id="nav-new-expediente" href="{{ path('expedientes_edit', {'id': expediente.id }) }}">
 			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 			Editar Expediente
 		</a>
 	</li>
 	<li>
-		<a id="nav-new-expediente" href="/expedientes/{{expediente.id}}/movimientos/new">
+		<a id="nav-new-expediente" href="{{ path('movimientos_new', {'id': expediente.id }) }}">
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 			Nuevo Movimiento
 		</a>
 	</li>
-	<li>
-		<a id="nav-delete-expediente" data-confirm="¿Está seguro que desea elminar el Expediente?" value="Delete" href="/expedientes/{{expediente.id}}/delete" rel="nofollow">
-			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-			Eliminar Expediente
-		</a>
-	</li>
+	{% if is_granted('ROLE_ADMIN') %}
+		<li>
+			<a>
+				{{ form_start(delete_form) }}
+				<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Expediente?')">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					Eliminar Expediente
+				</button>
+				{{ form_end(delete_form) }}
+			</a>
+		</li>
+	{% endif %}
 	<li class="navbar-primary">
-		<a id="nav_expediente" href="/expedientes/{{expediente.id}}">{{expediente.numeroInterno}}</a>
+		<a id="nav_expediente" href="{{ path('expedientes_show', {'id': expediente.id }) }}">{{expediente.numeroInterno}}</a>
 	</li>
 {% endif %}
 
 {% if route == "expedientes_edit" %}
 	<li class="navbar-primary">
-		<a id="nav_expediente" href="/expedientes/{{expediente.id}}">{{expediente.numeroInterno}}</a>
+		<a id="nav_expediente" href="{{ path('expedientes_show', {'id': expediente.id }) }}">{{expediente.numeroInterno}}</a>
 	</li>
 {% endif %}
 
@@ -58,12 +64,18 @@
 			Editar Titular
 		</a>
 	</li>
+	{% if is_granted('ROLE_ADMIN') %}
 	<li>
-		<a id="nav-delete-titular" data-confirm="¿Está seguro que desea elminar el Titular?" value="Delete" href="/titulares/{{titular.id}}" rel="nofollow">
+	<a>
+		{{ form_start(delete_form) }}
+		<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Titular?')">
 			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 			Eliminar Titular
-		</a>
+		</button>
+		{{ form_end(delete_form) }}
+	</a>
 	</li>
+	{% endif %}
 {% endif %}
 
 {#  -------------------------TECNICOS---------------------------- #}
@@ -83,12 +95,18 @@
 			Editar Tecnico
 		</a>
 	</li>
+	{% if is_granted('ROLE_ADMIN') %}
 	<li>
-		<a id="nav-delete-expediente" data-confirm="¿Está seguro que desea elminar el Tecnico?" value="Delete" href="/tecnicos/{{tecnico.id}}" rel="nofollow">
+	<a>
+		{{ form_start(delete_form) }}
+		<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Técnico?')">
 			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-			Eliminar Tecnico
-		</a>
+			Eliminar Técnico
+		</button>
+		{{ form_end(delete_form) }}
+	</a>
 	</li>
+	{% endif %}
 {% endif %}
 
 {#  -------------------------PLANTACIONES---------------------------- #}
@@ -114,12 +132,18 @@
 			Mapa
 		</a>
 	</li>
-	<li>
-		<a id="nav-delete-expediente" data-confirm="¿Está seguro que desea eliminar la Plantacion?" value="Delete" href="/plantaciones/{{plantacione.id}}" rel="nofollow">
-			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-			Eliminar
-		</a>
-	</li>
+	{% if is_granted('ROLE_ADMIN') %}
+		<li>
+			<a>
+				{{ form_start(delete_form) }}
+				<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar la Plantación?')">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					Eliminar Plantación
+				</button>
+				{{ form_end(delete_form) }}
+			</a>
+		</li>
+	{% endif %}
 {% endif %}
 {#  -------------------------MOVIMIENTOS---------------------------- #}
 {% if route == "list_movimientos" %}
@@ -141,12 +165,18 @@
 			Generar Reporte
 		</a>
 	</li>
-	<li>
-		<a id="nav-delete-movimiento" data-confirm="¿Está seguro que desea eliminar el Movimiento?" value="Delete" href="{{path('movimientos_delete',{id_mov: movimiento.id, idExp: movimiento.expediente.id})}}" data-method="delete" rel="nofollow">
-			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-			Eliminar
-		</a>
-	</li>
+	{% if is_granted('ROLE_ADMIN') %}
+		<li>
+			<a>
+				{{ form_start(delete_form) }}
+				<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Movimiento?')">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					Eliminar Movimiento
+				</button>
+				{{ form_end(delete_form) }}
+			</a>
+		</li>
+	{% endif %}
 	<li class="navbar-primary">
 		<a id="nav_expediente" href="/expedientes/{{movimiento.expediente.id}}">{{movimiento.expediente.numeroInterno}}</a>
 	</li>
@@ -183,20 +213,18 @@
 			Editar Plantaciones
 		</a>
 	</li>
-	<li>
-		<a
-			id="nav-delete-expediente"
-			href="{{ path('actividades_delete', {'idExp': actividad.movimiento.expediente.getId(), 'idMov': actividad.movimiento.getId() ,'id':actividad.getId() }) }}"
-			onclick="return confirm('¿Está seguro que desea eliminar la Actividad?')"
-			data-confirm="¿Está seguro que desea eliminar la Actividad?"
-			value="Delete"
-			method="delete"
-			rel="nofollow">
-			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-			Eliminar Actividad
-			{{ form_widget(delete) }}
-		</a>
-	</li>
+	{% if is_granted('ROLE_ADMIN') %}
+		<li>
+			<a>
+				{{ form_start(delete) }}
+				<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar la Actividad?')">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					Eliminar Actividad
+				</button>
+				{{ form_end(delete) }}
+			</a>
+		</li>
+	{% endif %}
 	<li>
 		<a id="nav_expediente" href="/expedientes/{#expediente.id#}">{#expediente.numeroInterno#}</a>
 	</li>
