@@ -17,12 +17,7 @@
   </div>
   {% block javascripts %}
    <script>
-      var plantaciones = {
-              "id":"1",
-              "type":"Feature",
-              "geometry": {{ plantacion.0.plantacion|raw }},
-              "properties":{"Fuente":"Original"}
-            }
+   var plantaciones = {{(plantacion|raw)}};
    </script>
   {% endblock %}
   {{ include('map_js.html.twig') }}
