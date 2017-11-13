@@ -26,6 +26,7 @@ class ActividadesController extends Controller
      */
     public function newAction(Request $request, $idExp, $idMov)
     {
+      $em = $this->getDoctrine()->getManager();
         $actividad = new Actividades();
         $form = $this->createForm('AppBundle\Form\ActividadesType', $actividad);
         $form->handleRequest($request);
@@ -84,21 +85,60 @@ class ActividadesController extends Controller
         ));
     }
 
-    // /**
-    //  * Finds and displays a actividade entity.
-    //  *
-    //  * @Route("/{id}", name="actividades_show")
-    //  * @Method("GET")
-    //  */
-    // public function showAction(Actividades $actividade)
-    // {
-    //     $deleteForm = $this->createDeleteForm($actividade);
-    //
-    //     return $this->render('actividades/show.html.twig', array(
-    //         'actividade' => $actividade,
-    //         'delete_form' => $deleteForm->createView(),
-    //     ));
-    // }
+    /* Obtengo Plantacion*/
+    /**
+     * Finds and displays a Plantaciones entity.
+     *
+     * @Route("/geojson/{id}", name="geojson_plantacion")
+     * @Method("GET")
+     */
+    public function getGeoJSON($id)
+    {
+        $em    = $this->getDoctrine()->getManager();
+        $dql_plantacion ="SELECT ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as plantacion
+                  FROM AppBundle:Plantaciones p
+                  WHERE p.id=:id";
+        $plantacion=$em->createQuery($dql_plantacion)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+        return $plantacion;
+    }
+
+    /**
+     * Finds and displays a Actividades entity.
+     *
+     * @Route("/expedientes/{id}/movimientos/{idMov}/actividades/{idAct}/mapa", name="map_actividades")
+     * @Method("GET")
+     */
+    public function mapAction($id, $idMov, $idAct)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $actividades = $em->getRepository('AppBundle:Actividades')->findOneById($idAct);
+        $deleteForm = $this->createDeleteForm($actividades);
+
+        $dql_p   = "SELECT   p.id as id,
+          t.nombre as titular,
+          e.nombreCientifico as especie,
+          st_area(p.geom)/10000 as area,
+          ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as plantacion
+                    FROM AppBundle:Actividades a
+                    LEFT JOIN AppBundle:ActividadesPlantaciones ap WITH a.id = ap.actividad
+                    LEFT JOIN AppBundle:Plantaciones p WITH p.id = ap.plantacion
+                    LEFT JOIN AppBundle:Titulares t WITH p.titular = t.id
+                    LEFT JOIN AppBundle:EspeciesPlantaciones ep WITH p.id = ep.plantacion
+                    LEFT JOIN AppBundle:Especies e WITH ep.especie = e.id
+                    WHERE a.id=:id";
+        $plantaciones = $em->createQuery($dql_p)->setParameters(array('id' => $idAct))->getResult(Query::HYDRATE_OBJECT);
+        $data = '';
+        foreach ($plantaciones as $key => $plantacion) {
+          $data[$key]['id']= $plantacion['id'];
+          $data[$key]['type']= "Feature";
+          $data[$key]['geometry']=json_decode($plantacion['plantacion']);
+          $data[$key]['properties']['ID']=$plantacion['id'];
+          $data[$key]['properties']['Titular']=$plantacion['titular'];
+          $data[$key]['properties']['Especie']=$plantacion['especie'];
+          $data[$key]['properties']['Superficie']=round($plantacion['area'],1);
+        }
+        return $this->render('map.html.twig', array('plantacion'=>json_encode($data)));
+    }
 
     /**
      * Finds and edit a Actividad entity.
@@ -129,7 +169,6 @@ class ActividadesController extends Controller
                     $em->persist($act);
                 }
             }
-
             try {
                 $this->getDoctrine()->getManager()->flush();
                 $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Actividad actualizada satisfactoriamente.'));
