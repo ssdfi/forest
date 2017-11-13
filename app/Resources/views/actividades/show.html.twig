@@ -29,6 +29,11 @@
           0.0
         {% endif %}
       </td>
+      <td>
+        <a href="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{actividad.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
+          <span class="glyphicon glyphicon-globe"></span>
+        </a>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
