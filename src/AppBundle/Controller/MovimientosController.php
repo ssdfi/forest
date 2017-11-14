@@ -12,6 +12,7 @@ use AppBundle\Entity\Expedientes;
 use AppBundle\Form\MovimientosType;
 use Doctrine;
 use Doctrine\ORM\Query;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * Movimientos controller.
@@ -42,7 +43,7 @@ class MovimientosController extends Controller
                 $em->persist($movimiento);
                 $em->flush();
                 $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Movimiento creado satisfactoriamente.'));
-                return $this->redirectToRoute('list_movimientos', array('id'=>$id,'idMov' => $movimiento->getId()));
+                return $this->redirectToRoute('list_movimientos', array('idExp'=>$id,'id' => $movimiento->getId()));
             } catch (\Doctrine\ORM\ORMException $e) {
                 $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al crear el movimiento');
                 $this->get('logger')->error($e->getMessage());
@@ -58,20 +59,20 @@ class MovimientosController extends Controller
     /**
      * List Movimientos.
      *
-     * @Route("/expedientes/{id}/movimientos/{idMov}", name="list_movimientos")
+     * @Route("/expedientes/{idExp}/movimientos/{id}", name="list_movimientos")
      * @Method("GET")
      */
 
-    public function indexAction($id, $idMov)
+    public function indexAction(Movimientos $movimiento, $id, $idExp)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
-        $actividades = $em->getRepository('AppBundle:Actividades')->findByMovimiento($idMov);
+        $actividades = $em->getRepository('AppBundle:Actividades')->findByMovimiento($id);
+        $deleteForm = $this->createDeleteForm($movimiento);
         return $this->render('movimientos/index.html.twig', array(
-            'expediente' => $id,
+            'expediente' => $idExp,
             'movimiento' => $movimiento,
-            'actividades'=>$actividades
+            'actividades'=>$actividades,
+            'delete_form' => $deleteForm->createView()
         ));
     }
 
@@ -103,6 +104,82 @@ class MovimientosController extends Controller
               'actividades' => $actividades,
               'plantaciones' => $plantaciones
           ));
+    }
+
+
+    /**
+     * Displays a form to edit an existing Movimientos entity.
+     *
+     * @Route("/expedientes/{idExp}/movimientos/{idMov}/edit", name="movimientos_edit")
+     * @Method({"GET", "POST"})
+     */
+    public function editAction(Request $request, $idExp, $idMov)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
+        $editForm = $this->createForm('AppBundle\Form\MovimientosType', $movimiento);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            try {
+                $em->persist($movimiento);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Movimiento actualizado satisfactoriamente.'));
+                return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el movimiento');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+            }
+        }
+
+        return $this->render('movimientos/edit.html.twig', array(
+            'movimiento' => $movimiento,
+            'edit_form' => $editForm->createView()
+        ));
+    }
+
+    /**
+     * Deletes a Movimientos entity.
+     *
+     * @Route("/expedientes/{idExp}/movimientos/{id}/delete", name="movimientos_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, Movimientos $movimiento, $idExp)
+    {
+        $form = $this->createDeleteForm($movimiento);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($movimiento);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Movimiento eliminado.'));
+                return $this->redirectToRoute('expedientes_show', array('id'=>$idExp));
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al eliminar el movimiento');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+            }
+        }
+    }
+
+    /**
+     * Creates a form to delete a Movimientos entity.
+     *
+     * @param Movimientos $movimiento The Movimientos entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Movimientos $movimiento)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('movimientos_delete', array('idExp'=>$movimiento->getExpediente()->getId(),'id' => $movimiento->getId())))
+            ->setMethod('DELETE')
+            ->getForm()
+        ;
     }
 
     public function getActividadAction($id)
@@ -137,89 +214,5 @@ class MovimientosController extends Controller
         return $this->render('movimientos/data.html.twig', array(
             'data' => $especie[0]->getNombreCientifico()
         ));
-    }
-    /**
-     * Displays a form to edit an existing Movimientos entity.
-     *
-     * @Route("/expedientes/{idExp}/movimientos/{idMov}/edit", name="movimientos_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editAction(Request $request, $idExp, $idMov)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $movimiento = $em->getRepository('AppBundle:Movimientos')->findOneById($idMov);
-        //$deleteForm = $this->createDeleteForm($movimiento);
-        $editForm = $this->createForm('AppBundle\Form\MovimientosType', $movimiento);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            try {
-                $em->persist($movimiento);
-                $em->flush();
-                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Movimiento actualizado satisfactoriamente.'));
-                return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
-            } catch (\Doctrine\ORM\ORMException $e) {
-                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el movimiento');
-                $this->get('logger')->error($e->getMessage());
-                return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
-            }
-        }
-
-        return $this->render('movimientos/edit.html.twig', array(
-            'movimiento' => $movimiento,
-            'edit_form' => $editForm->createView()
-        ));
-    }
-    // /**
-    //  * Finds and displays a Movimientos entity.
-    //  *
-    //  * @Route("/{id_mov}", name="movimientos_show")
-    //  * @Method("GET")
-    //  */
-    // public function showAction(Expedientes $expediente, Movimientos $movimiento)
-    // {
-    //     $deleteForm = $this->createDeleteForm($movimiento);
-    //
-    //     return $this->render('movimientos/show.html.twig', array(
-    //         'movimiento' => $movimiento,
-    //         'delete_form' => $deleteForm->createView(),
-    //     ));
-    // }
-
-    /**
-     * Deletes a Movimientos entity.
-     *
-     * @Route("/expedientes/{idExp}/movimientos/{id_mov}/delete", name="movimientos_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, Movimientos $movimiento)
-    {
-        $form = $this->createDeleteForm($movimiento);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($movimiento);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('movimientos_index');
-    }
-
-    /**
-     * Creates a form to delete a Movimientos entity.
-     *
-     * @param Movimientos $movimiento The Movimientos entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Movimientos $movimiento)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('movimientos_delete', array('id' => $movimiento->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }
