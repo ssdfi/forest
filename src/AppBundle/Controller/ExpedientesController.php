@@ -256,7 +256,7 @@ class ExpedientesController extends Controller
     /**
      * Deletes a Expedientes entity.
      *
-     * @Route("/{id}", name="expedientes_delete")
+     * @Route("/{id}/delete", name="expedientes_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Expedientes $expediente)
@@ -270,7 +270,7 @@ class ExpedientesController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('expedientes_index');
+        return $this->redirectToRoute('list_expedientes');
     }
     /**
      * Export a CSV file.
