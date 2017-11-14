@@ -183,12 +183,19 @@ class TecnicosController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($tecnico);
-            $em->flush();
+            try {
+              $em = $this->getDoctrine()->getManager();
+              $em->remove($tecnico);
+              $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Se ha eliminado satisfactoriamente.'));
+                return $this->redirectToRoute('tecnicos_index');
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al eliminar');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirectToRoute('tecnicos_index');
+            }
         }
 
-        return $this->redirectToRoute('tecnicos_index');
     }
 
     /**
