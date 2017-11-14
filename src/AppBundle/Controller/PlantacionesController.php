@@ -345,20 +345,29 @@ class PlantacionesController extends Controller
     public function mapAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        // $dql_p   = "SELECT st_area(p.geom)/10000
-        //           FROM AppBundle:Plantaciones p
-        //           WHERE p.id=:id";
-        // $plantacion=$em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult();
-        // $response = new Response();
-        // if($plantacion[0][1]) {
-        //   $plantacion[0][1] = round($plantacion[0][1],1,PHP_ROUND_HALF_UP);
-        // }
-        $plantacion = $this->getGeoJSON($id);
-
-        return $this->render('map.html.twig', array('plantacion'=>$plantacion));
-        // $response->setContent(json_encode($plantacion[0]));
-            // $response->headers->set('Content-Type', 'application/json');
-            // return $response;
+        $dql_p   = "SELECT
+                    p.id as id,
+                    t.nombre as titular,
+                    e.nombreCientifico as especie,
+                    st_area(p.geom)/10000 as area,
+                    ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as plantacion
+                  FROM AppBundle:Plantaciones p
+                  LEFT JOIN AppBundle:Titulares t WITH p.titular = t.id
+                  LEFT JOIN AppBundle:EspeciesPlantaciones ep WITH p.id = ep.plantacion
+                  LEFT JOIN AppBundle:Especies e WITH ep.especie = e.id
+                  WHERE p.id=:id";
+        $plantaciones=$em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult();
+        $data = '';
+        foreach ($plantaciones as $key => $plantacion) {
+          $data[$key]['id']= $plantacion['id'];
+          $data[$key]['type']= "Feature";
+          $data[$key]['geometry']=json_decode($plantacion['plantacion']);
+          $data[$key]['properties']['ID']=$plantacion['id'];
+          $data[$key]['properties']['Titular']=$plantacion['titular'];
+          $data[$key]['properties']['Especie']=$plantacion['especie'];
+          $data[$key]['properties']['Superficie']=round($plantacion['area'],1);
+        }
+        return $this->render('map.html.twig', array('plantacion'=>json_encode($data)));
     }
 
     /**
@@ -373,12 +382,19 @@ class PlantacionesController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($plantacione);
-            $em->flush();
+            try {
+              $em = $this->getDoctrine()->getManager();
+              $em->remove($plantacione);
+              $em->flush();
+                $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha eliminado correctamente la plantación.'));
+                return $this->redirectToRoute('plantaciones_index');
+            } catch (\Doctrine\ORM\ORMException $e) {
+                $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al eliminar la plantación');
+                $this->get('logger')->error($e->getMessage());
+                return $this->redirect('plantaciones_index');
+            }
         }
 
-        return $this->redirectToRoute('plantaciones_index');
     }
 
     /**
