@@ -1,10 +1,12 @@
 <ul class="nav nav-tabs" role="tablist">
 	<li class="active" role="presentation">
-		<a data-toggle="tab" href="#expedientes-tab">Expedientes</a>
+		<a href="#expedientes-tab" aria-controls="expedientes-tab" role="tab" data-toggle="tab" aria-expanded="true">Expedientes</a>
 	</li>
+	{% if (plantacione.getHistorico() is not empty) or (plantacionAnterior is not empty) %}
 	<li class="" role="presentation">
-		<a data-toggle="tab" href="#historial-tab">Historial</a>
+		<a href="#historial-tab" aria-controls="historial-tab" role="tab" data-toggle="tab" aria-expanded="false">Historial</a>
 	</li>
+	{% endif %}
 </ul>
 <div class="tab-content">
 	<div id="expedientes-tab" class="tab-pane fade in active">
@@ -76,24 +78,26 @@
 			</thead>
 			<tbody>
 				{% for actividad in actividades %}
-					<tr>
+					<tr data-link="/expedientes/{{actividad.movimiento.expediente.id}}/movimientos/{{actividad.movimiento.id}}/actividades/{{actividad.id}}">
 						<td>{{actividad.id}}</td>
 						<td>{{actividad.movimiento.id}}</td>
 						<td>{{actividad.movimiento.expediente.id}}</td>
 						<td>{{actividad.tipoActividad.descripcion}}</td>
-						<td>{{actividad.superficiePresentada}}</td>
-						<td>{{actividad.superficieCertificada}}</td>
-						<td>{{actividad.superficieInspeccionada}}</td>
-						<td>{{actividad.superficieRegistrada}}</td>
+						<td>{{actividad.superficiePresentada|number_format(1)}}</td>
+						<td>{{actividad.superficieCertificada|number_format(1)}}</td>
+						<td>{{actividad.superficieInspeccionada|number_format(1)}}</td>
+						<td>{{actividad.superficieRegistrada|number_format(1)}}</td>
 						<td class="icon icon-lg hidden-print">
-							<span class="glyphicon glyphicon-globe"></span>
+							<a href="/expedientes/{{actividad.movimiento.expediente.id}}/movimientos/{{actividad.movimiento.id}}/actividades/{{actividad.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
+								<span class="glyphicon glyphicon-globe"></span>
+							</a>
 						</td>
 					</tr>
 				{% endfor %}
 			</tbody>
 		</table>
 	</div>
-	<div id="historial-tab" class="tab-pane active" role="tabpanel">
+	<div id="historial-tab" class="tab-pane" role="tabpanel">
 		{% if plantacione.getHistorico() is not empty%}
 			<h4>Nuevas Plantaciones</h4>
 			<table id="plantaciones_nuevas" class="table table-hover table-grid">
@@ -136,46 +140,46 @@
 			</table>
 		{% endif %}
 
-
 		{% if plantacionAnterior is not empty %}
-		<table id="plantaciones_anteriores" class="table table-hover table-grid">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Titular</th>
-					<th>Especie</th>
-					<th>Tipo</th>
-					<th>Superficie</th>
-					<th>Activo</th>
-					<th class="icon">Mapa</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for item in plantacionAnterior %}
-					<tr data-link="/plantaciones/{{item.plantacionNueva.getId()}}">
-						<td>{{item.plantacionAnterior.getId()}}</td>
-						<td>
-							<a href="/titulares/{{item.plantacionAnterior.getTitular().getId()}}">{{item.plantacionAnterior.getTitular()}}</a>
-						</td>
-						<td>
-							{% if item.plantacionAnterior.getEspecie() %}
-								{{ item.plantacionAnterior.getEspecie().first.nombreCientifico }}
-							{% endif %}
-						</td>
-						<td>{{item.plantacionAnterior.getTipoPlantacion().descripcion}}</td>
-						<td>35.6</td>
-						<td class="icon">
-							<span class="icon icon-lg"></span>
-						</td>
-						<td class="icon icon-lg">
-							<a href="/plantaciones/{{item.plantacionAnterior.getId()}}/mapa" onclick="event.stopPropagation()" target="_blank">
-								<span class="glyphicon glyphicon-globe"></span>
-							</a>
-						</td>
+		<h4>Plantaciones Anteriores</h4>
+			<table id="plantaciones_anteriores" class="table table-hover table-grid">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Titular</th>
+						<th>Especie</th>
+						<th>Tipo</th>
+						<th>Superficie</th>
+						<th>Activo</th>
+						<th class="icon">Mapa</th>
 					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{% for item in plantacionAnterior %}
+						<tr data-link="/plantaciones/{{item.plantacionNueva.getId()}}">
+							<td>{{item.plantacionAnterior.getId()}}</td>
+							<td>
+								<a href="/titulares/{{item.plantacionAnterior.getTitular().getId()}}">{{item.plantacionAnterior.getTitular()}}</a>
+							</td>
+							<td>
+								{% if item.plantacionAnterior.getEspecie() %}
+									{{ item.plantacionAnterior.getEspecie().first.nombreCientifico }}
+								{% endif %}
+							</td>
+							<td>{{item.plantacionAnterior.getTipoPlantacion().descripcion}}</td>
+							<td>35.6</td>
+							<td class="icon">
+								<span class="icon icon-lg"></span>
+							</td>
+							<td class="icon icon-lg">
+								<a href="/plantaciones/{{item.plantacionAnterior.getId()}}/mapa" onclick="event.stopPropagation()" target="_blank">
+									<span class="glyphicon glyphicon-globe"></span>
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
 		{% endif %}
 	</div>
 </div>
