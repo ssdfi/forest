@@ -14,22 +14,20 @@
         </tr>
       </thead>
       <tbody>
-        {% for plantacion in plantaciones %}
-          <tr data-link="/plantaciones/{{plantacion.id}}">
-            <td>{{plantacion.id}}</td>
-            <td><a href="/titulares/{{plantacion.titular.id}}">{{plantacion.titular.nombre}}</a></td>
-            <td>{{plantacion.especie.first.nombreCientifico}}</td>
-            <td>{{plantacion.tipoPlantacion.descripcion}}</td>
-            {% if (plantacion.actividad.first) %}
-              <td>{{plantacion.actividad.first.superficieRegistrada}}</td>
+        {% for p in plantaciones %}
+          <tr data-link="/plantaciones/{{p.plantacion.id}}">
+            <td>{{p.plantacion.id}}</td>
+            <td><a href="/titulares/{{p.plantacion.titular.id}}">{{p.plantacion.titular.nombre}}</a></td>
+            <td>{% if p.plantacion.especie.first %}{{p.plantacion.especie.first.nombreCientifico}}{% endif %}</td>
+            <td>{% if p.plantacion.tipoPlantacion %}{{p.plantacion.tipoPlantacion.descripcion}}{% endif %}</td>
+            <td>{% if (p.plantacion.actividad.first) %}{{p.plantacion.actividad.first.superficieRegistrada|number_format(1)}}{% endif %}</td>
+            <td>{{p.area|round(1,'floor')|number_format(1)}}</td>
+            {% if (p.plantacion.actividad.first) %}
+              <td>{{p.plantacion.actividad.first.estadoAprobacion}}</td>
             {% endif %}
-            <td></td>
-            {% if (plantacion.actividad.first) %}
-              <td>{{plantacion.actividad.first.estadoAprobacion}}</td>
-            {% endif %}
-            <td>{{plantacion.comentarios}}</td>
+            <td>{% if p.plantacion.comentarios %}{{p.plantacion.comentarios}}{% endif %}</td>
             <td class="icon icon-lg hidden-print">
-              <a href="/plantaciones/{{plantacion.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
+              <a href="/plantaciones/{{p.plantacion.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
                 <span class="glyphicon glyphicon-globe"></span>
               </a>
             </td>
