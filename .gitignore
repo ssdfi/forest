@@ -49,3 +49,4 @@
 
 # NPM Debug
 npm-debug.log
+app/config/security.yml
