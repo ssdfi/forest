@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{{ include('flash/message.html.twig') }}
+	{{ include('flash/message.html.twig') }}
 	<div class="row">
 		<div class="col-md-3">
 			<div class="panel panel-primary">
@@ -13,7 +13,14 @@
 						<div class="form-group">
 							<label class="control-label col-sm-3" for="plantacion_ids">IDs</label>
 							<div class="col-sm-9">
-								<textarea id="plantacion_ids" class="form-control" rows="10" name="plantacion[ids]">{% if param %}{% for item in param %}{% if loop.last %}{{item}}{% else %}{{(item ~ '\n')|raw}}{% endif %}{% endfor %}{% endif %}</textarea>
+								<textarea id="plantacion_ids" class="form-control" rows="10" name="plantacion[ids]">
+									{% if param %}
+										{% for item in param %}
+											{% if loop.last %}{{item}}
+											{% else %}{{(item ~ '\n')|raw}}{% endif %}
+										{% endfor %}
+									{% endif %}
+								</textarea>
 							</div>
 						</div>
 						<hr>
@@ -37,37 +44,40 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for plantacion in plantaciones %}
-						<tr data-link="/plantaciones/{{ plantacion.id }}">
-							<td>{{ plantacion.id }}</td>
+					{% for p in plantaciones %}
+						<tr data-link="/plantaciones/{{ p.plantacion.id }}">
+							<td>{{ p.plantacion.id }}</td>
 							<td>
-								{% if plantacion.titular %}
-									<a href="/titulares/{{ plantacion.titular.id }}">
-										{{ plantacion.titular.nombre }}
+								{% if p.plantacion.titular %}
+									<a href="/titulares/{{ p.plantacion.titular.id }}">
+										{{ p.plantacion.titular.nombre }}
 									</a>
 								{% else %}
 								{% endif %}
 							</td>
 							<td>
-								{% if plantacion.especie | length > 0 %}
-									{{plantacion.especie.first.nombreCientifico}}
+								{% if p.plantacion.especie | length > 0 %}
+									{{p.plantacion.especie.first.nombreCientifico}}
 								{% endif %}
 							</td>
 							<td>
-								{% if plantacion.tipoPlantacion %}{{ plantacion.tipoPlantacion.descripcion }}
+								{% if p.plantacion.tipoPlantacion %}{{ p.plantacion.tipoPlantacion.descripcion }}
 								{% else %}
 								{% endif %}
 							</td>
-							<td></td>
+							<td>{{p.area|round(1,'floor')|number_format(1)}}</td>
 							<td class="icon">
-								{% if plantacion.activo %}
+								{% if p.plantacion.activo %}
 									<span class="glyphicon glyphicon-ok"></span>
 								{% else %}
 									<span class="glyphicon glyphicon-remove"></span>
 								{% endif %}
 							</td>
-							<td></td>
-							<td class="icon icon-lg"></td>
+							<td class="icon icon-lg">
+								<a href="/plantaciones/{{p.plantacion.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
+									<span class="glyphicon glyphicon-globe"></span>
+								</a>
+							</td>
 						</tr>
 					{% endfor %}
 				</tbody>
