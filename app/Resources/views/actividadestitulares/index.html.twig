@@ -18,10 +18,10 @@
         {% for actividadesTitulare in actividadesTitulares %}
             <tr>
                 <td><a href="{{ path('actividadestitulares_show', { 'id': actividadesTitulare.id }) }}">{{ actividadesTitulare.id }}</a></td>
-                <td>{{ actividadesTitulare.superficiePresentada }}</td>
-                <td>{{ actividadesTitulare.superficieCertificada }}</td>
-                <td>{{ actividadesTitulare.superficieInspeccionada }}</td>
-                <td>{{ actividadesTitulare.observaciones }}</td>
+                <td>{% if actividadesTitulare.superficiePresentada %}{{ actividadesTitulare.superficiePresentada }}{% endif %}</td>
+                <td>{% if actividadesTitulare.superficieCertificada %}{{ actividadesTitulare.superficieCertificada }}{% endif %}</td>
+                <td>{% if actividadesTitulare.superficieInspeccionada %}{{ actividadesTitulare.superficieInspeccionada }}{% endif %}</td>
+                <td>{% if actividadesTitulare.observaciones %}{{ actividadesTitulare.observaciones }}{% endif %}</td>
                 <td>
                     <ul>
                         <li>
