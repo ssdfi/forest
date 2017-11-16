@@ -71,13 +71,13 @@ class ActividadesController extends Controller
         $actividades = $em->getRepository('AppBundle:Actividades')->findOneById($idAct);
         $deleteForm = $this->createDeleteForm($actividades);
 
-        $dql_p   = "SELECT p
+        $dql_p   = "SELECT p as plantacion,
+                    st_area(p.geom)/10000 as area
                     FROM AppBundle:Actividades a
                     JOIN AppBundle:ActividadesPlantaciones ap WITH a.id = ap.actividad
                     JOIN AppBundle:Plantaciones p WITH p.id = ap.plantacion
                     WHERE a.id=:id";
         $plantaciones = $em->createQuery($dql_p)->setParameters(array('id' => $idAct))->getResult(Query::HYDRATE_OBJECT);
-
         return $this->render('actividades/index.html.twig', array(
             'actividad' => $actividades,
             'plantaciones' => $plantaciones,
