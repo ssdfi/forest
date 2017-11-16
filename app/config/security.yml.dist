@@ -28,27 +28,27 @@ security:
             logout:
                 path: /logout
 
-      access_control:
-         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-         - { path: ^/[0-9]+/delete$, role: ROLE_ADMIN , methods: DELETE }
-         - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/delete$, role: ROLE_ADMIN , methods: DELETE }
-         - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/actividades/[0-9]+$, role: ROLE_ADMIN, methods: DELETE  }
-         - { path: ^/expedientes/[0-9]+$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
-         - { path: ^/expedientes/new$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
-         - { path: ^/expedientes/[0-9]+/edit$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
-         - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
-         - { path: ^/expedientes/[0-9]+/movimientos/new$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
-         - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/edit$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
-         - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/actividades/[0-9]+$, role: [ROLE_ADMIN, ROLE_EDITOR], methods: [GET,POST]  }
-         - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/actividades/new$, role: [ROLE_ADMIN, ROLE_EDITOR], methods: [GET,POST]  }
-         - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/actividades/[0-9]+/edit$, role: [ROLE_ADMIN, ROLE_EDITOR], methods: [GET,POST]  }
-         - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/actividades/[0-9]+/mapa$, role: [ROLE_ADMIN, ROLE_EDITOR], methods: [GET,POST]  }
-         - { path: ^/plantaciones/[0-9]+/delete$, role: ROLE_ADMIN , methods: DELETE }
-         - { path: ^/plantaciones/[0-9]+$, role: [ROLE_ADMIN, ROLE_EDITOR] }
-         - { path: plantaciones, role: [ROLE_ADMIN, ROLE_EDITOR] }
-         - { path: aportes, role: [ROLE_ADMIN, ROLE_EDITOR] }
-         - { path: titulares, role: [ROLE_ADMIN, ROLE_EDITOR] }
-         - { path: tecnicos, role: [ROLE_ADMIN, ROLE_EDITOR] }
-         - { path: ^/$, roles: [ROLE_ADMIN, ROLE_EDITOR] }
-      encoders:
-        AppBundle\Entity\User: bcrypt
+    access_control:
+       - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/[0-9]+/delete$, role: ROLE_ADMIN , methods: DELETE }
+       - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/delete$, role: ROLE_ADMIN , methods: DELETE }
+       - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/actividades/[0-9]+$, role: ROLE_ADMIN, methods: DELETE  }
+       - { path: ^/expedientes/[0-9]+$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+       - { path: ^/expedientes/new$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+       - { path: ^/expedientes/[0-9]+/edit$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+       - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+       - { path: ^/expedientes/[0-9]+/movimientos/new$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+       - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/edit$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+       - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/actividades/[0-9]+$, role: [ROLE_ADMIN, ROLE_EDITOR], methods: [GET,POST]  }
+       - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/actividades/new$, role: [ROLE_ADMIN, ROLE_EDITOR], methods: [GET,POST]  }
+       - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/actividades/[0-9]+/edit$, role: [ROLE_ADMIN, ROLE_EDITOR], methods: [GET,POST]  }
+       - { path: ^/expedientes/[0-9]+/movimientos/[0-9]+/actividades/[0-9]+/mapa$, role: [ROLE_ADMIN, ROLE_EDITOR], methods: [GET,POST]  }
+       - { path: ^/plantaciones/[0-9]+/delete$, role: ROLE_ADMIN , methods: DELETE }
+       - { path: ^/plantaciones/[0-9]+$, role: [ROLE_ADMIN, ROLE_EDITOR] }
+       - { path: plantaciones, role: [ROLE_ADMIN, ROLE_EDITOR] }
+       - { path: aportes, role: [ROLE_ADMIN, ROLE_EDITOR] }
+       - { path: titulares, role: [ROLE_ADMIN, ROLE_EDITOR] }
+       - { path: tecnicos, role: [ROLE_ADMIN, ROLE_EDITOR] }
+       - { path: ^/$, roles: [ROLE_ADMIN, ROLE_EDITOR] }
+    encoders:
+      AppBundle\Entity\User: bcrypt
