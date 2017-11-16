@@ -60,12 +60,12 @@
             {% for actividad in actividades %}
               <tr>
                 <td>{{actividad.tipoActividad.descripcion}}</td>
-                <td>{{actividad.superficiePresentada}}</td>
-                <td>{{actividad.superficieCertificada}}</td>
-                <td>{{actividad.superficieInspeccionada}}</td>
+                <td>{{actividad.superficiePresentada|number_format(1)}}</td>
+                <td>{{actividad.superficieCertificada|number_format(1)}}</td>
+                <td>{{actividad.superficieInspeccionada|number_format(1)}}</td>
                 <td>
                   {% if actividad.superficieRegistrada is not null %}
-                    {{actividad.superficieRegistrada}}
+                    {{actividad.superficieRegistrada|number_format(1)}}
                   {% else %} 0.0 {% endif %}
                 </td>
               </tr>
