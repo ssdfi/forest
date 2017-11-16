@@ -12,6 +12,10 @@ input[type="date"], input[type="time"], input[type="datetime-local"], input[type
     line-height: 1.428571429 \0;
 }
 
+td.icon-lg span {
+  font-size: 200%;
+}
+
 .panel-primary {
     border-color: #428bca!important;
 }
