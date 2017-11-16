@@ -26,7 +26,7 @@
 					<dt>Sup. Presentada:</dt>
 					<dd>
 						{% if actividad.superficiePresentada %}
-							{{actividad.superficiePresentada}}
+							{{actividad.superficiePresentada|number_format(1)}}
 						{% else %}
 							0.0
 						{% endif %}
@@ -34,7 +34,7 @@
 					<dt>Sup. Certificada:</dt>
 					<dd>
 						{% if actividad.superficieCertificada %}
-							{{actividad.superficieCertificada}}
+							{{actividad.superficieCertificada|number_format(1)}}
 						{% else %}
 							0.0
 						{% endif %}
@@ -42,7 +42,7 @@
 					<dt>Sup. Inspeccionada:</dt>
 					<dd>
 						{% if actividad.superficieInspeccionada %}
-							{{actividad.superficieInspeccionada}}
+							{{actividad.superficieInspeccionada|number_format(1)}}
 						{% else %}
 							0.0
 						{% endif %}
@@ -50,7 +50,7 @@
 					<dt>Sup. Registrada:</dt>
 					<dd>
 						{% if actividad.getSupTotalSuma > 0%}
-							{{ actividad.getSupTotalSuma }}
+							{{ actividad.getSupTotalSuma|number_format(1) }}
 						{% else %}
 							0.0
 						{% endif %}
@@ -66,14 +66,18 @@
 				<li class="active" role="presentation">
 					<a href="#plantaciones-tab" aria-controls="plantaciones-tab" role="tab" data-toggle="tab">Plantaciones</a>
 				</li>
+				{% if actividad.getActividadesTitulares()is not empty %}
 				<li role="presentation">
 					<a href="#titulares-tab" aria-controls="titulares-tab" role="tab" data-toggle="tab" aria-expanded="true">Detalle de Productores</a>
 				</li>
+				{% endif %}
 			</ul>
 		</div>
 		<div class="tab-content">
 			{{ include('actividades/show_plantacion.html.twig', { 'plantaciones': plantaciones }) }}
-			{{ include('actividades/show_titulares.html.twig') }}
+			{% if actividad.getActividadesTitulares()is not empty %}
+				{{ include('actividades/show_titulares.html.twig') }}
+			{% endif %}
 		</div>
 	</div>
 {% endblock %}
