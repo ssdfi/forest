@@ -48,10 +48,10 @@ class Expedientes
      *
      * @ORM\Column(name="numero_expediente", type="string", length=255, nullable=true)
      * @Assert\Regex(
-     *     pattern     = "/EXP-S05:[0-9]{7}\/[0-9]{4}/",
-     *     message     = "El formato debe ser EXP-S05:#######/####"
+     *     pattern     = "/EXP-S05:[0-9]{7}\/[0-9]{4}|EX-20[0-9]{2}\-[0-9]{8}/",
+     *     message     = "El formato debe ser EXP-S05:#######/#### o EX-20##-########"
      * )
-     * @Assert\Length(min = 20, max=20, exactMessage="El campo debe tener {{ limit }} digitos, EXP-S05:#######/####")
+     * @Assert\Length(min = 16, max=20, exactMessage="El campo debe tener {{ limit }} digitos, EXP-S05:#######/####")
      * @Assert\NotBlank(message="El campo no puede estar vacío")
      */
     private $numeroExpediente;
