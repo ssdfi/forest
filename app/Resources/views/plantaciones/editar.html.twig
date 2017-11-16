@@ -1,0 +1,176 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+	<div class="row">
+		<div class="col-md-5">
+			<h1>Editar Plantación</h1>
+			{{ form_start(edit_form) }}
+			<div class="form-group">
+				{{ form_label(edit_form.param) }}
+				{{ form_errors(edit_form.param) }}
+				{{ form_widget(edit_form.param) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.titular) }}
+				<div class="input-group">
+					{{ form_errors(edit_form.titular) }}
+					{{ form_widget(edit_form.titular) }}
+					<span class="input-group-btn">
+						<button id="add-titular" class="btn btn-default" type="button" data-toggle="modal" data-target="#titulares-modal">
+							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+						</button>
+						<button id="remove-titular" class="btn btn-default" type="button">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</button>
+					</span>
+				</div>
+			</div>
+
+			<div class="form-group">
+				{{ form_label(edit_form.especie) }}
+				{{ form_errors(edit_form.especie) }}
+				{{ form_widget(edit_form.especie) }}
+			</div>
+			<div class="form-group" style="margin-top: -10px;">
+				<div class="col-sm-9 col-sm-offset-3">
+					<div class="pull-right">
+						<button id="add-especie" class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#especies-modal">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							Agregar
+						</button>
+						<button id="remove-especie" class="btn btn-default btn-xs" type="button">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							Eliminar
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				{{ form_label(edit_form.anioPlantacion) }}
+				{{ form_errors(edit_form.anioPlantacion) }}
+				{{ form_widget(edit_form.anioPlantacion) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.tipoPlantacion) }}
+				{{ form_errors(edit_form.tipoPlantacion) }}
+				{{ form_widget(edit_form.tipoPlantacion) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_label(edit_form.nomenclaturaCatastral) }}
+				{{ form_errors(edit_form.nomenclaturaCatastral) }}
+				{{ form_widget(edit_form.nomenclaturaCatastral) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_label(edit_form.estadoPlantacion) }}
+				{{ form_errors(edit_form.estadoPlantacion) }}
+				{{ form_widget(edit_form.estadoPlantacion) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_label(edit_form.distanciaPlantas) }}
+				{{ form_errors(edit_form.distanciaPlantas) }}
+				{{ form_widget(edit_form.distanciaPlantas) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.cantidadFilas) }}
+				{{ form_errors(edit_form.cantidadFilas) }}
+				{{ form_widget(edit_form.cantidadFilas) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.distanciaFilas) }}
+				{{ form_errors(edit_form.distanciaFilas) }}
+				{{ form_widget(edit_form.distanciaFilas) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.densidad) }}
+				{{ form_errors(edit_form.densidad) }}
+				{{ form_widget(edit_form.densidad) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.fuenteInformacion) }}
+				{{ form_errors(edit_form.fuenteInformacion) }}
+				{{ form_widget(edit_form.fuenteInformacion) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_label(edit_form.anioInformacion) }}
+				{{ form_errors(edit_form.anioInformacion) }}
+				{{ form_widget(edit_form.anioInformacion) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_label(edit_form.fuenteImagen) }}
+				{{ form_errors(edit_form.fuenteImagen) }}
+				{{ form_widget(edit_form.fuenteImagen) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_label(edit_form.fechaImagen) }}
+				{{ form_errors(edit_form.fechaImagen) }}
+				{{ form_widget(edit_form.fechaImagen) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.baseGeometricaId) }}
+				{{ form_errors(edit_form.baseGeometricaId) }}
+				{{ form_widget(edit_form.baseGeometricaId) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.provincia) }}
+				{{ form_errors(edit_form.provincia) }}
+				{{ form_widget(edit_form.provincia) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.departamento) }}
+				{{ form_errors(edit_form.departamento) }}
+				{{ form_widget(edit_form.departamento) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.estratoDesarrollo) }}
+				{{ form_errors(edit_form.estratoDesarrollo) }}
+				{{ form_widget(edit_form.estratoDesarrollo) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.usoForestal) }}
+				{{ form_errors(edit_form.usoForestal) }}
+				{{ form_widget(edit_form.usoForestal) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.usoAnterior) }}
+				{{ form_errors(edit_form.usoAnterior) }}
+				{{ form_widget(edit_form.usoAnterior) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.objetivoPlantacion) }}
+				{{ form_errors(edit_form.objetivoPlantacion) }}
+				{{ form_widget(edit_form.objetivoPlantacion) }}
+			</div>
+			<div class="form-group">
+				<div class="col-sm-12 col-sm-offset-0">
+					{{ form_label(edit_form.activo) }}
+					{{ form_errors(edit_form.activo) }}
+					{{ form_widget(edit_form.activo) }}
+				</div>
+			</div>
+			<div class="form-group">
+				{{ form_label(edit_form.comentarios) }}
+				{{ form_errors(edit_form.comentarios) }}
+				{{ form_widget(edit_form.comentarios) }}
+			</div>
+			<hr>
+			<a id="cancel-plantacion" class="btn btn-default" onClick="history.go(-1);return true;">Cancelar</a>
+			<input id="save-plantacion" class="btn btn-primary pull-right" type="submit" value="Guardar"/>
+			{{ form_end(edit_form) }}
+		</div>
+	</div>
+	{{ include('titulares/modal_search.html.twig') }}
+	{{ include('plantaciones/modal_especies.html.twig', { 'generos': generos }) }}
+	{{ include('plantaciones/modal_nuevas_plantaciones.html.twig') }}
+{% endblock %}
+{% block javascripts %}
+	{{parent()}}
+	<script src="{{ asset('js/plantaciones_edit.js') }}"></script>
+{% endblock %}
