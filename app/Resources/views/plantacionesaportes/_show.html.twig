@@ -120,10 +120,10 @@
           <td>{{actividad.movimiento.id}}</td>
           <td>{{actividad.movimiento.expediente.id}}</td>
           <td>{{actividad.tipoActividad.descripcion}}</td>
-          <td>{{actividad.superficiePresentada}}</td>
-          <td>{{actividad.superficieCertificada}}</td>
-          <td>{{actividad.superficieInspeccionada}}</td>
-          <td>{{actividad.superficieRegistrada}}</td>
+          <td>{{actividad.superficiePresentada|number_format(1)}}</td>
+          <td>{{actividad.superficieCertificada|number_format(1)}}</td>
+          <td>{{actividad.superficieInspeccionada|number_format(1)}}</td>
+          <td>{{actividad.superficieRegistrada|number_format(1)}}</td>
           <td class="icon icon-lg hidden-print"><span class="glyphicon glyphicon-globe"></span></td>
         </tr>
         {% endfor %}
