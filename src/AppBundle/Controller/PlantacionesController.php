@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\PlantacionesHistorico;
 use AppBundle\Entity\Especies;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 use Doctrine\ORM\Query;
 
@@ -28,6 +29,85 @@ use Doctrine\ORM\Query;
  */
 class PlantacionesController extends Controller
 {
+    /**
+     * Displays a form to edit an existing Plantaciones entity.
+     * @Route("/editar", name="plantaciones_editar")
+     * @Method({"GET", "POST"})
+     */
+    public function editarAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $param=$request->query->get('plantacion');
+        if ($param['ids']) {
+            $param = explode("\r\n", $param['ids']);
+            $plantacione = new Plantaciones();
+            $generos = $em->getRepository('AppBundle:Generos')->findAll();
+            $editForm = $this->createForm('AppBundle\Form\PlantacionesEditarType', $plantacione, array('param'=>$param));
+            $editForm->handleRequest($request);
+
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+                try {
+                    foreach ($param as $value) {
+                        $plantacion_actualizar = $em->getRepository('AppBundle:Plantaciones')->findOneById($value);
+                        if ($plantacion_actualizar) {
+                          ($plantacione);
+                          $plantacion_actualizar->setAnioPlantacion($plantacione->getAnioPlantacion());
+                          $plantacion_actualizar->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
+                          $plantacion_actualizar->setDistanciaPlantas($plantacione->getDistanciaPlantas());
+                          $plantacion_actualizar->setCantidadFilas($plantacione->getCantidadFilas());
+                          $plantacion_actualizar->setDistanciaFilas($plantacione->getDistanciaFilas());
+                          $plantacion_actualizar->setDensidad($plantacione->getDensidad());
+                          $plantacion_actualizar->setAnioInformacion($plantacione->getAnioInformacion());
+                          $plantacion_actualizar->setFechaImagen($plantacione->getFechaImagen());
+                          $plantacion_actualizar->setActivo($plantacione->getActivo());
+                          $plantacion_actualizar->setComentarios($plantacione->getComentarios());
+                          $plantacion_actualizar->setMpfId($plantacione->getMpfId());
+                          $plantacion_actualizar->setUnificadoId($plantacione->getUnificadoId());
+                          $plantacion_actualizar->setBaseGeometricaId($plantacione->getBaseGeometricaId());
+                          $plantacion_actualizar->setError($plantacione->getError());
+                          $plantacion_actualizar->setEstadoPlantacion($plantacione->getEstadoPlantacion());
+                          $plantacion_actualizar->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
+                          $plantacion_actualizar->setFuenteImagen($plantacione->getFuenteImagen());
+                          $plantacion_actualizar->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
+                          $plantacion_actualizar->setTipoPlantacion($plantacione->getTipoPlantacion());
+                          $plantacion_actualizar->setTitular($plantacione->getTitular());
+                          $plantacion_actualizar->setUsoAnterior($plantacione->getUsoAnterior());
+                          $plantacion_actualizar->setProvincia($plantacione->getProvincia());
+                          $plantacion_actualizar->setDepartamento($plantacione->getDepartamento());
+                          $plantacion_actualizar->setEspecie($plantacione->getEspecie());
+                          $em->persist($plantacion_actualizar);
+                        }
+                    }
+                    $em->flush();
+                    $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha editado correctamente la plantación.'));
+                    return $this->redirectToRoute('plantaciones_index');
+                } catch (\Doctrine\ORM\ORMException $e) {
+                    $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar la plantación');
+                    $this->get('logger')->error($e->getMessage());
+                    return $this->redirect('plantaciones_index');
+                }
+            }
+
+            return $this->render('plantaciones/editar.html.twig', array(
+            'plantacione' => $plantacione,
+            'generos' => $generos,
+            'edit_form' => $editForm->createView(),
+        ));
+        } else {
+            $dql   = "SELECT a FROM AppBundle:Plantaciones a";
+            $query = $em->createQuery($dql);
+            $paginator = $this->get('knp_paginator');
+            $this->get('session')->getFlashBag()->add('error', "Debe ingresar al menos un 'id' de plantación para editar");
+            $plantaciones = $paginator->paginate(
+                $query,
+                $request->query->getInt('page', 1),
+                15,
+                array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'asc')
+            );
+            return $this->render('plantaciones/index.html.twig', array('plantaciones' => $plantaciones, 'param'=> $param));
+        }
+    }
+
     /**
      * Lists all Plantaciones entities.
      *
@@ -44,16 +124,15 @@ class PlantacionesController extends Controller
             $param = explode("\r\n", $str);
             $datos = $em->getRepository('AppBundle:Plantaciones')->findBy(array('id'=>array_filter($param)));
         }
-        $dql   = "SELECT a FROM AppBundle:Plantaciones a";
+        $dql   = "SELECT p as plantacion, st_area(p.geom)/10000 as area FROM AppBundle:Plantaciones p";
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $plantaciones = $paginator->paginate(
                 $datos ? $datos: $query,
                 $request->query->getInt('page', 1),
                 15,
-                array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'asc')
+                array('defaultSortFieldName' => 'p.id', 'defaultSortDirection' => 'asc')
             );
-
         return $this->render('plantaciones/index.html.twig', array('plantaciones' => $plantaciones, 'param'=> $param));
     }
 
@@ -359,13 +438,13 @@ class PlantacionesController extends Controller
         $plantaciones=$em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult();
         $data = '';
         foreach ($plantaciones as $key => $plantacion) {
-          $data[$key]['id']= $plantacion['id'];
-          $data[$key]['type']= "Feature";
-          $data[$key]['geometry']=json_decode($plantacion['plantacion']);
-          $data[$key]['properties']['ID']=$plantacion['id'];
-          $data[$key]['properties']['Titular']=$plantacion['titular'];
-          $data[$key]['properties']['Especie']=$plantacion['especie'];
-          $data[$key]['properties']['Superficie']=round($plantacion['area'],1);
+            $data[$key]['id']= $plantacion['id'];
+            $data[$key]['type']= "Feature";
+            $data[$key]['geometry']=json_decode($plantacion['plantacion']);
+            $data[$key]['properties']['ID']=$plantacion['id'];
+            $data[$key]['properties']['Titular']=$plantacion['titular'];
+            $data[$key]['properties']['Especie']=$plantacion['especie'];
+            $data[$key]['properties']['Superficie']=round($plantacion['area'], 1);
         }
         return $this->render('map.html.twig', array('plantacion'=>json_encode($data)));
     }
@@ -383,9 +462,9 @@ class PlantacionesController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-              $em = $this->getDoctrine()->getManager();
-              $em->remove($plantacione);
-              $em->flush();
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($plantacione);
+                $em->flush();
                 $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha eliminado correctamente la plantación.'));
                 return $this->redirectToRoute('plantaciones_index');
             } catch (\Doctrine\ORM\ORMException $e) {
@@ -394,15 +473,6 @@ class PlantacionesController extends Controller
                 return $this->redirect('plantaciones_index');
             }
         }
-
-    }
-
-    /**
-     * Get hectarea value
-     */
-    public function getHectarea($geom)
-    {
-        return st_area(pl.geom) / 10000;
     }
 
     /**
