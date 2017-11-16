@@ -67,11 +67,21 @@ class MovimientosController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $actividades = $em->getRepository('AppBundle:Actividades')->findByMovimiento($id);
+        // st_area(p.geom)/10000 as area,
+        $dql_p   = "SELECT a as actividad,
+                    st_area(p.geom)/10000 as area
+                    FROM AppBundle:Actividades a
+                    JOIN AppBundle:ActividadesPlantaciones ap WITH a.id = ap.actividad
+                    JOIN AppBundle:Plantaciones p WITH p.id = ap.plantacion
+                    WHERE a.movimiento=:id";
+        $plantaciones = $em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
+
         $deleteForm = $this->createDeleteForm($movimiento);
         return $this->render('movimientos/index.html.twig', array(
             'expediente' => $idExp,
             'movimiento' => $movimiento,
             'actividades'=>$actividades,
+            'plantaciones'=>$plantaciones,
             'delete_form' => $deleteForm->createView()
         ));
     }
@@ -126,11 +136,11 @@ class MovimientosController extends Controller
                 $em->persist($movimiento);
                 $em->flush();
                 $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Movimiento actualizado satisfactoriamente.'));
-                return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+                return $this->redirectToRoute('list_movimientos', array('idExp' => $idExp, 'id' => $movimiento->getId()));
             } catch (\Doctrine\ORM\ORMException $e) {
                 $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al modificar el movimiento');
                 $this->get('logger')->error($e->getMessage());
-                return $this->redirectToRoute('list_movimientos', array('id' => $idExp, 'idMov' => $movimiento->getId()));
+                return $this->redirectToRoute('list_movimientos', array('idExp' => $idExp, 'id' => $movimiento->getId()));
             }
         }
 
