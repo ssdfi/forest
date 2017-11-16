@@ -11,26 +11,26 @@
     </tr>
   </thead>
   <tbody>
-    {% for actividad in actividades %}
-    <tr data-link="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{actividad.id}}">
-      <td>{{actividad.id}}</td>
+    {% for p in plantaciones %}
+    <tr data-link="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{p.actividad.id}}">
+      <td>{{p.actividad.id}}</td>
       <td>
-        {% if actividad.tipoActividad %}
-          {{actividad.tipoActividad.descripcion}}
+        {% if p.actividad.tipoActividad %}
+          {{p.actividad.tipoActividad.descripcion}}
         {% endif %}
       </td>
-      <td>{{actividad.superficiePresentada}}</td>
-      <td>{{actividad.superficieCertificada}}</td>
-      <td>{{actividad.superficieInspeccionada}}</td>
+      <td>{% if p.actividad.superficiePresentada %}{{p.actividad.superficiePresentada|number_format(1)}}{% endif %}</td>
+      <td>{% if p.actividad.superficieCertificada %}{{p.actividad.superficieCertificada|number_format(1)}}{% endif %}</td>
+      <td>{% if p.actividad.superficieInspeccionada %}{{p.actividad.superficieInspeccionada|number_format(1)}}{% endif %}</td>
       <td>
-        {% if actividad.superficieRegistrada %}
-          {{actividad.superficieRegistrada}}
+        {% if p.area is not empty %}
+          {{p.area|round(1,'floor')|number_format(1)}}
         {% else %}
           0.0
         {% endif %}
       </td>
       <td>
-        <a href="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{actividad.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
+        <a href="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{p.actividad.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
           <span class="glyphicon glyphicon-globe"></span>
         </a>
       </td>
