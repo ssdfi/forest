@@ -59,17 +59,25 @@
 					<dd>{{ expediente.anio }}</dd>
 					<dt>Plurianual:</dt>
 					<dd>
-						<span class="glyphicon glyphicon-remove"></span>
+						{% if expediente.plurianual %}
+							<span class="glyphicon glyphicon-ok"></span>
+						{% else %}
+							<span class="glyphicon glyphicon-remove"></span>
+						{% endif %}
 					</dd>
 					<dt>Agrupado:</dt>
 					<dd>
-						<span class="glyphicon glyphicon-remove"></span>
+						{% if expediente.agrupado %}
+							<span class="glyphicon glyphicon-ok"></span>
+						{% else %}
+							<span class="glyphicon glyphicon-remove"></span>
+						{% endif %}
 					</dd>
 					<dt>Última Entrada:</dt>
 					<dd>
-						{% if expediente.movimientos.last.fechaEntrada is defined %}
-							{% if expediente.movimientos.last.fechaEntrada is not null %}
-								{{ expediente.movimientos.last.fechaEntrada|date('d-m-Y') }}
+						{% if expediente.movimientos.first.fechaEntrada is defined %}
+							{% if expediente.movimientos.first.fechaEntrada is not null %}
+								{{ expediente.movimientos.first.fechaEntrada|date('d-m-Y') }}
 							{% endif %}
 						{% endif %}
 					</dd>
