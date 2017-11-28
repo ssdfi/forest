@@ -118,21 +118,29 @@ class PlantacionesController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $param=$request->query->get('plantacion');
-        $datos = null;
+        $queries = null;
         if ($param['ids']) {
             $str = $param['ids'];
             $param = explode("\r\n", $str);
-            $datos = $em->getRepository('AppBundle:Plantaciones')->findBy(array('id'=>array_filter($param)));
+            $ids = [];
+            foreach ($param as $key => $value) {
+              if (!empty($value)) {
+                $ids[]= $value;
+              }
+            }
+            $queries = $em->createQuery('SELECT p as plantacion, st_area(p.geom)/10000 as area FROM AppBundle:Plantaciones p WHERE p.id IN (:ids)');
+            $queries->setParameter('ids', $ids);
         }
         $dql   = "SELECT p as plantacion, st_area(p.geom)/10000 as area FROM AppBundle:Plantaciones p";
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $plantaciones = $paginator->paginate(
-                $datos ? $datos: $query,
+                $queries ? $queries : $query,
                 $request->query->getInt('page', 1),
                 15,
                 array('defaultSortFieldName' => 'p.id', 'defaultSortDirection' => 'asc')
             );
+
         return $this->render('plantaciones/index.html.twig', array('plantaciones' => $plantaciones, 'param'=> $param));
     }
 
@@ -221,7 +229,7 @@ class PlantacionesController extends Controller
     public function showAction(Plantaciones $plantacione, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $dql_pr   = "SELECT p as plantacione, ap as actividadPlantacion, a as actividades, m as movimientos, e as expedientes
+        $dql_pr   = "SELECT p as plantacione, ap as actividadPlantacion, a as actividades, m as movimientos, e as expedientes, ST_AREA(p.geom)/10000 as area
                 FROM AppBundle:Plantaciones p
                 JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
                 JOIN AppBundle:Actividades a WITH a.id=ap.actividad
@@ -237,8 +245,10 @@ class PlantacionesController extends Controller
         }
         $plantacion_anterior = $em->getRepository('AppBundle:PlantacionesHistorico')->findByPlantacionNueva($plantacione->getId());
         $deleteForm = $this->createDeleteForm($plantacione);
+
         return $this->render('plantaciones/show.html.twig', array(
             'plantacione' => $plantacione,
+            'area'=> ($arr_query['area'][0]) ? $arr_query['area'][0] : null,
             'movimientos' => ($arr_query) ? $arr_query['movimientos'] : null,
             'actividades' => ($arr_query) ? $arr_query['actividades'] : null,
             'expedientes' => ($arr_query) ? $arr_query['expedientes'] : null,
