@@ -20,7 +20,13 @@
             <td><a href="/titulares/{{p.plantacion.titular.id}}">{{p.plantacion.titular.nombre}}</a></td>
             <td>{% if p.plantacion.especie.first %}{{p.plantacion.especie.first.nombreCientifico}}{% endif %}</td>
             <td>{% if p.plantacion.tipoPlantacion %}{{p.plantacion.tipoPlantacion.descripcion}}{% endif %}</td>
-            <td>{% if (p.plantacion.actividad.first) %}{{p.plantacion.actividad.first.superficieRegistrada|number_format(1)}}{% endif %}</td>
+            <td>{% if (p.plantacion.actividad.first) %}
+                  {% if p.plantacion.actividad.first.superficieRegistrada %}
+                  {{p.plantacion.actividad.first.superficieRegistrada|number_format(2)}}
+                {% endif %}
+                {% else %}
+                  {{p.plantacion.actividad.getSupTotalSuma()}}
+              {% endif %}</td>
             <td>{{p.area|round(1,'floor')|number_format(1)}}</td>
             {% if (p.plantacion.actividad.first) %}
               <td>{{p.plantacion.actividad.first.estadoAprobacion}}</td>
