@@ -13,6 +13,8 @@ use AppBundle\Form\MovimientosType;
 use Doctrine;
 use Doctrine\ORM\Query;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Movimientos controller.
@@ -62,28 +64,44 @@ class MovimientosController extends Controller
      * @Route("/expedientes/{idExp}/movimientos/{id}", name="list_movimientos")
      * @Method("GET")
      */
-
     public function indexAction(Movimientos $movimiento, $id, $idExp)
     {
         $em = $this->getDoctrine()->getManager();
         $actividades = $em->getRepository('AppBundle:Actividades')->findByMovimiento($id);
-        // st_area(p.geom)/10000 as area,
-        $dql_p   = "SELECT a as actividad,
-                    st_area(p.geom)/10000 as area
+        $dql_p   = "SELECT a as actividad
                     FROM AppBundle:Actividades a
                     JOIN AppBundle:ActividadesPlantaciones ap WITH a.id = ap.actividad
                     JOIN AppBundle:Plantaciones p WITH p.id = ap.plantacion
                     WHERE a.movimiento=:id";
         $plantaciones = $em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
-
+        $finder = new Finder();
+        $promocion_folder =$this->container->getParameter('promocion_folder');
+        $finder->files()->in($promocion_folder)->name($id.'.pdf');
+        $archivo = null;
+        foreach ($finder as $file) {
+          $archivo = $file;
+        }
         $deleteForm = $this->createDeleteForm($movimiento);
         return $this->render('movimientos/index.html.twig', array(
+            'archivo' => $archivo,
             'expediente' => $idExp,
             'movimiento' => $movimiento,
             'actividades'=>$actividades,
             'plantaciones'=>$plantaciones,
             'delete_form' => $deleteForm->createView()
         ));
+    }
+
+    /**
+     * List Movimientos.
+     *
+     * @Route("/expedientes/{idExp}/movimientos/{id}/informe", name="pdf_view")
+     * @Method("GET")
+     */
+    public function pdfAction($id)
+    {
+        $folder = $this->container->getParameter('promocion_folder');
+        return new BinaryFileResponse($folder.'/'.$id.'.pdf');
     }
 
     /**
