@@ -101,8 +101,8 @@ class ExpedientesController extends Controller
             $estabilidad_fiscal = $param['estabilidad_fiscal'] == 1 ? 'true' : 'false';
             $wheres[]="m.estabilidadFiscal = $estabilidad_fiscal";
         }
-        $dql   = "SELECT a FROM AppBundle:Expedientes a
-                INNER JOIN AppBundle:Movimientos m WITH a.id = m.expediente";
+        $dql   = "SELECT a
+                  FROM AppBundle:Expedientes a";
         $filter = '';
         foreach ($wheres as $key => $value) {
             $filter = $filter .' '.$value;
@@ -113,13 +113,14 @@ class ExpedientesController extends Controller
         if (!empty($wheres)) {
             $dql = $dql .' WHERE '.$filter;
         }
+        $dql = $dql . ' ORDER BY a.createdAt DESC';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $expedientes = $paginator->paginate(
               $query,
               $request->query->getInt('page', 1),
               15,
-              array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'desc')
+              array('orderBy' => 'a.createdAt', 'defaultSortDirection' => 'ASC')
           );
         $search_form->handleRequest($request);
         if ($search_form->get('exportar')->isClicked()) {
@@ -195,7 +196,6 @@ class ExpedientesController extends Controller
                   WHERE m.expediente=:id";
         $movimientos=$em->createQuery($dql_m)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
         $deleteForm = $this->createDeleteForm($expediente);
-
         return $this->render('expedientes/show.html.twig', array(
           'expediente' => $expediente,
           'movimientos' => $movimientos,
