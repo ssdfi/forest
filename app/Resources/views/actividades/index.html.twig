@@ -42,7 +42,7 @@
 					<dt>Sup. Inspeccionada:</dt>
 					<dd>
 						{% if actividad.superficieInspeccionada %}
-							{{actividad.superficieInspeccionada|number_format(1)}}
+							{{actividad.superficieInspeccionada|number_format(2)}}
 						{% else %}
 							0.0
 						{% endif %}
@@ -50,7 +50,7 @@
 					<dt>Sup. Registrada:</dt>
 					<dd>
 						{% if actividad.getSupTotalSuma > 0%}
-							{{ actividad.getSupTotalSuma|number_format(1) }}
+							{{ actividad.getSupTotalSuma|number_format(2) }}
 						{% else %}
 							0.0
 						{% endif %}
