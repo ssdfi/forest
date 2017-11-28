@@ -35,8 +35,10 @@ class TitularesController extends Controller
         $wheres=array();
 
         if ($param['nombre']) {
-            $nombre=$param['nombre'];
-            $wheres[]="lower(a.nombre) like lower('%$nombre%')";
+          $nombre=$param['nombre'];
+          foreach (explode(' ',$nombre) as $key => $value) {
+            $wheres[]="lower(a.nombre) like lower('%$value%')";
+          }
         }
         if ($param['dni']) {
             $dni=$param['dni'];
@@ -83,7 +85,9 @@ class TitularesController extends Controller
 
         if ($param['nombre']) {
             $nombre=$param['nombre'];
-            $wheres[]="a.nombre like '%$nombre%'";
+            foreach (explode(' ',$nombre) as $key => $value) {
+              $wheres[]="lower(a.nombre) like lower('%$value%')";
+            }
         }
         if ($param['dni']) {
             $dni=$param['dni'];
