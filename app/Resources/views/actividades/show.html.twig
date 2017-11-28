@@ -1,40 +1,76 @@
 <table id="movimientos" class="table table-hover table-grid">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th nowrap="">Tipo actividad</th>
-      <th nowrap="">Presentado</th>
-      <th>Certificado</th>
-      <th>Inspeccionado</th>
-      <th>Registrado</th>
-      <th class="icon">Mapa</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for p in plantaciones %}
-    <tr data-link="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{p.actividad.id}}">
-      <td>{{p.actividad.id}}</td>
-      <td>
-        {% if p.actividad.tipoActividad %}
-          {{p.actividad.tipoActividad.descripcion}}
-        {% endif %}
-      </td>
-      <td>{% if p.actividad.superficiePresentada %}{{p.actividad.superficiePresentada|number_format(1)}}{% endif %}</td>
-      <td>{% if p.actividad.superficieCertificada %}{{p.actividad.superficieCertificada|number_format(1)}}{% endif %}</td>
-      <td>{% if p.actividad.superficieInspeccionada %}{{p.actividad.superficieInspeccionada|number_format(1)}}{% endif %}</td>
-      <td>
-        {% if p.area is not empty %}
-          {{p.area|round(1,'floor')|number_format(1)}}
-        {% else %}
-          0.0
-        {% endif %}
-      </td>
-      <td>
-        <a href="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{p.actividad.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
-          <span class="glyphicon glyphicon-globe"></span>
-        </a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th nowrap="">Tipo actividad</th>
+			<th nowrap="">Presentado</th>
+			<th>Certificado</th>
+			<th>Inspeccionado</th>
+			<th>Registrado</th>
+			<th class="icon">Mapa</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% if plantaciones | length > 0 %}
+			{% for p in plantaciones %}
+				<tr data-link="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{p.actividad.id}}">
+					<td>{{p.actividad.id}}</td>
+					<td>
+						{% if p.actividad.tipoActividad %}
+							{{p.actividad.tipoActividad.descripcion}}
+						{% endif %}
+					</td>
+					<td>
+						{% if p.actividad.superficiePresentada %}{{p.actividad.superficiePresentada|number_format(1)}}{% endif %}
+					</td>
+					<td>
+						{% if p.actividad.superficieCertificada %}{{p.actividad.superficieCertificada|number_format(1)}}{% endif %}
+					</td>
+					<td>
+						{% if p.actividad.superficieInspeccionada %}{{p.actividad.superficieInspeccionada|number_format(2)}}{% endif %}
+					</td>
+					<td>
+						{{p.actividad.getSupTotalSuma()}}
+					</td>
+					<td class="icon icon-lg hidden-print">
+						<a href="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{p.actividad.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
+							<span class="glyphicon glyphicon-globe"></span>
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		{% else %}
+			{% for actividad in actividades %}
+				<tr data-link="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{actividad.id}}">
+					<td>{{actividad.id}}</td>
+					<td>
+						{% if actividad.tipoActividad %}
+							{{actividad.tipoActividad.descripcion}}
+						{% endif %}
+					</td>
+					<td>
+						{% if actividad.superficiePresentada %}{{actividad.superficiePresentada|number_format(1)}}{% endif %}
+					</td>
+					<td>
+						{% if actividad.superficieCertificada %}{{actividad.superficieCertificada|number_format(2)}}{% endif %}
+					</td>
+					<td>
+						{% if actividad.superficieInspeccionada %}{{actividad.superficieInspeccionada|number_format(2)}}{% endif %}
+					</td>
+					<td>
+						{% if actividad.superficieRegistrada is null %}
+							0.0
+						{% else %}
+							{{actividad.superficieRegistrada|number_format(1)}}
+						{% endif %}
+					</td>
+					<td>
+						<!-- <a href="/expedientes/{expediente}}/movimientos/{movimiento.id}}/actividades/{actividad.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
+							<span class="glyphicon glyphicon-globe"></span>
+						</a> -->
+					</td>
+				</tr>
+			{% endfor %}
+		{% endif %}
+	</tbody>
 </table>
