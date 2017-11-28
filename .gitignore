@@ -50,3 +50,4 @@
 # NPM Debug
 npm-debug.log
 app/config/security.yml
+app/config/config.yml
