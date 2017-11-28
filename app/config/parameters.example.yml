@@ -11,3 +11,5 @@ parameters:
     mailer_password: null
     secret:
     ldap_server:
+    google_maps_apikey:
+    promocion_folder:
