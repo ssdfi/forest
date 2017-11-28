@@ -62,11 +62,13 @@
                 <td>{{actividad.tipoActividad.descripcion}}</td>
                 <td>{{actividad.superficiePresentada|number_format(1)}}</td>
                 <td>{{actividad.superficieCertificada|number_format(1)}}</td>
-                <td>{{actividad.superficieInspeccionada|number_format(1)}}</td>
+                <td>{{actividad.superficieInspeccionada|number_format(2)}}</td>
                 <td>
                   {% if actividad.superficieRegistrada is not null %}
-                    {{actividad.superficieRegistrada|number_format(1)}}
-                  {% else %} 0.0 {% endif %}
+                    {{actividad.superficieRegistrada|number_format(2)}}
+                  {% else %}
+                     {{actividad.getSupTotalSuma()}}
+                  {% endif %}
                 </td>
               </tr>
             {% endfor %}
