@@ -26,9 +26,11 @@ $.fn.bootstrapSwitch.defaults.labelWidth = '150';
  * Convierte todos los checkbox en switch
  */
 $(function() {
-  $("input[data-label]").each(function () {
-    $(this).bootstrapSwitch({labelText: this.dataset.label});
-  });
+    $("input[data-label]").each(function() {
+        $(this).bootstrapSwitch({
+            labelText: this.dataset.label
+        });
+    });
 });
 
 /**
@@ -36,9 +38,9 @@ $(function() {
  * que contenga dicha propiedad.
  */
 $(function() {
-  $("tr[data-link]").click(function () {
-    window.location = this.dataset.link;
-  });
+    $("tr[data-link]").click(function() {
+        window.location = this.dataset.link;
+    });
 });
 
 /**
@@ -47,23 +49,33 @@ $(function() {
  * definida, se trunca el texto si la cantidad de caracteres es mayor a 8.
  */
 $(function() {
-  $("abbr").each(function () {
-    text = $(this).prop("title");
-    length = parseInt(this.dataset.length) || 8;
-    if (text.length > length) {
-      text = text.substring(0, length);
-      $(this).text(text);
-    } else {
-      $(this).parent().text(text);
-    }
-  });
+    $("abbr").each(function() {
+        text = $(this).prop("title");
+        length = parseInt(this.dataset.length) || 8;
+        if (text.length > length) {
+            text = text.substring(0, length);
+            $(this).text(text);
+        } else {
+            $(this).parent().text(text);
+        }
+    });
 });
 
 /**
  * Cierra automáticamente los mensajes informativos
  */
 setTimeout(function() {
-  $(".alert.alert-info").slideUp(1500, 0, function() {
-    $(this).remove();
-  });
+    $(".alert.alert-info").slideUp(1500, 0, function() {
+        $(this).remove();
+    });
 }, 4000);
+
+$(function() {
+    function copyToClipboard(element) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(element).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+    }
+});
