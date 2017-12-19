@@ -6,10 +6,10 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: es
-
+    # promocion_folder: "%promocion_folder%"
 framework:
     #esi:             ~
-    #translator:      { fallbacks: ["%locale%"] }
+    translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -35,6 +35,8 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     autoescape: "name"
+    globals:
+      google_maps_apikey : "%google_maps_apikey%"
 
 # Doctrine Configuration
 doctrine:
