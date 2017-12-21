@@ -102,7 +102,8 @@ class ExpedientesController extends Controller
             $wheres[]="m.estabilidadFiscal = $estabilidad_fiscal";
         }
         $dql   = "SELECT a
-                  FROM AppBundle:Expedientes a";
+                  FROM AppBundle:Expedientes a
+                  INNER JOIN AppBundle:Movimientos m WITH a.id = m.expediente";
         $filter = '';
         foreach ($wheres as $key => $value) {
             $filter = $filter .' '.$value;
