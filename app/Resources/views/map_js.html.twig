@@ -1,5 +1,4 @@
 {% set params = app.request.attributes.get('_route') %}
-{{dump(google_maps_apikey)}}
 {% block javascripts %}
   <script src="{{ asset('js/jquery-3.1.1.js') }}"></script>
   {% if params == 'plantacionesaportes_show' %}
