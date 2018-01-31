@@ -130,15 +130,18 @@ class PlantacionesController extends Controller
             }
             $queries = $em->createQuery('SELECT p as plantacion, st_area(p.geom)/10000 as area FROM AppBundle:Plantaciones p WHERE p.id IN (:ids)');
             $queries->setParameter('ids', $ids);
+        } else {
+          $qb = $em->createQueryBuilder();
+          $qb->select('p as plantacion, st_area(p.geom)/10000 as area')
+             ->from('AppBundle:Plantaciones', 'p')
+             ->orderBy('p.id', 'ASC');
         }
-        $dql   = "SELECT p as plantacion, st_area(p.geom)/10000 as area FROM AppBundle:Plantaciones p";
-        $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $plantaciones = $paginator->paginate(
-                $queries ? $queries : $query,
+                $queries ? $queries : $qb,
                 $request->query->getInt('page', 1),
                 15,
-                array('defaultSortFieldName' => 'p.id', 'defaultSortDirection' => 'asc')
+                array('wrap-queries'=>true,'distinct' => false)
             );
 
         return $this->render('plantaciones/index.html.twig', array('plantaciones' => $plantaciones, 'param'=> $param));
