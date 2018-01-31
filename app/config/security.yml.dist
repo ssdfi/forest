@@ -1,0 +1,37 @@
+security:
+    providers:
+        # in_memory:
+        #     memory: ~
+        my_ldap:
+            ldap:
+                service: Symfony\Component\Ldap\Ldap
+                base_dn:         ou=,dc=,dc=
+                search_dn:       "userldap@yourdomain"
+                search_password: Yourpassword
+                filter:          ({uid_key}={username})
+                default_roles:   ROLE_ADMIN
+                # uid_key:         sAMAccountName
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: ~
+            form_login_ldap:
+                provider: my_ldap
+                login_path: login
+                check_path: login
+                service: Symfony\Component\Ldap\Ldap
+                dn_string: '{username}@yourdomain'
+                csrf_token_generator: security.csrf.token_manager
+            logout:
+                path: /logout
+
+                access_control:
+                   - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+                   - { path: ^/$, roles: [ROLE_ADMIN, ROLE_EDITOR] }
+                   - { path: ^/.*, role: ROLE_ADMIN , methods: DELETE }
+                   - { path: ^/.*, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+                encoders:
+                  AppBundle\Entity\User: bcrypt
