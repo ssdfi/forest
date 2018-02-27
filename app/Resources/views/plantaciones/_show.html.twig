@@ -29,7 +29,7 @@
 			</thead>
 			<tbody>
 				{% for movimiento in movimientos %}
-					<tr>
+					<tr data-link="/expedientes/{{movimiento.expediente.id}}/movimientos/{{movimiento.id}}">
 						<td>{{movimiento.id}}</td>
 						<td>{{movimiento.expediente.id}}</td>
 						<td>{{movimiento.numeroFicha}}</td>
