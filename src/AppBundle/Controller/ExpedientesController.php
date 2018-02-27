@@ -72,38 +72,48 @@ class ExpedientesController extends Controller
             $agrupado = $param['agrupado'] == 1 ? 'TRUE' : 'FALSE';
             $wheres[]="a.agrupado = $agrupado";
         }
-
+        $mov = 0;
         if ($param['responsable']) {
             $responsable = $param['responsable'];
             $wheres[]="m.responsable = $responsable";
+            $mov++;
         }
         if ($param['validador']) {
             $validador = $param['validador'];
             $wheres[]="m.validador = $validador";
+            $mov++;
         }
         if ($param['fechaEntradaDesde']) {
             $fechaEntradaDesde = $param['fechaEntradaDesde'];
             $wheres[]="m.fechaEntrada > '$fechaEntradaDesde'";
+            $mov++;
         }
         if ($param['fechaEntradaHasta']) {
             $fechaEntradaHasta = $param['fechaEntradaHasta'];
             $wheres[]="m.fechaEntrada <= '$fechaEntradaHasta'";
+            $mov++;
         }
         if ($param['fechaSalidaDesde']) {
             $fechaSalidaaDesde = $param['fechaSalidaDesde'];
             $wheres[]="m.fechaSalida >= '$fechaSalidaaDesde'";
+            $mov++;
         }
         if ($param['fechaSalidaHasta']) {
             $fechaSalidaHasta = $param['fechaSalidaHasta'];
             $wheres[]="m.fechaSalida <= '$fechaSalidaHasta'";
+            $mov++;
         }
         if ($param['estabilidad_fiscal']) {
             $estabilidad_fiscal = $param['estabilidad_fiscal'] == 1 ? 'true' : 'false';
             $wheres[]="m.estabilidadFiscal = $estabilidad_fiscal";
+            $mov++;
         }
         $dql   = "SELECT a
-                  FROM AppBundle:Expedientes a
-                  INNER JOIN AppBundle:Movimientos m WITH a.id = m.expediente";
+                  FROM AppBundle:Expedientes a";
+        if( $mov > 0 ) {
+          $dql = $dql . " INNER JOIN AppBundle:Movimientos m WITH a.id = m.expediente";
+        }
+
         $filter = '';
         foreach ($wheres as $key => $value) {
             $filter = $filter .' '.$value;
@@ -114,14 +124,17 @@ class ExpedientesController extends Controller
         if (!empty($wheres)) {
             $dql = $dql .' WHERE '.$filter;
         }
-        $dql = $dql . ' ORDER BY a.createdAt DESC';
+        $dql = $dql . ' ORDER BY a.updatedAt DESC';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
+        $count = $em->createQuery('SELECT DISTINCT COUNT(DISTINCT e.id) FROM  AppBundle:Expedientes e WHERE (e.numeroExpediente IS NOT NULL)')->getSingleScalarResult();
+        $query->setHint('knp_paginator.count', $count);
         $expedientes = $paginator->paginate(
               $query,
               $request->query->getInt('page', 1),
               15,
-              array('orderBy' => 'a.createdAt', 'defaultSortDirection' => 'ASC')
+              array('distinct' => FALSE)
+              //'wrap-queries'=>true,
           );
         $search_form->handleRequest($request);
         if ($search_form->get('exportar')->isClicked()) {
