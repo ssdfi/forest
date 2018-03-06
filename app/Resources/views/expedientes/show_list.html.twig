@@ -13,6 +13,7 @@
   </thead>
   <tbody>
       {% for expediente in expedientes %}
+      {% if expediente is defined %}{% endif %}
       <tr data-link="/expedientes/{{expediente.id}}">
         <td>{{ expediente.id }}</td>
         <td nowrap>{{ expediente.numeroInterno }}</td>
@@ -55,7 +56,7 @@
       {% endfor %}
   </tbody>
 </table>
-{% if expedientes|length >14 %}
+{% if expedientes | length > 14 %}
 <div class="well well-sm clearfix">
   <div class="pagination-info pull-left">
     Mostrando <b>
