@@ -216,10 +216,12 @@
 		</a>
 	</li>
 	<li>
-		<a id="nav-edit-plantacion" href="{{path}}/edit">
+		{% if plantaciones|length > 0 %}
+		<a id="nav-edit-plantacion" href="{{path('plantaciones_editar', {'actividad_id': actividad.id})}}">
 			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 			Editar Plantaciones
 		</a>
+		{% endif %}
 	</li>
 	{% if is_granted('ROLE_ADMIN') %}
 		<li>
