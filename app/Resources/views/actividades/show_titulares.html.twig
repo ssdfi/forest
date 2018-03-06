@@ -29,13 +29,13 @@
 						{% if productor.tipoPlantacion %}{{productor.tipoPlantacion.codigo}}{% endif %}
 					</td>
 					<td>
-						{% if productor.superficiePresentada %}{{productor.superficiePresentada|number_format(1)}}{% endif %}
+						{% if productor.superficiePresentada is defined and productor.superficiePresentada is not null %}{{productor.superficiePresentada|number_format(1)}}{% endif %}
 					</td>
 					<td>
-						{% if productor.superficieCertificada %}{{productor.superficieCertificada|number_format(1)}}{% endif %}
+						{% if productor.superficieCertificada is defined and productor.superficieCertificada is not null %}{{productor.superficieCertificada|number_format(1)}}{% endif %}
 					</td>
 					<td>
-						{% if productor.superficieInspeccionada %}{{productor.superficieInspeccionada|number_format(1)}}{% endif %}
+						{% if productor.superficieInspeccionada is defined and productor.superficieInspeccionada is not null %}{{productor.superficieInspeccionada|number_format(1)}}{% endif %}
 					</td>
 					<td>
 						{% if productor.observaciones %}{{productor.observaciones}}{% endif %}
