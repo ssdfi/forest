@@ -38,8 +38,16 @@ class PlantacionesController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $param=$request->query->get('plantacion');
-        if ($param['ids']) {
-            $param = explode("\r\n", $param['ids']);
+        $actividad = $request->query->get('actividad_id');
+        if ($param['ids'] || $actividad) {
+          $p_actividad = array();
+            if($actividad){
+              $plantaciones_actividad = $em->getRepository('AppBundle:Actividades')->findOneById($actividad);
+              foreach ($plantaciones_actividad->getPlantaciones() as $k => $v) {
+                $p_actividad[$k] = $v->getId();
+              }
+            }
+            $param = ($p_actividad)? $p_actividad : array_filter(explode("\r\n", $param['ids']));
             $plantacione = new Plantaciones();
             $generos = $em->getRepository('AppBundle:Generos')->findAll();
             $editForm = $this->createForm('AppBundle\Form\PlantacionesEditarType', $plantacione, array('param'=>$param));
@@ -50,37 +58,38 @@ class PlantacionesController extends Controller
                     foreach ($param as $value) {
                         $plantacion_actualizar = $em->getRepository('AppBundle:Plantaciones')->findOneById($value);
                         if ($plantacion_actualizar) {
-                          ($plantacione);
-                          $plantacion_actualizar->setAnioPlantacion($plantacione->getAnioPlantacion());
-                          $plantacion_actualizar->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
-                          $plantacion_actualizar->setDistanciaPlantas($plantacione->getDistanciaPlantas());
-                          $plantacion_actualizar->setCantidadFilas($plantacione->getCantidadFilas());
-                          $plantacion_actualizar->setDistanciaFilas($plantacione->getDistanciaFilas());
-                          $plantacion_actualizar->setDensidad($plantacione->getDensidad());
-                          $plantacion_actualizar->setAnioInformacion($plantacione->getAnioInformacion());
-                          $plantacion_actualizar->setFechaImagen($plantacione->getFechaImagen());
-                          $plantacion_actualizar->setActivo($plantacione->getActivo());
-                          $plantacion_actualizar->setComentarios($plantacione->getComentarios());
-                          $plantacion_actualizar->setMpfId($plantacione->getMpfId());
-                          $plantacion_actualizar->setUnificadoId($plantacione->getUnificadoId());
-                          $plantacion_actualizar->setBaseGeometricaId($plantacione->getBaseGeometricaId());
-                          $plantacion_actualizar->setError($plantacione->getError());
-                          $plantacion_actualizar->setEstadoPlantacion($plantacione->getEstadoPlantacion());
-                          $plantacion_actualizar->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
-                          $plantacion_actualizar->setFuenteImagen($plantacione->getFuenteImagen());
-                          $plantacion_actualizar->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
-                          $plantacion_actualizar->setTipoPlantacion($plantacione->getTipoPlantacion());
-                          $plantacion_actualizar->setTitular($plantacione->getTitular());
-                          $plantacion_actualizar->setUsoAnterior($plantacione->getUsoAnterior());
-                          $plantacion_actualizar->setProvincia($plantacione->getProvincia());
-                          $plantacion_actualizar->setDepartamento($plantacione->getDepartamento());
-                          $plantacion_actualizar->setEspecie($plantacione->getEspecie());
+                          if ($plantacione->getAnioPlantacion()) { $plantacion_actualizar->setAnioPlantacion($plantacione->getAnioPlantacion()); }
+                          if ($plantacione->getNomenclaturaCatastral()) { $plantacion_actualizar->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral()); }
+                          if ($plantacione->getDistanciaPlantas()) { $plantacion_actualizar->setDistanciaPlantas($plantacione->getDistanciaPlantas()); }
+                          if ($plantacione->getCantidadFilas()) { $plantacion_actualizar->setCantidadFilas($plantacione->getCantidadFilas()); }
+                          if ($plantacione->getDistanciaFilas()) { $plantacion_actualizar->setDistanciaFilas($plantacione->getDistanciaFilas()); }
+                          if ($plantacione->getDensidad()) { $plantacion_actualizar->setDensidad($plantacione->getDensidad()); }
+                          if ($plantacione->getAnioInformacion()) { $plantacion_actualizar->setAnioInformacion($plantacione->getAnioInformacion()); }
+                          if ($plantacione->getFechaImagen()) { $plantacion_actualizar->setFechaImagen($plantacione->getFechaImagen()); }
+                          if ($plantacione->getActivo()) { $plantacion_actualizar->setActivo($plantacione->getActivo()); }
+                          if ($plantacione->getComentarios()) { $plantacion_actualizar->setComentarios($plantacione->getComentarios()); }
+                          if ($plantacione->getMpfId()) { $plantacion_actualizar->setMpfId($plantacione->getMpfId()); }
+                          if ($plantacione->getUnificadoId()) { $plantacion_actualizar->setUnificadoId($plantacione->getUnificadoId()); }
+                          if ($plantacione->getBaseGeometricaId()) { $plantacion_actualizar->setBaseGeometricaId($plantacione->getBaseGeometricaId()); }
+                          if ($plantacione->getError()) { $plantacion_actualizar->setError($plantacione->getError()); }
+                          if ($plantacione->getEstadoPlantacion()) { $plantacion_actualizar->setEstadoPlantacion($plantacione->getEstadoPlantacion()); }
+                          if ($plantacione->getEstratoDesarrollo()) { $plantacion_actualizar->setEstratoDesarrollo($plantacione->getEstratoDesarrollo()); }
+                          if ($plantacione->getFuenteImagen()) { $plantacion_actualizar->setFuenteImagen($plantacione->getFuenteImagen()); }
+                          if ($plantacione->getFuenteInformacion()) { $plantacion_actualizar->setFuenteInformacion($plantacione->getFuenteInformacion()); }
+                          if ($plantacione->getObjetivoPlantacion()) { $plantacion_actualizar->setObjetivoPlantacion($plantacione->getObjetivoPlantacion()); }
+                          if ($plantacione->getTipoPlantacion()) { $plantacion_actualizar->setTipoPlantacion($plantacione->getTipoPlantacion()); }
+                          if ($plantacione->getTitular()) { $plantacion_actualizar->setTitular($plantacione->getTitular()); }
+                          if ($plantacione->getUsoAnterior()) { $plantacion_actualizar->setUsoAnterior($plantacione->getUsoAnterior()); }
+                          if ($plantacione->getUsoForestal()) { $plantacion_actualizar->setUsoForestal($plantacione->getUsoForestal()); }
+                          if ($plantacione->getProvincia()) { $plantacion_actualizar->setProvincia($plantacione->getProvincia()); }
+                          if ($plantacione->getDepartamento()) { $plantacion_actualizar->setDepartamento($plantacione->getDepartamento()); }
+                          if ($plantacione->getEspecie()) { $plantacion_actualizar->setEspecie($plantacione->getEspecie()); }
                           $em->persist($plantacion_actualizar);
                         }
                     }
                     $em->flush();
                     $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha editado correctamente la plantación.'));
-                    return $this->redirectToRoute('plantaciones_index');
+                    return $this->redirectToRoute('plantaciones_index',array('plantacion[ids]'=>implode("\r\n",$param)));
                 } catch (\Doctrine\ORM\ORMException $e) {
                     $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar la plantación');
                     $this->get('logger')->error($e->getMessage());
@@ -234,28 +243,31 @@ class PlantacionesController extends Controller
         $em = $this->getDoctrine()->getManager();
         $dql_pr   = "SELECT p as plantacione, ap as actividadPlantacion, a as actividades, m as movimientos, e as expedientes, ST_AREA(p.geom)/10000 as area
                 FROM AppBundle:Plantaciones p
-                JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
-                JOIN AppBundle:Actividades a WITH a.id=ap.actividad
-                JOIN AppBundle:Movimientos m WITH m.id=a.movimiento
-                JOIN AppBundle:Expedientes e WITH e.id=m.expediente
+                LEFT JOIN AppBundle:ActividadesPlantaciones ap WITH p.id=ap.plantacion
+                LEFT JOIN AppBundle:Actividades a WITH a.id=ap.actividad
+                LEFT JOIN AppBundle:Movimientos m WITH m.id=a.movimiento
+                LEFT JOIN AppBundle:Expedientes e WITH e.id=m.expediente
                 WHERE p.id=:id";
         $query = $em->createQuery($dql_pr)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
         $arr_query = array();
         foreach ($query as $item) {
             foreach ($item as $key => $value) {
-                $arr_query[$key][] = $value;
+                if ($value != null){
+                  $arr_query[$key][] = $value;
+                }
             }
         }
-        $plantacion_anterior = $em->getRepository('AppBundle:PlantacionesHistorico')->findByPlantacionNueva($plantacione->getId());
+        $plantaciones_anteriores = $em->getRepository('AppBundle:PlantacionesHistorico')->findPlantacionNuevaWithArea($plantacione->getId());
+        $plantaciones_nuevas = $em->getRepository('AppBundle:PlantacionesHistorico')->findPlantacionAnteriorWithArea($plantacione->getId());
         $deleteForm = $this->createDeleteForm($plantacione);
-
         return $this->render('plantaciones/show.html.twig', array(
             'plantacione' => $plantacione,
-            'area'=> ($arr_query['area'][0]) ? $arr_query['area'][0] : null,
-            'movimientos' => ($arr_query) ? $arr_query['movimientos'] : null,
-            'actividades' => ($arr_query) ? $arr_query['actividades'] : null,
-            'expedientes' => ($arr_query) ? $arr_query['expedientes'] : null,
-            'plantacionAnterior' => $plantacion_anterior,
+            'area'=> (array_key_exists('area', $arr_query)) ? $arr_query['area'][0] : null,
+            'movimientos' => (array_key_exists('movimientos', $arr_query)) ? $arr_query['movimientos'] : null,
+            'actividades' => (array_key_exists('actividades', $arr_query)) ? $arr_query['actividades'] : null,
+            'expedientes' => (array_key_exists('expedientes', $arr_query)) ? $arr_query['expedientes'] : null,
+            'plantacionAnterior' => $plantaciones_anteriores,
+            'plantacionNueva'=> $plantaciones_nuevas,
             'delete_form' => $deleteForm->createView(),
         ));
     }
