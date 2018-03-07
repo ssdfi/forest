@@ -1,7 +1,9 @@
 <ul class="nav nav-tabs" role="tablist">
+	{% if expedientes|length > 0 %}
 	<li class="active" role="presentation">
 		<a href="#expedientes-tab" aria-controls="expedientes-tab" role="tab" data-toggle="tab" aria-expanded="true">Expedientes</a>
 	</li>
+	{% endif %}
 	{% if (plantacione.getHistorico() is not empty) or (plantacionAnterior is not empty) %}
 	<li class="" role="presentation">
 		<a href="#historial-tab" aria-controls="historial-tab" role="tab" data-toggle="tab" aria-expanded="false">Historial</a>
@@ -10,6 +12,7 @@
 </ul>
 <div class="tab-content">
 	<div id="expedientes-tab" class="tab-pane fade in active">
+		{% if expedientes|length %}
 		<h4>Expedientes</h4>
 		{{ include('expedientes/show_list.html.twig', {'expedientes': expedientes}) }}
 		<h4>Movimientos</h4>
@@ -101,9 +104,10 @@
 				{% endfor %}
 			</tbody>
 		</table>
+		{% endif %}
 	</div>
 	<div id="historial-tab" class="tab-pane" role="tabpanel">
-		{% if plantacione.getHistorico() is not empty%}
+		{% if plantacionNueva is not empty%}
 			<h4>Nuevas Plantaciones</h4>
 			<table id="plantaciones_nuevas" class="table table-hover table-grid">
 				<thead>
@@ -118,7 +122,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for item in plantacione.getHistorico() %}
+					{% for item in plantacionNueva %}
 						<tr data-link="/plantaciones/{{item.plantacionNueva.getId()}}">
 							<td>{{item.plantacionNueva.getId()}}</td>
 							<td>
@@ -130,9 +134,13 @@
 								{% endif %}
 							</td>
 							<td>{{item.plantacionNueva.getTipoPlantacion().descripcion}}</td>
-							<td>35.6</td>
+							<td>{{item.area|round(1,'common')|number_format(1)}}</td>
 							<td class="icon">
-								<span class="icon icon-lg"></span>
+								{% if item.plantacionNueva.getActivo %}
+										<span class="glyphicon glyphicon-ok"></span>
+								{% else %}
+										<span class="glyphicon glyphicon-remove"></span>
+								{% endif %}
 							</td>
 							<td class="icon icon-lg">
 								<a href="/plantaciones/{{item.plantacionNueva.getId()}}/mapa" onclick="event.stopPropagation()" target="_blank">
@@ -161,7 +169,7 @@
 				</thead>
 				<tbody>
 					{% for item in plantacionAnterior %}
-						<tr data-link="/plantaciones/{{item.plantacionNueva.getId()}}">
+						<tr data-link="/plantaciones/{{item.plantacionAnterior.getId()}}">
 							<td>{{item.plantacionAnterior.getId()}}</td>
 							<td>
 								<a href="/titulares/{{item.plantacionAnterior.getTitular().getId()}}">{{item.plantacionAnterior.getTitular()}}</a>
@@ -172,9 +180,13 @@
 								{% endif %}
 							</td>
 							<td>{{item.plantacionAnterior.getTipoPlantacion().descripcion}}</td>
-							<td>35.6</td>
+							<td>{{item.area|round(1,'floor')|number_format(1)}}</td>
 							<td class="icon">
-								<span class="icon icon-lg"></span>
+								{% if item.plantacionAnterior.getActivo %}
+										<span class="glyphicon glyphicon-ok"></span>
+								{% else %}
+										<span class="glyphicon glyphicon-remove"></span>
+								{% endif %}
 							</td>
 							<td class="icon icon-lg">
 								<a href="/plantaciones/{{item.plantacionAnterior.getId()}}/mapa" onclick="event.stopPropagation()" target="_blank">
