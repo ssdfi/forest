@@ -37,30 +37,30 @@ class ExpedientesSearchType extends AbstractType
             ->add('fechaSalidaDesde', DateType::class, array('label'=>'Fecha salida desde', 'widget'=>'single_text','required'=>false,'format'=>'yyyy-MM-dd', 'attr'=>array('class' => 'form-control','placeholder'=>"AAAA-MM-DD"),'mapped'=>false))
             ->add('fechaSalidaHasta', DateType::class, array('label'=>'Fecha salida hasta', 'widget'=>'single_text','required'=>false,'format'=>'yyyy-MM-dd', 'attr'=>array('class' => 'form-control','placeholder'=>"AAAA-MM-DD"),'mapped'=>false))
             ->add('responsable', EntityType::class, array("attr"=> array("class"=>"form-control"),'class'=>'AppBundle\Entity\Responsables','placeholder' => "",
-            'query_builder' => function ($er) {
-                                return $er->createQueryBuilder('u')
-                                    ->orderBy('u.activo', 'DESC');
-                            },
-            'group_by'=> function ($dato) {
-                if ($dato->getActivo() == true) {
-                    return 'Activos';
-                } else {
-                    return 'Inactivos';
-                }
-            },'mapped'=>false))
+                                                          'query_builder' => function ($er) {
+                                                                              return $er->createQueryBuilder('u')
+                                                                                  ->orderBy('u.activo', 'DESC');
+                                                                          },
+                                                          'group_by'=> function ($dato) {
+                                                              if ($dato->getActivo() == true) {
+                                                                  return 'Activos';
+                                                              } else {
+                                                                  return 'Inactivos';
+                                                              }
+                                                          },'mapped'=>false))
             ->add('tecnico', EntityType::class, array("attr"=> array("class"=>"form-control"),'class'=>'AppBundle\Entity\Tecnicos', 'required'=>false))
             ->add('validador', EntityType::class, array("attr"=> array("class"=>"form-control"),'class'=>'AppBundle\Entity\Responsables','placeholder' => "",'mapped'=>false ,
-            'query_builder' => function ($er) {
-                                return $er->createQueryBuilder('u')
-                                    ->orderBy('u.activo', 'DESC');
-                            },
-            'group_by'=> function ($dato) {
-                if ($dato->getActivo() == false) {
-                    return 'Inactivos';
-                } else {
-                    return 'Activos';
-                }
-            }))
+                                                        'query_builder' => function ($er) {
+                                                                            return $er->createQueryBuilder('u')
+                                                                                ->orderBy('u.activo', 'DESC');
+                                                                        },
+                                                        'group_by'=> function ($dato) {
+                                                            if ($dato->getActivo() == false) {
+                                                                return 'Inactivos';
+                                                            } else {
+                                                                return 'Activos';
+                                                            }
+                                                        }))
             ->add('activo', ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-control"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false))
             ->add('plurianual', ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-control"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false))
             ->add('agrupado', ChoiceType::class, array('choices'=>array('Todos'=>null,'Sí'=>true, 'No'=>false),"attr"=> array("class"=>"form-control"),'expanded'=>true, 'multiple'=>false,'empty_data'=>false))
