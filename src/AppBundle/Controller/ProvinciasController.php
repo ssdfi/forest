@@ -34,11 +34,11 @@ class ProvinciasController extends Controller{
     public function jsonDepartamentosAction(Request $request, $id) {
       $em = $this->getDoctrine()->getManager();
       $departamentos = $em->getRepository('AppBundle:Departamentos')->findByProvincia($id);
-      // $result=$departamentos->getResult((\Doctrine\ORM\Query::HYDRATE_ARRAY));
       $query = $em->createQueryBuilder()
                   ->select('d')
                   ->from('AppBundle:Departamentos','d')
                   ->where('d.provincia = :id')
+                  ->orderBy('d.nombre','ASC')
                   ->setParameter('id', $id)
                   ->getQuery();
       $data = $query->getResult(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
