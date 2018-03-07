@@ -12,9 +12,11 @@
 					<dt>Id Plantación</dt>
 					<dd>{% if plantacione.id %} {{ plantacione.id }}{% endif %}</dd>
 					<dt>Titular</dt>
+					<dd>
 					{% if plantacione.titular %}
-						<dd>{{ plantacione.titular.nombre }}</dd>
+						{{ plantacione.titular.nombre }}
 					{% endif %}
+					</dd>
 					<dt>Superficie</dt>
 					<dd>{% if area %}{{area|number_format(1)}}{% endif %}</dd>
 					<dt>Especie/s</dt>
