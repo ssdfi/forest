@@ -110,8 +110,12 @@ class ExpedientesController extends Controller
         }
         $dql   = "SELECT a
                   FROM AppBundle:Expedientes a";
+
+        $dql_count = 'SELECT DISTINCT COUNT(DISTINCT a.id) FROM  AppBundle:Expedientes a ';
+
         if( $mov > 0 ) {
           $dql = $dql . " INNER JOIN AppBundle:Movimientos m WITH a.id = m.expediente";
+          $dql_count = $dql_count . " INNER JOIN AppBundle:Movimientos m WITH a.id = m.expediente";
         }
 
         $filter = '';
@@ -123,18 +127,17 @@ class ExpedientesController extends Controller
         }
         if (!empty($wheres)) {
             $dql = $dql .' WHERE '.$filter;
+            $dql_count = $dql_count .' WHERE '.$filter;
         }
         $dql = $dql . ' ORDER BY a.updatedAt DESC';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
-        $count = $em->createQuery('SELECT DISTINCT COUNT(DISTINCT e.id) FROM  AppBundle:Expedientes e WHERE (e.numeroExpediente IS NOT NULL)')->getSingleScalarResult();
+        $count = $em->createQuery($dql_count)->getSingleScalarResult();
         $query->setHint('knp_paginator.count', $count);
         $expedientes = $paginator->paginate(
               $query,
               $request->query->getInt('page', 1),
-              15,
-              array('distinct' => FALSE)
-              //'wrap-queries'=>true,
+              15
           );
         $search_form->handleRequest($request);
         if ($search_form->get('exportar')->isClicked()) {
