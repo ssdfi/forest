@@ -235,8 +235,8 @@
 			</a>
 		</li>
 	{% endif %}
-	<li>
-		<a id="nav_expediente" href="/expedientes/{#expediente.id#}">{#expediente.numeroInterno#}</a>
+	<li class="navbar-primary">
+		<a id="nav_expediente" href="/expedientes/{{actividad.movimiento.expediente.id}}">{{actividad.movimiento.expediente.numeroInterno}}</a>
 	</li>
 {% endif %}
 {% if route == "actividades_new" %}
