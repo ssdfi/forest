@@ -53,8 +53,14 @@ class PlantacionesType extends AbstractType
             ->add('fuenteImagen', EntityType::class, array('class'=>'AppBundle\Entity\FuentesImagen', 'placeholder' => "Seleccione una opción" , 'label'=>'Fuente de Imagen','required'=>false))
             ->add('fechaImagen', DateType::class, array('widget' => 'single_text','attr' => ['class' => 'js-datepicker','placeholder'=>"AAAA-MM-DD"], 'label'=>'Fecha de Imagen','required'=>false))
             ->add('baseGeometricaId', EntityType::class, array('class'=>'AppBundle\Entity\BasesGeometricas', 'placeholder' => "Seleccione una opción" , 'label'=>'Base Geométrica','required'=>false ))
-            ->add('provincia', EntityType::class, array('class'=>'AppBundle\Entity\Provincias','choice_label' => 'nombre','placeholder' => "Seleccione una opción"))
-            ->add('departamento', EntityType::class, array('class'=>'AppBundle\Entity\Departamentos', 'placeholder' => "Seleccione una opción" ))
+            ->add('provincia', EntityType::class, array('class'=>'AppBundle\Entity\Provincias','query_builder' => function (EntityRepository $er) {
+                                                                                                                return $er->createQueryBuilder('p')
+                                                                                                                    ->orderBy('p.nombre', 'ASC');
+                                                                                                            },'choice_label' => 'nombre','placeholder' => "Seleccione una opción"))
+            ->add('departamento', EntityType::class, array('class'=>'AppBundle\Entity\Departamentos','query_builder' => function (EntityRepository $er) {
+                                                                                                                return $er->createQueryBuilder('d')
+                                                                                                                    ->orderBy('d.nombre', 'ASC');
+                                                                                                            }, 'placeholder' => "Seleccione una opción" ))
             ->add('estratoDesarrollo', EntityType::class, array('class'=>'AppBundle\Entity\EstratosDesarrollo', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('usoForestal')
             ->add('usoAnterior')
@@ -119,6 +125,7 @@ class PlantacionesType extends AbstractType
                                 'class' =>  \AppBundle\Entity\PlantacionesHistorico::class,
                                 'multiple'=>true,
                                 'required'=>false,
+                                'label'=>'Nuevas Plantaciones',
                                 'choices'=> $choices,
                                 'choice_value'=>function ($value) {
                                     return (string)$value;
