@@ -35,12 +35,12 @@
 							{{p.plantacion.actividad.getSupTotalSuma()}}
 						{% endif %}
 					</td>
-					<td>{{p.area|round(1,'floor')|number_format(2)}}</td>
+					<td>{{p.area|round(1,'common')|number_format(1)}}</td>
 					{% if (p.plantacion.actividad.first) %}
 						<td>{{p.plantacion.actividad.first.estadoAprobacion}}</td>
 					{% endif %}
 					<td>
-						{% if p.plantacion.comentarios %}{{p.plantacion.comentarios}}{% endif %}
+						{% if p.plantacion.actividad.first.observaciones %}{{p.plantacion.actividad.first.observaciones}}{% endif %}
 					</td>
 					<td class="icon icon-lg hidden-print">
 						<a href="/plantaciones/{{p.plantacion.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
