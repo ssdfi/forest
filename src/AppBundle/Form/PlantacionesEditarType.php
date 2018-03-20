@@ -88,7 +88,6 @@ class PlantacionesEditarType extends AbstractType
             ->add('objetivoPlantacion', EntityType::class, array('class'=>'AppBundle\Entity\ObjetivosPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('activo', CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
             ->add('comentarios');
-
         $builder->addEventSubscriber(new AddEspeciesListener())->addModelTransformer($transformer);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
