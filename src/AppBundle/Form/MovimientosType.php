@@ -22,9 +22,9 @@ class MovimientosType extends AbstractType
       //fecha de entrada + inspector + responsable + Si el expediente es plurianual entonces tiene que tener si o si: ETAPA
         $builder
             ->add('numeroFicha',TextType::class, array('label'=>'Número de ficha','required'=>false))
-            ->add('inspector',EntityType::class, array('class'=>'AppBundle\Entity\Inspectores', 'placeholder' => "Seleccione una opción"))
+            ->add('inspector',EntityType::class, array('class'=>'AppBundle\Entity\Inspectores', 'placeholder' => "Seleccione una opción",'required'=>false))
             ->add('reinspector',EntityType::class, array('class'=>'AppBundle\Entity\Inspectores', 'placeholder' => "Seleccione una opción" ,'required'=>false))
-            ->add('responsable',EntityType::class, array('class'=>'AppBundle\Entity\Responsables','placeholder' => "",
+            ->add('responsable',EntityType::class, array('class'=>'AppBundle\Entity\Responsables','required'=>false,'placeholder' => "",
                                                           'query_builder' => function ($er) {
                                                                               return $er->createQueryBuilder('u')
                                                                                   ->orderBy('u.activo', 'DESC');
@@ -38,7 +38,7 @@ class MovimientosType extends AbstractType
                                                           },'group_by'=> function($dato) { if ($dato->getActivo() == false) { return 'Inactivos'; } else { return 'Activos'; } }))
             ->add('anioInspeccion',TextType::class, array('label'=>'Año  de Inspección' ,'required'=>false))
             ->add('destino',EntityType::class, array('class'=>'AppBundle\Entity\Destinos', 'placeholder' => "Seleccione una opción" ,'required'=>false))
-            ->add('validador',EntityType::class, array('class'=>'AppBundle\Entity\Responsables','placeholder' => "",
+            ->add('validador',EntityType::class, array('class'=>'AppBundle\Entity\Responsables','required'=>false,'placeholder' => "",
                                                           'query_builder' => function ($er) {
                                                                               return $er->createQueryBuilder('u')
                                                                                   ->orderBy('u.activo', 'DESC');
