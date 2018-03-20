@@ -70,8 +70,8 @@ class MovimientosController extends Controller
         $actividades = $em->getRepository('AppBundle:Actividades')->findByMovimiento($id);
         $dql_p   = "SELECT a as actividad
                     FROM AppBundle:Actividades a
-                    JOIN AppBundle:ActividadesPlantaciones ap WITH a.id = ap.actividad
-                    JOIN AppBundle:Plantaciones p WITH p.id = ap.plantacion
+                    LEFT JOIN AppBundle:ActividadesPlantaciones ap WITH a.id = ap.actividad
+                    LEFT JOIN AppBundle:Plantaciones p WITH p.id = ap.plantacion
                     WHERE a.movimiento=:id";
         $plantaciones = $em->createQuery($dql_p)->setParameters(array('id' => $id))->getResult(Query::HYDRATE_OBJECT);
         $finder = new Finder();
