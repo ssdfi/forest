@@ -17,8 +17,8 @@ class TitularesType extends AbstractType
     {
         $builder
             ->add('nombre',TextType::class,array('label'=>'Nombre'))
-            ->add('dni',NumberType::class,array('label'=>'DNI'))
-            ->add('cuit',TextType::class,array('label'=>'CUIT'));
+            ->add('dni',TextType::class,array('label'=>'DNI','required'=>false))
+            ->add('cuit',TextType::class,array('label'=>'CUIT','required'=>false));
     }
 
     /**
