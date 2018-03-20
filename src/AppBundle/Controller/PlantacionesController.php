@@ -83,7 +83,7 @@ class PlantacionesController extends Controller
                           if ($plantacione->getUsoForestal()) { $plantacion_actualizar->setUsoForestal($plantacione->getUsoForestal()); }
                           if ($plantacione->getProvincia()) { $plantacion_actualizar->setProvincia($plantacione->getProvincia()); }
                           if ($plantacione->getDepartamento()) { $plantacion_actualizar->setDepartamento($plantacione->getDepartamento()); }
-                          if ($plantacione->getEspecie()) { $plantacion_actualizar->setEspecie($plantacione->getEspecie()); }
+                          if (!$plantacione->getEspecie()->isEmpty()) { $plantacion_actualizar->setEspecie($plantacione->getEspecie()); }
                           $em->persist($plantacion_actualizar);
                         }
                     }
