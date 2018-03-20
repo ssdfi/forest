@@ -56,7 +56,8 @@
       {% endfor %}
   </tbody>
 </table>
-{% if expedientes | length > 14 %}
+
+{% if expedientes | length > 14 and expedientes.getItemNumberPerPage is defined %}
 <div class="well well-sm clearfix">
   <div class="pagination-info pull-left">
     Mostrando <b>
