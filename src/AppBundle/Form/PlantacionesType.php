@@ -135,9 +135,11 @@ class PlantacionesType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form=$event->getForm();
             $data=$event->getData();
-            $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
-            $data['titular'] = $titular;
-            $event->setData($data);
+            if(array_key_exists('plantacion_titular_id', $data) && $data['plantacion_titular_id']){
+              $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
+              $data['titular'] = $titular;
+              $event->setData($data);
+            }
         });
 
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
