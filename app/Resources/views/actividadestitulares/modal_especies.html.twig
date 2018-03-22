@@ -1,0 +1,63 @@
+<div id="especies-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="especies-modal-label" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button class="close" type="button" data-dismiss="modal">
+					<span aria-hidden="true">×</span>
+					<span class="sr-only">Cerrar</span>
+				</button>
+				<h4 id="especies-modal-label" class="modal-title">Agregar Especie</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<form class="form-inline" accept-charset="UTF-8" action="{{path('json_especies')}}" data-remote="true" method="get" role="form">
+							<div class="form-group">
+								<label class="sr-only control-label" for="especie[genero_id]">Especie[genero id]</label>
+								<select id="especie[genero_id]" class="form-control" name="especie[genero_id]">
+                  <option value=''>Género</option>
+                  {% for genero in generos %}
+                    <option value="{{genero.id}}">{{genero.descripcion}}</option>
+                  {% endfor %}
+                </select>
+							</div>
+							<div class="form-group">
+								<label class="sr-only control-label" for="especie[codigo_sp]">Especie[codigo sp]</label>
+								<input id="especie[codigo_sp]" class="form-control" name="especie[codigo_sp]" placeholder="Código" type="text">
+							</div>
+							<div class="form-group">
+								<label class="sr-only control-label" for="especie[nombre_cientifico]">Especie[nombre cientifico]</label>
+								<input id="especie[nombre_cientifico]" class="form-control" name="especie[nombre_cientifico]" placeholder="Nombre Científico" type="text">
+							</div>
+							<div class="form-group">
+								<label class="sr-only control-label" for="especie[nombre_comun]">Especie[nombre comun]</label>
+								<input id="especie[nombre_comun]" class="form-control" name="especie[nombre_comun]" placeholder="Nombre Común" type="text">
+							</div>
+							<input id="especies-modal-search" class="btn btn-default" name="commit" value="Buscar" type="submit">
+						</form>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-md-12">
+						<table id="especies-list" class="table">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Código</th>
+									<th>Nombre Científico</th>
+									<th>Nombre Común</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-default" type="button" data-dismiss="modal">Cancelar</button>
+				<button id="especies-modal-add" class="btn btn-primary" type="button">Agregar</button>
+			</div>
+		</div>
+	</div>
+</div>
