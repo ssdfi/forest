@@ -32,7 +32,7 @@ class ActividadesTitularesType extends AbstractType
       $transformer = new TitularesToNumberTransformer($this->manager);
         $builder
           ->add('tipoPlantacion',EntityType::class, array('class'=>'AppBundle\Entity\TiposPlantacion', 'placeholder' => "Seleccione una opción" ))
-          ->add('especie')
+          // ->add('especie')
           ->add('superficiePresentada')
           ->add('superficieCertificada')
           ->add('superficieInspeccionada')
@@ -59,13 +59,40 @@ class ActividadesTitularesType extends AbstractType
               ));
           });
 
+          $builder->addEventListener(
+              FormEvents::PRE_SET_DATA,
+              function(FormEvent $event){
+                $form=$event->getForm();
+                $data=$event->getData();
+                if($data->getEspecie()){
+                  $especie= $data->getEspecie();
+                }else{
+                  $especie = null;
+                }
+                $form->add('especie_id', HiddenType::class, array(
+                              'data' => ($especie !== null) ? $especie->getId() : '',
+                              'mapped' => false,
+                ));
+                $form->add('especie', TextType::class, array(
+                              'data' => ($especie !== null) ? $especie->getCodigoSp() . '-' .$especie->getNombreCientifico() : '',
+                              'required'=>true,
+                              'attr' => ['disabled' => 'disabled'],
+                ));
+            });
+
         $builder->addEventListener(
             FormEvents::PRE_SUBMIT,
             function(FormEvent $event){
               $form=$event->getForm();
               $data=$event->getData();
-              $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
-              $data['titular'] = $titular;
+              if(array_key_exists('plantacion_titular_id',$data)){
+                $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
+                $data['titular'] = $titular;
+              }
+              if(array_key_exists('especie_id',$data)){
+                $especie = $this->manager->getRepository('AppBundle:Especies')->findOneById($data['especie_id']);
+                $data['especie'] = $especie;
+              }
               $event->setData($data);
           });
 
