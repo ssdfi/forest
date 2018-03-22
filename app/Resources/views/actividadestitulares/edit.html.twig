@@ -2,7 +2,7 @@
 
 {% block body %}
 {% form_theme form 'bootstrap_3_layout.html.twig' %}
-
+{{ include('actividadestitulares/modal_especies.html.twig') }}
 <div class="modal fade" id="titulares-modal" tabindex="-1" role="dialog" aria-labelledby="titulares-modal-label" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -62,6 +62,22 @@
               <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
             </button>
             <button id="remove-titular" class="btn btn-default" type="button">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </button>
+          </span>
+        </div>
+        {{ form_label(form.tipoPlantacion) }}
+        {{ form_errors(form.tipoPlantacion) }}
+        {{ form_widget(form.tipoPlantacion) }}
+        {{ form_label(form.especie) }}
+        <div class="input-group">
+          {{ form_errors(form.especie) }}
+          {{ form_widget(form.especie) }}
+          <span class="input-group-btn">
+            <button id="add-especie" class="btn btn-default" type="button" data-toggle="modal" data-target="#especies-modal">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </button>
+            <button id="remove-especie" class="btn btn-default" type="button">
               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
             </button>
           </span>
