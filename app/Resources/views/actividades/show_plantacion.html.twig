@@ -28,7 +28,7 @@
 					</td>
 					<td>
 						{% if (p.plantacion.actividad.first) %}
-							{% if p.plantacion.actividad.first.superficieRegistrada %}
+							{% if p.plantacion.actividad.first.superficieRegistrada >= 0 %}
 								{{p.plantacion.actividad.first.superficieRegistrada|number_format(2)}}
 							{% endif %}
 						{% else %}
