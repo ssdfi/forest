@@ -28,7 +28,10 @@ class ExpedientesType extends AbstractType
         $builder
             ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group")))
             ->add('numeroExpediente', TextType::class, array("attr"=> array("class"=>"form-group")))
-            ->add('tecnico',EntityType::class, array('class'=>'AppBundle\Entity\Tecnicos' , 'required'=>false))
+            ->add('tecnico',EntityType::class, array('class'=>'AppBundle\Entity\Tecnicos' , 'required'=>false,'query_builder' => function ($er) {
+                                return $er->createQueryBuilder('u')
+                                    ->orderBy('u.nombre', 'asc');
+                            },))
             ->add('plurianual',CheckboxType::class, array('attr' => array('data-label' => 'Plurianual'), 'label' => false, 'required'=>false))
             ->add('agrupado',CheckboxType::class, array('attr' => array('data-label' => 'Agrupado'), 'label' => false, 'required'=>false))
             ->add('activo',CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false));
