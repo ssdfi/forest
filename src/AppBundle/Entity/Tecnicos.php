@@ -56,9 +56,8 @@ class Tecnicos
     /**
      * @var string
      *
-     * @ORM\Column(name="dni", type="string", length=255, nullable=true)
+     * @ORM\Column(name="dni", type="string", length=255, nullable=true, unique=TRUE)
      * @Assert\Type(type="numeric", message="El valor debe que ser numérico")
-     * @Assert\NotBlank(message="El campo no puede estar vacío")
      * @Assert\Length(min = 8, max=8 ,exactMessage="El DNI debe tener {{ limit }} dígitos.")
      */
     private $dni;
@@ -66,9 +65,8 @@ class Tecnicos
     /**
      * @var string
      *
-     * @ORM\Column(name="cuit", type="string", length=255, nullable=true)
+     * @ORM\Column(name="cuit", type="string", length=255, nullable=true, unique=TRUE)
      * @Assert\Type(type="numeric", message="El valor debe que ser numérico")
-     * @Assert\NotBlank(message="El campo no puede estar vacío")
      * @Assert\Length(min = 11, max=11 ,exactMessage="El CUIT debe tener {{ limit }} dígitos.")
      */
     private $cuit;
