@@ -44,7 +44,7 @@ class PlantacionesController extends Controller
             if($actividad){
               $plantaciones_actividad = $em->getRepository('AppBundle:Actividades')->findOneById($actividad);
               foreach ($plantaciones_actividad->getPlantaciones() as $k => $v) {
-                $p_actividad[$k] = $v->getId();
+                $p_actividad[$k] = $v->getPlantacion();
               }
             }
             $param = ($p_actividad)? $p_actividad : array_filter(explode("\r\n", $param['ids']));
