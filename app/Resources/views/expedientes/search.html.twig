@@ -102,6 +102,15 @@
 		{% endfor %}
 	</div>
 </div>
+<div class="form-group">
+	{{ form_label(search_form.analizar, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+	<div class="col-sm-7">
+		{% for child in search_form.analizar %}
+			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
+		{% endfor %}
+	</div>
+</div>
 <!-- <div class="form-group">
 	{ form_label(search_form.pendiente, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
 	<div class="col-sm-7">

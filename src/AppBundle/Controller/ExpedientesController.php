@@ -103,6 +103,15 @@ class ExpedientesController extends Controller
             $wheres[]="m.fechaSalida <= '$fechaSalidaHasta'";
             $mov++;
         }
+        if ($param['analizar']) {
+            $analizar =$param['analizar'] == 1 ? 'true' : 'false';
+            if ($analizar == 'true') {
+              $wheres[]="m.fechaSalida is null";
+            } else {
+              $wheres[]="m.fechaSalida is not null";
+            }
+            $mov++;
+        }
         if ($param['estabilidad_fiscal']) {
             $estabilidad_fiscal = $param['estabilidad_fiscal'] == 1 ? 'true' : 'false';
             $wheres[]="m.estabilidadFiscal = $estabilidad_fiscal";
