@@ -131,6 +131,13 @@ class Plantaciones
     private $geom;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="dosel", type="boolean", nullable=true)
+     */
+    private $dosel;
+
+    /**
      * @var \BasesGeometricas
      *
      * @ORM\ManyToOne(targetEntity="BasesGeometricas")
@@ -1092,6 +1099,29 @@ class Plantaciones
     }
     public function __toString() {
       return (string)$this->id;
-  }
+    }
 
+    /**
+     * Set dosel
+     *
+     * @param boolean $dosel
+     *
+     * @return Plantaciones
+     */
+    public function setDosel($dosel)
+    {
+        $this->dosel = $dosel;
+
+        return $this;
+    }
+
+    /**
+     * Get /**
+     *
+     * @return boolean
+     */
+    public function getDosel()
+    {
+        return $this->dosel;
+    }
 }

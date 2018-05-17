@@ -81,6 +81,18 @@
 					<dd>{% if plantacione.usoAnterior %} {{ plantacione.usoAnterior }}{% endif %}</dd>
 					<dt>Objetivo de Plantación</dt>
 					<dd>{% if plantacione.objetivoPlantacion %} {{ plantacione.objetivoPlantacion }}{% endif %}</dd>
+					<dt>Dosel</dt>
+					<dd>
+						{% if plantacione.dosel is null %}
+						{% else %}
+							{% if plantacione.dosel == TRUE %}
+								Regular
+							{% endif %}
+							{% if plantacione.dosel == FALSE %}
+								Irregular
+							{% endif %}
+						{% endif %}
+						</dd>
 					<dt>Comentarios</dt>
 					<dd>{% if plantacione.comentarios %} {{ plantacione.comentarios }}{% endif %}</dd>
 				</dl>

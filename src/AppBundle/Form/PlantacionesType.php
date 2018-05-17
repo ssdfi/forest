@@ -81,6 +81,7 @@ class PlantacionesType extends AbstractType
                       )))
             ->add('objetivoPlantacion', EntityType::class, array('class'=>'AppBundle\Entity\ObjetivosPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('activo', CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
+            ->add('dosel', ChoiceType::class, array('choices'  => array('' => null,'Regular' => true,'Irregular' => false)))
             ->add('comentarios')
             ->add('copiarDatos', CheckboxType::class, array('attr' => array('data-label' => 'Copiar Datos'), 'mapped'=> false, 'label' => false, 'required'=>false))
             ->add('activarNuevas', CheckboxType::class, array('attr' => array('data-label' => 'Activar Nuevas'), 'mapped'=> false, 'label' => false, 'required'=>false));
