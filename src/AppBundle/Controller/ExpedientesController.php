@@ -112,6 +112,18 @@ class ExpedientesController extends Controller
             }
             $mov++;
         }
+
+        if ($param['validado']) {
+            $validado =$param['validado'] == 1 ? 'true' : 'false';
+            if ($validado == 'true') {
+              dump('holi');
+              $wheres[]="m.validador is not null";
+            } else {
+              $wheres[]="m.validador is null";
+            }
+            $mov++;
+        }
+
         if ($param['estabilidad_fiscal']) {
             $estabilidad_fiscal = $param['estabilidad_fiscal'] == 1 ? 'true' : 'false';
             $wheres[]="m.estabilidadFiscal = $estabilidad_fiscal";
