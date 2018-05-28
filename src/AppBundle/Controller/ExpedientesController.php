@@ -116,7 +116,6 @@ class ExpedientesController extends Controller
         if ($param['validado']) {
             $validado =$param['validado'] == 1 ? 'true' : 'false';
             if ($validado == 'true') {
-              dump('holi');
               $wheres[]="m.validador is not null";
             } else {
               $wheres[]="m.validador is null";
