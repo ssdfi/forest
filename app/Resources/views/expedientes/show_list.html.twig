@@ -32,9 +32,9 @@
           {% endif %}
         </td>
         <td>
-          {% if expediente.movimientos.last.fechaSalida is defined %}
-            {% if expediente.movimientos.last.fechaSalida is not null %}
-                {{ expediente.movimientos.last.fechaSalida|date('d-m-Y') }}
+          {% if expediente.movimientos.first.fechaSalida is defined %}
+            {% if expediente.movimientos.first.fechaSalida is not null %}
+                {{ expediente.movimientos.first.fechaSalida|date('d-m-Y') }}
             {% endif %}
           {% endif %}
         </td>
