@@ -25,9 +25,9 @@
           {% endif %}
         </td>
         <td>
-          {% if expediente.movimientos.last.fechaEntrada is defined %}
-            {% if expediente.movimientos.last.fechaEntrada is not null %}
-              {{ expediente.movimientos.last.fechaEntrada|date('d-m-Y') }}
+          {% if expediente.movimientos.first.fechaEntrada is defined %}
+            {% if expediente.movimientos.first.fechaEntrada is not null %}
+              {{ expediente.movimientos.first.fechaEntrada|date('d-m-Y') }}
             {% endif %}
           {% endif %}
         </td>
@@ -57,12 +57,17 @@
   </tbody>
 </table>
 
-{% if expedientes | length > 14 and expedientes.getItemNumberPerPage is defined %}
+{% if expedientes | length > 1 and expedientes.getItemNumberPerPage is defined %}
 <div class="well well-sm clearfix">
   <div class="pagination-info pull-left">
-    Mostrando <b>
-      {{(expedientes.getItemNumberPerPage * expedientes.getCurrentPageNumber) - (expedientes.getItemNumberPerPage -1) }} -
-      {{expedientes.getItemNumberPerPage * expedientes.getCurrentPageNumber }}</b>
+    Mostrando
+      {% if  expedientes | length > 14 %}
+       <b>
+        {{(expedientes.getItemNumberPerPage * expedientes.getCurrentPageNumber) - (expedientes.getItemNumberPerPage -1) }} -
+        {{expedientes.getItemNumberPerPage * expedientes.getCurrentPageNumber }}</b>
+      {% else %}
+      <b> {{ expedientes.getTotalItemCount }} </b>
+      {% endif %}
     de
       <b> {{ expedientes.getTotalItemCount }} </b>
   </div>
