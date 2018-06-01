@@ -329,6 +329,11 @@ class PlantacionesController extends Controller
                     $plantacionNueva->getPlantacionNueva()->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
                 }
             }
+            if ($activarNuevas === true) {
+                foreach ($plantacione->getHistorico() as $key => $plantacionNueva) {
+                    $plantacionNueva->getPlantacionNueva()->setActivo($activarNuevas);
+                }
+            }
             try {
                 $em->persist($plantacione);
                 $em->flush();
