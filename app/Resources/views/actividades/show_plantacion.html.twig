@@ -21,15 +21,15 @@
 						<a href="/titulares/{{p.plantacion.titular.id}}">{{p.plantacion.titular.nombre}}</a>
 					</td>
 					<td>
-						{% if p.plantacion.especie.first %}{{p.plantacion.especie.first.nombreCientifico}}{% endif %}
+						{% if p.plantacion.especie.last %}{{p.plantacion.especie.last.nombreCientifico}}{% endif %}
 					</td>
 					<td>
 						{% if p.plantacion.tipoPlantacion %}{{p.plantacion.tipoPlantacion.descripcion}}{% endif %}
 					</td>
 					<td>
-						{% if (p.plantacion.actividad.first) %}
-							{% if p.plantacion.actividad.first.superficieRegistrada >= 0 %}
-								{{p.plantacion.actividad.first.superficieRegistrada|number_format(2)}}
+						{% if (p.plantacion.actividad.last) %}
+							{% if p.plantacion.actividad.last.superficieRegistrada >= 0 %}
+								{{p.plantacion.actividad.last.superficieRegistrada|number_format(2)}}
 							{% endif %}
 						{% else %}
 							{{p.plantacion.actividad.getSupTotalSuma()}}
