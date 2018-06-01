@@ -36,11 +36,11 @@
 						{% endif %}
 					</td>
 					<td>{{p.area|round(1,'common')|number_format(1)}}</td>
-					{% if (p.plantacion.actividad.first) %}
-						<td>{{p.plantacion.actividad.first.estadoAprobacion}}</td>
+					{% if (p.plantacion.actividad.last) %}
+						<td>{{p.plantacion.actividad.last.estadoAprobacion}}</td>
 					{% endif %}
 					<td>
-						{% if p.plantacion.actividad.first.observaciones %}{{p.plantacion.actividad.first.observaciones}}{% endif %}
+						{% if p.plantacion.actividad.last.observaciones %}{{p.plantacion.actividad.last.observaciones}}{% endif %}
 					</td>
 					<td class="icon icon-lg hidden-print">
 						<a href="/plantaciones/{{p.plantacion.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
