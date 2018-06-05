@@ -21,26 +21,26 @@
 						<a href="/titulares/{{p.plantacion.titular.id}}">{{p.plantacion.titular.nombre}}</a>
 					</td>
 					<td>
-						{% if p.plantacion.especie.last %}{{p.plantacion.especie.last.nombreCientifico}}{% endif %}
+						{% if p.plantacion.especie.first %}{{p.plantacion.especie.first.nombreCientifico}}{% endif %}
 					</td>
 					<td>
 						{% if p.plantacion.tipoPlantacion %}{{p.plantacion.tipoPlantacion.descripcion}}{% endif %}
 					</td>
 					<td>
-						{% if (p.plantacion.actividad.last) %}
-							{% if p.plantacion.actividad.last.superficieRegistrada >= 0 %}
-								{{p.plantacion.actividad.last.superficieRegistrada|number_format(2)}}
+						{% if (p.plantacion.actividad.first) %}
+							{% if p.plantacion.actividad.first.superficieRegistrada >= 0 %}
+								{{p.plantacion.actividad.first.superficieRegistrada|number_format(2)}}
 							{% endif %}
 						{% else %}
 							{{p.plantacion.actividad.getSupTotalSuma()}}
 						{% endif %}
 					</td>
 					<td>{{p.area|round(1,'common')|number_format(1)}}</td>
-					{% if (p.plantacion.actividad.last) %}
-						<td>{{p.plantacion.actividad.last.estadoAprobacion}}</td>
+					{% if (p.plantacion.actividad.first) %}
+						<td>{{p.plantacion.actividad.first.estadoAprobacion}}</td>
 					{% endif %}
 					<td>
-						{% if p.plantacion.actividad.last.observaciones %}{{p.plantacion.actividad.last.observaciones}}{% endif %}
+						{% if p.plantacion.actividad.first.observaciones %}{{p.plantacion.actividad.first.observaciones}}{% endif %}
 					</td>
 					<td class="icon icon-lg hidden-print">
 						<a href="/plantaciones/{{p.plantacion.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
