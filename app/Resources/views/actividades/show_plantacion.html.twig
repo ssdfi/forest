@@ -20,7 +20,9 @@
 							{{p.plantacion.plantacion.id}}
 						</td>
 						<td>
-							{{p.plantacion.plantacion.titular.nombre}}
+							<a href="/titulares/{{p.plantacion.plantacion.titular.id}}">
+								{{p.plantacion.plantacion.titular.nombre}}
+							</a>
 						</td>
 						<td>
 							{{p.plantacion.plantacion.especie.first.nombreComun}}
