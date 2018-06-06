@@ -71,7 +71,7 @@ class ActividadesController extends Controller
         $actividades = $em->getRepository('AppBundle:Actividades')->findOneById($idAct);
         $deleteForm = $this->createDeleteForm($actividades);
 
-        $dql_p   = "SELECT p as plantacion,
+        $dql_p   = "SELECT ap as plantacion,
                     st_area(p.geom)/10000 as area
                     FROM AppBundle:Actividades a
                     JOIN AppBundle:ActividadesPlantaciones ap WITH a.id = ap.actividad

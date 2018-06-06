@@ -15,40 +15,39 @@
 		</thead>
 		<tbody>
 			{% for p in plantaciones %}
-				<tr data-link="/plantaciones/{{p.plantacion.id}}">
-					<td class="id" data-toggle="tooltip" data-toggle="tooltip" data-html="true" title="">{{p.plantacion.id}}</td>
-					<td>
-						<a href="/titulares/{{p.plantacion.titular.id}}">{{p.plantacion.titular.nombre}}</a>
-					</td>
-					<td>
-						{% if p.plantacion.especie.first %}{{p.plantacion.especie.first.nombreCientifico}}{% endif %}
-					</td>
-					<td>
-						{% if p.plantacion.tipoPlantacion %}{{p.plantacion.tipoPlantacion.descripcion}}{% endif %}
-					</td>
-					<td>
-						{% if (p.plantacion.actividad.first) %}
-							{% if p.plantacion.actividad.first.superficieRegistrada >= 0 %}
-								{{p.plantacion.actividad.first.superficieRegistrada|number_format(2)}}
-							{% endif %}
-						{% else %}
-							{{p.plantacion.actividad.getSupTotalSuma()}}
-						{% endif %}
-					</td>
-					<td>{{p.area|round(1,'common')|number_format(1)}}</td>
-					{% if (p.plantacion.actividad.first) %}
-						<td>{{p.plantacion.actividad.first.estadoAprobacion}}</td>
-					{% endif %}
-					<td>
-						{% if p.plantacion.actividad.first.observaciones %}{{p.plantacion.actividad.first.observaciones}}{% endif %}
-					</td>
-					<td class="icon icon-lg hidden-print">
-						<a href="/plantaciones/{{p.plantacion.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
-							<span class="glyphicon glyphicon-globe"></span>
-						</a>
-					</td>
-				</tr>
+					<tr data-link="/plantaciones/{{p.plantacion.plantacion.id}}">
+						<td class="id" data-toggle="tooltip" data-toggle="tooltip" data-html="true" title="">
+							{{p.plantacion.plantacion.id}}
+						</td>
+						<td>
+							{{p.plantacion.plantacion.titular.nombre}}
+						</td>
+						<td>
+							{{p.plantacion.plantacion.especie.first.nombreComun}}
+						</td>
+						<td>
+							{{p.plantacion.plantacion.tipoPlantacion}}
+						</td>
+						<td>
+							{{p.plantacion.superficieRegistrada}}
+						</td>
+						<td>
+							{{p.area|number_format(1)}}
+						</td>
+						<td>
+							{{p.plantacion.estadoAprobacion.descripcion}}
+						</td>
+						<td>
+							<abbr title="{{p.plantacion.observaciones}}" data-length="20">{{p.plantacion.observaciones}}</abbr>
+						</td>
+						<td class="icon icon-lg hidden-print">
+							<a href="/plantaciones/{{p.plantacion.plantacion.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
+								<span class="glyphicon glyphicon-globe"></span>
+							</a>
+						</td>
+					</tr>
 			{% endfor %}
+
 		</tbody>
 	</table>
 </div>
