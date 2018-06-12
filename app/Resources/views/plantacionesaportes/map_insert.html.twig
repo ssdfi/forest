@@ -1,0 +1,39 @@
+<div class="row">
+	<div class="col-md-12 hidden-print">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Plantaciones</h3>
+			</div>
+			<div class="panel-body">
+				<div id='map' class="map"></div>
+			</div>
+		</div>
+		<!-- <div class="col-md-12 hidden-print">
+			<div class="form-group">
+				<div class="checkbox">
+					<label>
+            <input name="activar_nuevos" type="checkbox" data-label="Activar Nuevas" />
+					</label>
+				</div>
+			</div>
+  </div> -->
+  <!-- <div class="">
+    <button type="button" class="btn btn-success btn-lg">Aceptar Aporte</button>
+    <button type="button" class="btn btn-danger btn-lg">Rechazar Aporte</button>
+  </div> -->
+	</div>
+</div>
+{% block javascripts %}
+	<script>
+		var plantaciones = {
+			"id": "1",
+			"type": "Feature",
+			"geometry": {{ geom|raw }},
+			"properties": {
+				"Id" : {{plantacion.getId()}},
+				"Area": {{area|round(2)}}
+			}
+		}
+	</script>
+{% endblock %}
+{{ include('map_js.html.twig') }}

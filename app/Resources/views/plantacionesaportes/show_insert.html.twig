@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{{ include('flash/message.html.twig') }}
+	<div class="col-md-3 hidden-print">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Plantación</h3>
+			</div>
+			<div class="panel-body">
+				<dl class="dl-horizontal">
+					<dt>Id Plantación</dt>
+					<dd>{% if plantacione.id %} {{ plantacione.id }}{% endif %}</dd>
+					<dt>Titular</dt>
+					<dd>
+					{% if plantacione.titular %}
+						{{ plantacione.titular.nombre }}
+					{% endif %}
+					</dd>
+					<dt>Superficie</dt>
+					<dd>{% if area %}{{area|number_format(1)}}{% endif %}</dd>
+					<dt>Especie/s</dt>
+					<dd>
+						<ul class="list-unstyled">
+							{% for especie in plantacione.especie %}
+								<li>{{ especie.nombreCientifico }}</li>
+							{% endfor %}
+						</ul>
+					</dd>
+					<dt>Año de Plantación</dt>
+					<dd>{% if plantacione.anioPlantacion %}{{ plantacione.anioPlantacion }} {% endif %}</dd>
+					<dt>Tipo de Plantación</dt>
+					<dd>
+						{% if (plantacione.tipoPlantacion) %}{{ plantacione.tipoPlantacion.descripcion }}
+						{% endif %}
+					</dd>
+					<dt>Nomenclatura Catrastal</dt>
+					<dd>{% if plantacione.nomenclaturaCatastral %}{{ plantacione.nomenclaturaCatastral }} {% endif %}</dd>
+					<dt>Estado de Plantación</dt>
+					<dd>{% if plantacione.estadoPlantacion %} {{ plantacione.estadoPlantacion }}{% endif %}</dd>
+					<dt>Distancia entre Plantas</dt>
+					<dd>{% if plantacione.distanciaPlantas %} {{ plantacione.distanciaPlantas }} {% endif %}</dd>
+					<dt>Cantidad de Filas</dt>
+					<dd>{% if plantacione.cantidadFilas %}{{ plantacione.cantidadFilas }} {% endif %}</dd>
+					<dt>Distancia entre Filas</dt>
+					<dd>{% if plantacione.distanciaFilas %}{{ plantacione.distanciaFilas }} {% endif %}</dd>
+					<dt>Densidad</dt>
+					<dd>{% if plantacione.densidad %} {{ plantacione.densidad }}{% endif %}</dd>
+					<dt>Fuente de Información</dt>
+					<dd>{% if plantacione.fuenteInformacion %} {{ plantacione.fuenteInformacion }} {% endif %}</dd>
+					<dt>Año de Información</dt>
+					<dd>{% if plantacione.anioInformacion %}{{ plantacione.anioInformacion }} {% endif %}</dd>
+					<dt>Fuente de Imagen</dt>
+					<dd>{% if plantacione.fuenteImagen %} {{ plantacione.fuenteImagen }} {% endif %}</dd>
+					<dt>Fecha de Imagen</dt>
+					<dd>{% if plantacione.fechaImagen %} {{ plantacione.fechaImagen|date('Y-m-d') }} {% endif %}</dd>
+					<dt>Base Geométrica</dt>
+					<dd>{% if plantacione.baseGeometricaId %} {{ plantacione.baseGeometricaId.descripcion }} {% endif %}</dd>
+					<dt>Provincia</dt>
+					<dd>
+						{% if (plantacione.provincia) %}
+							{{ (plantacione.provincia.nombre) }}
+						{% else %}
+						{% endif %}
+					</dd>
+					<dt>Departamento</dt>
+					<dd>
+						{% if (plantacione.departamento) %}{{ plantacione.departamento.nombre }}
+						{% else %}
+						{% endif %}
+					</dd>
+					<dt>Estrato de Desarrollo</dt>
+					<dd>
+						{% if (plantacione.estratoDesarrollo) %}{{ plantacione.estratoDesarrollo }}
+						{% else %}
+						{% endif %}
+					</dd>
+					<dt>Uso Forestal</dt>
+					<dd>{% if plantacione.usoForestal %} {{ plantacione.usoForestal }}{% endif %}</dd>
+					<dt>Uso Anterior</dt>
+					<dd>{% if plantacione.usoAnterior %} {{ plantacione.usoAnterior }}{% endif %}</dd>
+					<dt>Objetivo de Plantación</dt>
+					<dd>{% if plantacione.objetivoPlantacion %} {{ plantacione.objetivoPlantacion }}{% endif %}</dd>
+					<dt>Comentarios</dt>
+					<dd>{% if plantacione.comentarios %} {{ plantacione.comentarios }}{% endif %}</dd>
+				</dl>
+			</div>
+			<div class="panel-footer">
+				{% if plantacione.activo %}
+					<span class="label label-success">Activo</span>
+				{% else %}
+					<span class="label label-danger">Inactivo</span>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="col-md-9">
+		{{ include('plantacionesaportes/map_insert.html.twig', {'plantacion': plantacione, 'geom':geom, 'area':area}) }}
+	</div>
+{% endblock %}

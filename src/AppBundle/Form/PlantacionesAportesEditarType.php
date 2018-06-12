@@ -23,7 +23,7 @@ use Doctrine\ORM\EntityRepository;
 use AppBundle\Form\EventListener\AddEspeciesListener;
 use AppBundle\Form\EventListener\AddHistoricoListener;
 
-class PlantacionesAportesType extends AbstractType
+class PlantacionesAportesEditarType extends AbstractType
 {
     private $manager;
 
@@ -39,8 +39,17 @@ class PlantacionesAportesType extends AbstractType
     {
         $transformer = new EspeciesToNumberTransformer($this->manager);
         $id_plantacion = $builder->getData() ? $builder->getData()->getId() : '';
+        $ids='';
+        foreach ($options['param'] as $key => $value) {
+          $ids.=$value;
+          $next = array_key_exists($key + 1, $options['param']);
+          if ($next) {
+              $ids.='-';
+          }
+        }
         $builder
-            ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group")))
+            ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
+            ->add('param', TextType::class, array('mapped'=> false, 'label' => 'Plantaciones', 'data' => $ids,'attr' => ['disabled' => 'disabled']))
             ->add('anioPlantacion', TextType::class, array('label'=>'Año de Plantación','required'=>false))
             ->add('tipoPlantacion', EntityType::class, array('class'=>'AppBundle\Entity\TiposPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('nomenclaturaCatastral', TextType::class, array('label'=>'Nomenclatura Catrastal','required'=>false))
@@ -54,8 +63,11 @@ class PlantacionesAportesType extends AbstractType
             ->add('fuenteImagen', EntityType::class, array('class'=>'AppBundle\Entity\FuentesImagen', 'placeholder' => "Seleccione una opción" , 'label'=>'Fuente de Imagen','required'=>false))
             ->add('fechaImagen', DateType::class, array('widget' => 'single_text','attr' => ['class' => 'js-datepicker','placeholder'=>"AAAA-MM-DD"], 'label'=>'Fecha de Imagen','required'=>false))
             ->add('baseGeometricaId', EntityType::class, array('class'=>'AppBundle\Entity\BasesGeometricas', 'placeholder' => "Seleccione una opción" , 'label'=>'Base Geométrica','required'=>false ))
-            ->add('provincia', EntityType::class, array('class'=>'AppBundle\Entity\Provincias','choice_label' => 'nombre','placeholder' => "Seleccione una opción"))
-            ->add('departamento', EntityType::class, array('class'=>'AppBundle\Entity\Departamentos', 'placeholder' => "Seleccione una opción" ))
+            ->add('provincia', EntityType::class, array('class'=>'AppBundle\Entity\Provincias','query_builder' => function (EntityRepository $er) {
+                                                                                                                return $er->createQueryBuilder('p')
+                                                                                                                    ->orderBy('p.nombre', 'ASC');
+                                                                                                            },'choice_label' => 'nombre','placeholder' => "Seleccione una opción",'required'=>false))
+            ->add('departamento', EntityType::class, array('class'=>'AppBundle\Entity\Departamentos', 'placeholder' => "Seleccione una opción",'required'=>false))
             ->add('estratoDesarrollo', EntityType::class, array('class'=>'AppBundle\Entity\EstratosDesarrollo', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('usoForestal')
             ->add('usoAnterior')
@@ -65,11 +77,10 @@ class PlantacionesAportesType extends AbstractType
                           'required'=>false,
                           'compound'=>false,
                           'query_builder' => function (EntityRepository $er) use ($id_plantacion) {
-                              $pruebi = $er->createQueryBuilder('u')
-                              ->leftJoin('u.plantacionAporte', 'p')
+                              return $er->createQueryBuilder('u')
+                              ->leftJoin('u.plantacion', 'p')
                               ->where('p.id = :id_plantacion')
                               ->setParameter('id_plantacion', $id_plantacion);
-                              return $pruebi;
                           },
                           'choice_value'=>function ($data) {
                               return $data->getId();
@@ -78,7 +89,6 @@ class PlantacionesAportesType extends AbstractType
             ->add('objetivoPlantacion', EntityType::class, array('class'=>'AppBundle\Entity\ObjetivosPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('activo', CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
             ->add('comentarios');
-
         $builder->addEventSubscriber(new AddEspeciesListener())->addModelTransformer($transformer);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
@@ -104,11 +114,16 @@ class PlantacionesAportesType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form=$event->getForm();
             $data=$event->getData();
-            $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
-            $data['titular'] = $titular;
-            $event->setData($data);
+            if ($data['plantacion_titular_id']){
+              $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
+              $data['titular'] = $titular;
+              $event->setData($data);
+            }
         });
 
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+            $event->stopPropagation();
+        }, 900);
     }
 
     /**
@@ -117,6 +132,7 @@ class PlantacionesAportesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'param' => null,
             'data_class' => 'AppBundle\Entity\PlantacionesAportes'
         ));
     }

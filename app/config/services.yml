@@ -44,6 +44,12 @@ services:
        tags:
          -  { name: form.type }
 
+     app.form.type.editar_plantaciones_aportes:
+       class: AppBundle\Form\PlantacionesAportesEditarType
+       arguments: [ "@doctrine.orm.entity_manager" ]
+       tags:
+         -  { name: form.type }
+
      Symfony\Component\Ldap\Ldap:
         arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
 

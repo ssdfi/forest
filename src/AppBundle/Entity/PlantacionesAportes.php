@@ -3,12 +3,13 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * PlantacionesAportes
  *
  * @ORM\Table(name="plantaciones_aportes", indexes={@ORM\Index(name="index_plantaciones_aportes_on_objetivo_plantacion_id", columns={"objetivo_plantacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_estrato_desarrollo_id", columns={"estrato_desarrollo_id"}), @ORM\Index(name="index_plantaciones_aportes_on_fuente_imagen_id", columns={"fuente_imagen_id"}), @ORM\Index(name="index_plantaciones_aportes_on_departamento_id", columns={"departamento_id"}), @ORM\Index(name="index_plantaciones_aportes_on_provincia_id", columns={"provincia_id"}), @ORM\Index(name="index_plantaciones_aportes_on_fuente_informacion_id", columns={"fuente_informacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_uso_anterior_id", columns={"uso_anterior_id"}), @ORM\Index(name="index_plantaciones_aportes_on_tipo_plantacion_id", columns={"tipo_plantacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_base_geometrica_id", columns={"base_geometrica_id"}), @ORM\Index(name="index_plantaciones_aportes_on_uso_forestal_id", columns={"uso_forestal_id"}), @ORM\Index(name="index_plantaciones_aportes_on_titular_id", columns={"titular_id"}), @ORM\Index(name="index_plantaciones_aportes_on_estado_plantacion_id", columns={"estado_plantacion_id"}), @ORM\Index(name="index_plantaciones_aportes_on_error_id", columns={"error_id"}), @ORM\Index(name="index_plantaciones_aportes_on_activo", columns={"activo"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PlantacionesAportesRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class PlantacionesAportes
@@ -286,7 +287,49 @@ class PlantacionesAportes
      */
     private $titular;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="verificado", type="boolean", nullable=true)
+     */
+    private $verificado;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="numero_interno", type="string", length=255, nullable=true)
+     * @Assert\Regex(
+     *     pattern     = "/[0-9]{2}-[0-9]{3}-[0-9]{3}\/[0-9]{2}/",
+     *     message = "El formato debe ser ##-###-###/##"
+     * )
+     * @Assert\Length(min = 13, max=13, exactMessage="El campo debe tener {{ limit }} digitos, ##-###-###/##")
+     */
+    private $numeroInterno;
+
+    /**
+     * @var \Actividades
+     *
+     * @ORM\ManyToOne(targetEntity="Actividades", fetch="LAZY")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="actividad_id", referencedColumnName="id")
+     * })
+     */
+     private $actividad;
+
+     /**
+       * @var \Especies
+       * @ORM\ManyToMany(targetEntity="Especies", fetch="LAZY")
+       * @ORM\JoinTable(
+       *      name="especies_plantaciones_aportes",
+       *      joinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")},
+       *      inverseJoinColumns={@ORM\JoinColumn(name="especie_id", referencedColumnName="id")}
+       * )
+       */
+      private $especie;
+
+      public function __construct() {
+        $this->especie = new \Doctrine\Common\Collections\ArrayCollection();
+      }
 
     /**
      * Gets triggered only on insert
@@ -460,6 +503,30 @@ class PlantacionesAportes
     public function getDistanciaFilas()
     {
         return $this->distanciaFilas;
+    }
+
+    /**
+     * Set distanciaFilas
+     *
+     * @param string $distanciaFilas
+     *
+     * @return PlantacionesAportes
+     */
+    public function setNumeroInterno($numeroInterno)
+    {
+        $this->numeroInterno = $numeroInterno;
+
+        return $this;
+    }
+
+    /**
+     * Get distanciaFilas
+     *
+     * @return string
+     */
+    public function getNumeroInterno()
+    {
+        return $this->numeroInterno;
     }
 
     /**
@@ -1085,5 +1152,47 @@ class PlantacionesAportes
     {
         return $this->titular;
     }
+
+    /**
+     * Get especie
+     *
+     * @return \AppBundle\Entity\Especies
+     */
+    public function getEspecie(){
+        return $this->especie;
+    }
+
+    /**
+    * @param Especie $titular
+    */
+     public function addEspecies($especie)
+     {
+       if (true === $this->especie->contains($especie)) {
+         return;
+       }
+       $this->especie=$especie;
+     }
+
+     /**
+     * @param Especie $titular
+     */
+      public function setEspecie($especie)
+      {
+        if (true === $this->especie->contains($especie)) {
+          return;
+        }
+        $this->especie=$especie;
+      }
+
+     /**
+     * @param Especie $titular
+     */
+      public function removeEspecie($especie)
+      {
+        if (true === $this->especie->contains($especie)) {
+            return;
+        }
+        $this->especie->removeElement($especie);
+      }
 
 }

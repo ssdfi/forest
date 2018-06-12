@@ -1,152 +1,182 @@
 {{ form_start(search_form, {'attr':{'class':'form-horizontal'}}) }}
-<div class="form-group">
-	{{ form_label(search_form.numeroInterno, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{{ form_widget(search_form.numeroInterno, {'attr': {'class': 'form-control'}}) }}
+{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR') %}
+	<div class="form-group">
+		{{ form_label(search_form.numeroInterno, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_widget(search_form.numeroInterno, {'attr': {'class': 'form-control'}}) }}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.numeroExpediente, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{{ form_errors(search_form.numeroExpediente) }}
-		{{ form_widget(search_form.numeroExpediente) }}
+	<div class="form-group">
+		{{ form_label(search_form.numeroExpediente, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.numeroExpediente) }}
+			{{ form_widget(search_form.numeroExpediente) }}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.zona, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{{ form_errors(search_form.zona) }}
-		{{ form_widget(search_form.zona) }}
+	<div class="form-group">
+		{{ form_label(search_form.zona, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.zona) }}
+			{{ form_widget(search_form.zona) }}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.anio, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{{ form_errors(search_form.anio) }}
-		{{ form_widget(search_form.anio) }}
+	<div class="form-group">
+		{{ form_label(search_form.anio, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.anio) }}
+			{{ form_widget(search_form.anio) }}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.fechaEntradaDesde, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{{ form_errors(search_form.fechaEntradaDesde) }}
-		{{ form_widget(search_form.fechaEntradaDesde) }}
+	<div class="form-group">
+		{{ form_label(search_form.fechaEntradaDesde, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.fechaEntradaDesde) }}
+			{{ form_widget(search_form.fechaEntradaDesde) }}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.fechaEntradaHasta, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{{ form_errors(search_form.fechaEntradaHasta) }}
-		{{ form_widget(search_form.fechaEntradaHasta) }}
+	<div class="form-group">
+		{{ form_label(search_form.fechaEntradaHasta, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.fechaEntradaHasta) }}
+			{{ form_widget(search_form.fechaEntradaHasta) }}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.fechaSalidaDesde, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{{ form_errors(search_form.fechaSalidaDesde) }}
-		{{ form_widget(search_form.fechaSalidaDesde) }}
+	<div class="form-group">
+		{{ form_label(search_form.fechaSalidaDesde, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.fechaSalidaDesde) }}
+			{{ form_widget(search_form.fechaSalidaDesde) }}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.fechaSalidaHasta, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{{ form_errors(search_form.fechaSalidaHasta) }}
-		{{ form_widget(search_form.fechaSalidaHasta) }}
+	<div class="form-group">
+		{{ form_label(search_form.fechaSalidaHasta, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.fechaSalidaHasta) }}
+			{{ form_widget(search_form.fechaSalidaHasta) }}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.responsable, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{{ form_errors(search_form.responsable) }}
-		{{ form_widget(search_form.responsable) }}
+	<div class="form-group">
+		{{ form_label(search_form.responsable, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.responsable) }}
+			{{ form_widget(search_form.responsable) }}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.tecnico, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{{ form_errors(search_form.tecnico) }}
-		{{ form_widget(search_form.tecnico) }}
+	<div class="form-group">
+		{{ form_label(search_form.tecnico, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.tecnico) }}
+			{{ form_widget(search_form.tecnico) }}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.validador, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{{ form_errors(search_form.validador) }}
-		{{ form_widget(search_form.validador) }}
+	<div class="form-group">
+		{{ form_label(search_form.validador, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.validador) }}
+			{{ form_widget(search_form.validador) }}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.activo, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{% for child in search_form.activo %}
-			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
-		{% endfor %}
+	<div class="form-group">
+		{{ form_label(search_form.activo, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{% for child in search_form.activo %}
+				{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+				{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
+			{% endfor %}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.plurianual, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{% for child in search_form.plurianual %}
-			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
-		{% endfor %}
+	<div class="form-group">
+		{{ form_label(search_form.plurianual, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{% for child in search_form.plurianual %}
+				{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+				{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
+			{% endfor %}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.agrupado, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{% for child in search_form.agrupado %}
-			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
-		{% endfor %}
+	<div class="form-group">
+		{{ form_label(search_form.agrupado, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{% for child in search_form.agrupado %}
+				{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+				{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
+			{% endfor %}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.analizar, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{% for child in search_form.analizar %}
-			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
-		{% endfor %}
+	<div class="form-group">
+		{{ form_label(search_form.analizar, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{% for child in search_form.analizar %}
+				{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+				{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
+			{% endfor %}
+		</div>
 	</div>
-</div>
-<!-- <div class="form-group">
-	{ form_label(search_form.pendiente, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{ for child in search_form.pendiente %}
-			{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
-		{ endfor %}
+	<div class="form-group">
+		{{ form_label(search_form.validado, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{% for child in search_form.validado %}
+			 {{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+			 {{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
+			{% endfor %}
+		</div>
 	</div>
-</div> -->
-<div class="form-group">
-	{{ form_label(search_form.validado, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{% for child in search_form.validado %}
-		 {{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-		 {{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
-		{% endfor %}
+	<div class="form-group">
+		{{ form_label(search_form.estabilidad_fiscal, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{% for child in search_form.estabilidad_fiscal %}
+				{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+				{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
+			{% endfor %}
+		</div>
 	</div>
-</div>
-<div class="form-group">
-	{{ form_label(search_form.estabilidad_fiscal, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{% for child in search_form.estabilidad_fiscal %}
-			{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
-		{% endfor %}
+{% else %}
+	<div class="form-group">
+		{{ form_label(search_form.numeroInterno, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_widget(search_form.numeroInterno, {'attr': {'class': 'form-control'}}) }}
+		</div>
 	</div>
-</div>
-<!-- <div class="form-group">
-	{ form_label(search_form.incompleto, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
-	<div class="col-sm-7">
-		{ for child in search_form.incompleto %}
-			{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
-			{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
-		{ endfor %}
+	<div class="form-group">
+		{{ form_label(search_form.numeroExpediente, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.numeroExpediente) }}
+			{{ form_widget(search_form.numeroExpediente) }}
+		</div>
 	</div>
-</div> -->
+	<div class="form-group">
+		{{ form_label(search_form.zona, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.zona) }}
+			{{ form_widget(search_form.zona) }}
+		</div>
+	</div>
+	<div class="form-group">
+		{{ form_label(search_form.anio, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{{ form_errors(search_form.anio) }}
+			{{ form_widget(search_form.anio) }}
+		</div>
+	</div>
+	<div class="form-group">
+		{{ form_label(search_form.agrupado, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+		<div class="col-sm-7">
+			{% for child in search_form.agrupado %}
+				{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+				{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
+			{% endfor %}
+		</div>
+	</div>
+	<div class="form-group">
+			{{ form_label(search_form.estabilidad_fiscal, null, {'label_attr': {'class': 'control-label col-sm-5'}}) }}
+			<div class="col-sm-7">
+				{% for child in search_form.estabilidad_fiscal %}
+					{{ form_widget(child, {'attr': { 'class': 'required', 'value': child.vars.value  } }) }}
+					{{ form_label(child, null, {'attr' : { 'label_attr': {'class': 'radio-inline'}}}) }}
+				{% endfor %}
+			</div>
+		</div>
+{% endif %}
 {{ form_widget(search_form) }}
 <input type="hidden" name="_csrf_token" value="{{ csrf_token('search_form') }}">
 {{ form_end(search_form) }}

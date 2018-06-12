@@ -34,77 +34,80 @@ class ExpedientesController extends Controller
 
         $expediente = new Expedientes();
         $search_form = $this->createForm('AppBundle\Form\ExpedientesSearchType', $expediente, array(
-        'action' => '/',
-        'method' => 'get'
-      ));
-        $param=$request->query->get('expedientes_search');
+          'action' => '/',
+          'method' => 'get',
+          'user'=>$this->getUser()
+        ));
+        $param=($request->query->get('expedientes_search'))? $request->query->get('expedientes_search'):[];
         $wheres=array();
         $join=array();
-        if ($param['numeroInterno']) {
+
+        if (array_key_exists('numeroInterno',$param) && $param['numeroInterno']) {
             $numeroInterno = $param['numeroInterno'];
             $wheres[]="lower(a.numeroInterno) like lower('%$numeroInterno%')";
         }
-        if ($param['numeroExpediente']) {
+        if (array_key_exists('numeroExpediente',$param) && $param['numeroExpediente']) {
             $numeroExpediente = $param['numeroExpediente'];
             $wheres[]="lower(a.numeroExpediente) like lower('%$numeroExpediente%')";
         }
-        if ($param['zona']) {
+        if (array_key_exists('zona',$param) && $param['zona']) {
             $zona = $param['zona'];
             $wheres[]="a.zona = $zona";
         }
-        if ($param['anio']) {
+        if (array_key_exists('anio',$param) &&  $param['anio']) {
             $anio = $param['anio'];
             $wheres[]="a.anio = $anio OR m.etapa = $anio";
         }
-        if ($param['tecnico']) {
+        if (array_key_exists('tecnico',$param) &&  $param['tecnico']) {
             $tecnico = $param['tecnico'];
             $wheres[]="a.tecnico = $tecnico";
         }
-        if ($param['activo']) {
+        if (array_key_exists('activo',$param) &&  $param['activo']) {
             $activo = $param['activo'] == 1 ? 'TRUE' : 'FALSE';
             $wheres[]="a.activo = $activo";
         }
-        if ($param['plurianual']) {
+        if (array_key_exists('plurianual',$param) &&  $param['plurianual']) {
             $plurianual = $param['plurianual'] == 1 ? 'TRUE' : 'FALSE';
             $wheres[]="a.plurianual = $plurianual";
         }
-        if ($param['agrupado']) {
+        if (array_key_exists('agrupado',$param) &&  $param['agrupado']) {
             $agrupado = $param['agrupado'] == 1 ? 'TRUE' : 'FALSE';
             $wheres[]="a.agrupado = $agrupado";
         }
         $mov = 0;
-        if ($param['responsable']) {
+        if (array_key_exists('responsable',$param) && $param['responsable']) {
             $responsable = $param['responsable'];
             $wheres[]="m.responsable = $responsable";
             $mov++;
         }
-        if ($param['validador']) {
+        if (array_key_exists('validador',$param) && $param['validador']) {
             $validador = $param['validador'];
             $wheres[]="m.validador = $validador";
             $mov++;
         }
-        if ($param['fechaEntradaDesde']) {
+        if (array_key_exists('fechaEntradaDesde',$param) && $param['fechaEntradaDesde']) {
             $fechaEntradaDesde = $param['fechaEntradaDesde'];
             $wheres[]="m.fechaEntrada > '$fechaEntradaDesde'";
             $mov++;
         }
-        if ($param['fechaEntradaHasta']) {
+        if (array_key_exists('fechaEntradaHasta',$param) && $param['fechaEntradaHasta']) {
             $fechaEntradaHasta = $param['fechaEntradaHasta'];
             $wheres[]="m.fechaEntrada <= '$fechaEntradaHasta'";
             $mov++;
         }
-        if ($param['fechaSalidaDesde']) {
+        if (array_key_exists('fechaSalidaDesde',$param) && $param['fechaSalidaDesde']) {
             $fechaSalidaaDesde = $param['fechaSalidaDesde'];
             $wheres[]="m.fechaSalida >= '$fechaSalidaaDesde'";
             $mov++;
         }
-        if ($param['fechaSalidaHasta']) {
+        if (array_key_exists('fechaSalidaHasta',$param) && $param['fechaSalidaHasta']) {
             $fechaSalidaHasta = $param['fechaSalidaHasta'];
             $wheres[]="m.fechaSalida <= '$fechaSalidaHasta'";
             $mov++;
         }
-        if ($param['analizar']) {
-            $analizar =$param['analizar'] == 1 ? 'true' : 'false';
+
+        if (array_key_exists('analizar',$param) && $param['analizar'] ) {
+            $analizar = $param['analizar'] == 1 ? 'true' : 'false';
             if ($analizar == 'true') {
               $wheres[]="m.fechaSalida is null";
             } else {
@@ -113,7 +116,12 @@ class ExpedientesController extends Controller
             $mov++;
         }
 
-        if ($param['validado']) {
+        if($this->isGranted('ROLE_USER')) {
+            $wheres[]="m.fechaSalida is not null";
+            $mov++;
+        }
+
+        if (array_key_exists('validado',$param) && $param['validado']) {
             $validado =$param['validado'] == 1 ? 'true' : 'false';
             if ($validado == 'true') {
               $wheres[]="m.validador is not null";
@@ -123,7 +131,7 @@ class ExpedientesController extends Controller
             $mov++;
         }
 
-        if ($param['estabilidad_fiscal']) {
+        if (array_key_exists('estabilidad_fiscal',$param) && $param['estabilidad_fiscal']) {
             $estabilidad_fiscal = $param['estabilidad_fiscal'] == 1 ? 'true' : 'false';
             $wheres[]="m.estabilidadFiscal = $estabilidad_fiscal";
             $mov++;
@@ -160,7 +168,7 @@ class ExpedientesController extends Controller
               15
           );
         $search_form->handleRequest($request);
-        if ($search_form->get('exportar')->isClicked()) {
+        if ($search_form->has('exportar') && $search_form->get('exportar')->isClicked()) {
             return $this->render('expedientes/export.csv.twig', array('data' => $this->exportCSV($dql)));
         }
         return $this->render('expedientes/list.html.twig', array('expedientes' => $expedientes, 'search_form'=>$search_form->createView(),'param' => $param,'dql'=>$dql));

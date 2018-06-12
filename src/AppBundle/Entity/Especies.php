@@ -92,6 +92,17 @@ class Especies
       */
     private $plantacion;
 
+    /**
+      * @var ArrayCollection $plantaciones
+      * @ORM\ManyToMany(targetEntity="PlantacionesAportes",  cascade={"all"}, fetch="LAZY")
+      * @ORM\JoinTable(
+      *      name="especies_plantaciones_aportes",
+      *      joinColumns={@ORM\JoinColumn(name="especie_id", referencedColumnName="id")},
+      *      inverseJoinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")}
+      * )
+      */
+    private $plantacionAporte;
+
 
     /**
      * Get Plantacion
@@ -101,6 +112,16 @@ class Especies
     public function getPlantacion()
     {
         return $this->plantacion;
+    }
+
+    /**
+     * Get Plantacion
+     *
+     * @return Plantacion
+     */
+    public function getPlantacionAporte()
+    {
+        return $this->plantacionAporte;
     }
 
     /**

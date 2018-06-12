@@ -1,6 +1,29 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+	{{ include('flash/message.html.twig') }}
+  <div class="row">
+
+      <div class="col-md-3">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Buscador</h3>
+          </div>
+          <div class="panel-body">
+            <form id="new_plantacion_aporte" class="form-horizontal" role="form" method="get" action="/aportes" accept-charset="UTF-8">
+              <div class="form-group">
+                <label class="control-label col-sm-3" for="plantacion_ids">IDs</label>
+                <div class="col-sm-9">
+                  <textarea id="plantacion_ids" class="form-control" rows="10" name="plantacion[ids]">{% if param %}{% for item in param %}{% if loop.last %}{{item}}{% else %}{{(item ~ '\n')|raw}}{% endif %}{% endfor %}{% endif %}</textarea>
+                </div>
+              </div>
+              <hr>
+              <input id="search" class="btn btn-primary pull-right" type="submit" value="Buscar" name="commit" data-url="/aportes/">
+              <input id="edit" class="btn btn-primary" type="submit" data-url="/aportes/editar" value="Editar" name="commit" >
+            </form>
+          </div>
+        </div>
+      </div>
       <div class="col-md-9">
         <h4>Plantaciones Aportes</h4>
         <table id="plantaciones" class="table table-hover table-grid">
@@ -8,7 +31,7 @@
             <tr>
               <th>ID</th>
               <th>Titular</th>
-              <!-- <th>Especie</th> -->
+              <th>Especie</th>
               <th>Tipo</th>
               <th>Activo</th>
               <th>Usuario</th>
@@ -19,6 +42,12 @@
             <tr data-link="/aportes/{{ plantacion.id }}">
               <td>{{ plantacion.id }}</td>
               <td>{% if plantacion.titular %}<a href="/titulares/{{ plantacion.titular.id }}"> {{ plantacion.titular.nombre }} </a> {% else %} {% endif %} </td>
+              <td>
+                {% if plantacion.especie %}
+                {% for item in plantacion.especie %}
+                  {{item.nombreCientifico}} |
+                {% endfor %}{% endif %}
+              </td>
               <td>{% if plantacion.tipoPlantacion %}{{ plantacion.tipoPlantacion.descripcion }}{% else %} {% endif %} </td>
               <td class="icon">
                 {% if plantacion.activo %}
@@ -49,5 +78,11 @@
         {% endif %}
       </div>
     </div>
+  </div>
 
+{% endblock %}
+
+{% block javascripts %}
+	{{parent()}}
+	<script src="{{ asset('js/plantacionesAportes.js') }}"></script>
 {% endblock %}

@@ -38,20 +38,20 @@
       _ref = $("#titulares-list input:checked");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         titular = _ref[_i];
-        $("#plantaciones_aportes_plantacion_titular_id").val(titular.value);
-        $("#plantaciones_aportes_titular").val($($(titular).parent().siblings()[0]).text());
+        $("#plantaciones_aportes_editar_plantacion_titular_id").val(titular.value);
+        $("#plantaciones_aportes_editar_titular").val($($(titular).parent().siblings()[0]).text());
       }
       return $("#titulares-modal").modal('hide');
     });
 
     /* Elimina el titular seleccionado */
     $("#remove-titular").click(function() {
-      $("#plantaciones_aportes_titular").val('');
-      return $("#plantaciones_aportes_titular").val('');
+      $("#plantaciones_aportes_editar_titular").val('');
+      return $("#plantaciones_aportes_editar_titular").val('');
     });
 
     /* Define el destino del formulario dependiendo del botón apretado: Buscar o Editar */
-    $('#new_plantacion_aporte').children('input[data-url]').on('click', function() {
+    $('#new_plantacion').children('input[data-url]').on('click', function() {
       return $(this).parent().prop('action', this.dataset.url);
     });
 
@@ -83,7 +83,7 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         titular = _ref[_i];
         $("#plantacion_titular_id").val(titular.value);
-        $("#plantacion_aportes_titular").val($($(titular).parent().siblings()[0]).text());
+        $("#plantacion_titular").val($($(titular).parent().siblings()[0]).text());
       }
       return $("#titulares-modal").modal('hide');
     });
@@ -97,7 +97,7 @@
     /* Elimina las especies seleccionadas */
     $("#remove-especie").click(function() {
       var especie, _i, _len, _ref, _results;
-      _ref = $("#plantaciones_aportes_especie option:selected");
+      _ref = $("#plantaciones_aportes_editar_especie option:selected");
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         especie = _ref[_i];
@@ -141,32 +141,32 @@
       _ref = $("#especies-list input:checked");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         especie = _ref[_i];
-        $("#plantaciones_aportes_especie").append($("<option value='" + especie.value + "'>" + $($(especie
+        $("#plantaciones_aportes_editar_especie").append($("<option value='" + especie.value + "'>" + $($(especie
 ).parent().siblings()[1]).text() + "</option>"));
       }
       return $("#especies-modal").modal('hide');
     });
 
     /* Busca y carga los departamentos pertenecientes a la provincia seleccionada */
-    $("#plantaciones_provincia").change(function() {
-      $("#plantaciones_departamento").prop('disabled', true);
-      $("#plantaciones_departamento").empty();
-      $("#plantaciones_departamento").append($("<option />"));
-      if ($("#plantaciones_provincia").val()) {
+    $("#plantaciones_aportes_editar_provincia").change(function() {
+      $("#plantaciones_aportes_editar_departamento").prop('disabled', true);
+      $("#plantaciones_aportes_editar_departamento").empty();
+      $("#plantaciones_aportes_editar_departamento").append($("<option />"));
+      if ($("#plantaciones_aportes_editar_provincia").val()) {
         return $.ajax({
-          url: "/provincias/" + $("#plantaciones_provincia").val() + "/departamentos.json"
+          url: "/provincias/" + $("#plantaciones_aportes_editar_provincia").val() + "/departamentos.json"
         }).done(function(data) {
           var departamento, _i, _len, _ref;
           _ref = $(data);
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             departamento = _ref[_i];
-            $("#plantaciones_departamento").append($("<option />").val(departamento.id).text(departamento
+            $("#plantaciones_aportes_editar_departamento").append($("<option />").val(departamento.id).text(departamento
 .nombre));
           }
-          return $("#plantaciones_departamento").prop('disabled', false);
+          return $("#plantaciones_aportes_editar_departamento").prop('disabled', false);
         });
       } else {
-        return $("#plantaciones_departamento").prop('disabled', false);
+        return $("#plantaciones_aportes_editar_departamento").prop('disabled', false);
       }
     });
 
@@ -175,8 +175,8 @@
     /* Convertir el listado de IDs del textarea de plantaciones en un array antes de ejectuar el submit
  del formulario */
     $("form").submit(function(e) {
-      $("#plantaciones_aportes_especie option").prop('selected', true);
-      return $("#plantaciones_historico option").prop('selected', true);
+      $("#plantaciones_aportes_editar_especie option").prop('selected', true);
+      return $("#plantaciones_aportes_editar_historico option").prop('selected', true);
     });
 
     /* Activa/Descativa el campo asociado al label */
@@ -196,9 +196,9 @@
      * todos las plantaciones cuyos IDs han sido colocados en el campo de texto
      */
     $("#plantaciones-modal-add").click(function() {
-      $.each($('#plantaciones_nuevas_ids').val().split('\n'), function(key, value) {
+      $.each($('#plantaciones_aportes_editar_nuevas_ids').val().split('\n'), function(key, value) {
         if (value !== '') {
-          return $('#plantaciones_historico').append("<option value='" + value + "'>" + value
+          return $('#plantaciones_aportes_editar_historico').append("<option value='" + value + "'>" + value
  + "</option>");
         }
       });
@@ -208,7 +208,7 @@
     /* Elimina las plantaciones seleccionadas */
     $("#remove-nueva-plantacion").click(function() {
       var nuevaPlantacion, _i, _len, _ref, _results;
-      _ref = $("#plantaciones_historico option:selected");
+      _ref = $("#plantaciones_aportes_editar_historico option:selected");
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         nuevaPlantacion = _ref[_i];
@@ -219,11 +219,11 @@
 
     /* Hacer foco en el textarea cuando se abre el modal */
     return $('#nuevas-plantaciones-modal').on('shown.bs.modal', function() {
-      return $('#plantaciones_nuevas_ids').focus();
+      return $('#plantaciones_aportes_editar_nuevas_ids').focus();
     });
   });
   /* Selecciona todos los titulares del listado antes ejectuar el submit del formulario */
   return $("form").submit(function() {
-    return $("#plantaciones_historico option").prop('selected', true);
+    return $("#plantaciones_aportes_editar_historico option").prop('selected', true);
   });
 }).call(this);
