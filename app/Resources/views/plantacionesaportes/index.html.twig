@@ -40,7 +40,7 @@
           <tbody>
             {% for plantacion in plantaciones %}
             <tr data-link="/aportes/{{ plantacion.id }}">
-              <td>{{ plantacion.id }}</td>
+              <td>{% if plantacion.id %}{{ plantacion.id }}{% endif %}</td>
               <td>{% if plantacion.titular %}<a href="/titulares/{{ plantacion.titular.id }}"> {{ plantacion.titular.nombre }} </a> {% else %} {% endif %} </td>
               <td>
                 {% if plantacion.especie %}
@@ -56,7 +56,7 @@
                   <span class="glyphicon glyphicon-remove"></span>
                 {% endif %}
               </td>
-              <td>{{plantacion.usuario}}</td>
+              <td>{% if plantacion.usuario %}{{plantacion.usuario}}{% endif %}</td>
               <td class="icon icon-lg"></td>
             </tr>
             {% endfor %}

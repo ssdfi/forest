@@ -144,7 +144,7 @@ class PlantacionesAportesController extends Controller
               $query,
               $request->query->getInt('page', 1),
               15,
-              array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'asc')
+              array('defaultSortFieldName' => 'id', 'defaultSortDirection' => 'asc')
           );
         return $this->render('plantacionesaportes/index.html.twig', array('plantaciones' => $plantaciones,'param'=>$param));
     }
