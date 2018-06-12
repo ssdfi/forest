@@ -114,26 +114,31 @@ class PlantacionesAportesController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $em    = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $param=$request->query->get('plantacion');
         $ids = [];
-        $dql   = "SELECT a FROM AppBundle:PlantacionesAportes a WHERE a.usuario = :usuario";
         if ($param['ids']) {
             $str = $param['ids'];
             $param = explode("\r\n", $str);
-            $ids = [];
             foreach ($param as $key => $value) {
               if (!empty($value)) {
                 $ids[]= $value;
               }
             }
-            $dql = $dql . " AND a.id IN (:ids)";
         }
-        $query = $em->createQuery($dql);
-        if ($param && $ids){
-          $query->setParameter('ids', $ids);
+        $ck = $em->createQueryBuilder();
+        $ck->select('p')
+            ->from('AppBundle:PlantacionesAportes', 'p');
+
+        if ($this->isGranted('ROLE_TECNICO_REGIONAL')) {
+          $ck->andWhere('p.usuario = :Usuario');
+          $ck->setParameter('Usuario',$this->getUser()->getUsername());
         }
-        $query->setParameter('usuario', $this->getUser()->getUsername());
+        if ($param && $ids) {
+          $ck->andWhere('p.id IN (:Ids)');
+          $ck->setParameter('Ids',$ids);
+        }
+        $query = $ck->getQuery()->getResult();
         $paginator = $this->get('knp_paginator');
         $plantaciones = $paginator->paginate(
               $query,
