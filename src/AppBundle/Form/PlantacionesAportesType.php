@@ -40,7 +40,7 @@ class PlantacionesAportesType extends AbstractType
         $transformer = new EspeciesToNumberTransformer($this->manager);
         $id_plantacion = $builder->getData() ? $builder->getData()->getId() : '';
         $builder
-            ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group")))
+            ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
             ->add('anioPlantacion', TextType::class, array('label'=>'Año de Plantación','required'=>false))
             ->add('tipoPlantacion', EntityType::class, array('class'=>'AppBundle\Entity\TiposPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('nomenclaturaCatastral', TextType::class, array('label'=>'Nomenclatura Catrastal','required'=>false))
@@ -104,9 +104,11 @@ class PlantacionesAportesType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form=$event->getForm();
             $data=$event->getData();
-            $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
-            $data['titular'] = $titular;
-            $event->setData($data);
+            if(array_key_exists('plantacion_titular_id',$data) && $data['plantacion_titular_id']) {
+              $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
+              $data['titular'] = $titular;
+              $event->setData($data);
+            }
         });
 
     }
