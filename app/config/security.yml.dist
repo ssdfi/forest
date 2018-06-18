@@ -30,8 +30,17 @@ security:
 
                 access_control:
                    - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-                   - { path: ^/$, roles: [ROLE_ADMIN, ROLE_EDITOR] }
                    - { path: ^/.*, role: ROLE_ADMIN , methods: DELETE }
-                   - { path: ^/.*, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+                   - { path: ^/aportes/.*/.*, role: [ROLE_ADMIN, ROLE_EDITOR, ROLE_TECNICO_REGIONAL] , methods: [GET,POST] }
+                   - { path: ^/plantaciones/especie_json/.*, role: [ROLE_ADMIN, ROLE_EDITOR, ROLE_TECNICO_REGIONAL] , methods: [GET,POST] }
+                   - { path: ^/plantaciones/.*/mapa$, role: [ROLE_ADMIN, ROLE_EDITOR, ROLE_TECNICO_REGIONAL] , methods: [GET,POST] }
+                   - { path: ^/.*/new$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+                   - { path: ^/.*/.*/new$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+                   - { path: ^/.*/.*/edit$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+                   - { path: ^/.*/.*/.*/new$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+                   - { path: ^/.*/.*/edit$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+                   - { path: ^/plantaciones/.*, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
+                   - { path: ^/.*, role: [ROLE_ADMIN, ROLE_EDITOR, ROLE_USER, ROLE_TECNICO_REGIONAL] , methods: [GET,POST] }
+                   - { path: ^/.*/new$, role: [ROLE_ADMIN, ROLE_EDITOR] , methods: [GET,POST] }
                 encoders:
                   AppBundle\Entity\User: bcrypt
