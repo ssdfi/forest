@@ -1,0 +1,86 @@
+<table id="expedientes" class="table table-hover table-grid">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th nowrap>Número interno</th>
+      <th nowrap>Número expediente</th>
+      <th>Titular</th>
+      <th{% if expedientes.isSorted('m.fechaEntrada') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(expedientes, 'Última Entrada', 'm.fechaEntrada') }}
+        {% if expedientes.isSorted('m.fechaEntrada') %}
+          {% if expedientes.direction() == 'asc' %}<span class="glyphicon glyphicon-menu-up"></span>{% else %}<span class="glyphicon glyphicon-menu-down"></span>{% endif %}
+        {% endif %}
+      </th>
+      <th{% if expedientes.isSorted('m.fechaSalida') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(expedientes, 'Última Salida', 'm.fechaSalida') }}
+        {% if expedientes.isSorted('m.fechaSalida') %}
+          {% if expedientes.direction() == 'asc' %}<span class="glyphicon glyphicon-menu-up"></span>{% else %}<span class="glyphicon glyphicon-menu-down"></span>{% endif %}
+        {% endif %}
+      </th>
+      <th>Técnico</th>
+      <th class="icon">Activo</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for expediente in expedientes %}
+      {% if expediente is defined %}{% endif %}
+      <tr data-link="/expedientes/{{expediente.0.id}}">
+        <td>{{ expediente.0.id }}</td>
+        <td nowrap>{{ expediente.0.numeroInterno }}</td>
+        <td nowrap>{{ expediente.0.numeroExpediente }}</td>
+        <td>
+          {% if expediente.0.titulares|first[0] is defined %}
+              <abbr title="{{expediente.0.titulares|first[0].nombre}}" data-length="10">
+                {{ expediente.0.titulares|first[0].nombre }}</abbr>
+          {% endif %}
+        </td>
+        <td>
+          {% if expediente.0.movimientos.first.fechaEntrada is defined %}
+            {% if expediente.0.movimientos.first.fechaEntrada is not null %}
+              {{ expediente.0.movimientos.first.fechaEntrada|date('d-m-Y') }}
+            {% endif %}
+          {% endif %}
+        </td>
+        <td>
+          {% if expediente.0.movimientos.first.fechaSalida is defined %}
+            {% if expediente.0.movimientos.first.fechaSalida is not null %}
+                {{ expediente.0.movimientos.first.fechaSalida|date('d-m-Y') }}
+            {% endif %}
+          {% endif %}
+        </td>
+        <td>
+          {% if expediente.0.tecnico.nombre is defined %}
+           <abbr title="{{ expediente.0.tecnico.nombre }}" data-length="20">
+             {{ expediente.0.tecnico.nombre }}
+           </abbr>
+           {% endif %}
+
+        <td class="icon">
+          {% if expediente.0.activo %}
+            <span class="glyphicon glyphicon-ok"></span>
+          {% else %}
+            <span class="glyphicon glyphicon-remove"></span>
+          {% endif %}
+          </td>
+      </tr>
+      {% endfor %}
+  </tbody>
+</table>
+
+{% if expedientes | length > 1 and expedientes.getItemNumberPerPage is defined %}
+<div class="well well-sm clearfix">
+  <div class="pagination-info pull-left">
+    Mostrando
+      {% if  expedientes | length > 14 %}
+       <b>
+        {{(expedientes.getItemNumberPerPage * expedientes.getCurrentPageNumber) - (expedientes.getItemNumberPerPage -1) }} -
+        {{expedientes.getItemNumberPerPage * expedientes.getCurrentPageNumber }}</b>
+      {% else %}
+      <b> {{ expedientes.getTotalItemCount }} </b>
+      {% endif %}
+    de
+      <b> {{ expedientes.getTotalItemCount }} </b>
+  </div>
+    <ul class="pagination pull-right">
+      {{ knp_pagination_render(expedientes) }}
+    </ul>
+</div>
+{% endif %}
