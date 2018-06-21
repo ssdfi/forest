@@ -130,10 +130,10 @@ class Expedientes
 
     /**
         * @var ArrayCollection $titulares
-        * @ORM\ManyToMany(targetEntity="Titulares", inversedBy="expediente" ,cascade={"all","remove","persist"}, fetch="LAZY")
+        * @ORM\ManyToMany(targetEntity="Titulares", inversedBy="expediente" ,cascade={"all","persist"}, fetch="LAZY")
         * @ORM\JoinTable(
         *      name="expedientes_titulares",
-        *      joinColumns={@ORM\JoinColumn(name="expediente_id", referencedColumnName="id",onDelete="CASCADE")},
+        *      joinColumns={@ORM\JoinColumn(name="expediente_id", referencedColumnName="id")},
         *      inverseJoinColumns={@ORM\JoinColumn(name="titular_id", referencedColumnName="id")}
         * )
         */

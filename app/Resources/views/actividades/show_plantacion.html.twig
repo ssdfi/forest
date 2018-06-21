@@ -21,12 +21,16 @@
 							{{p.plantacion.plantacion.id}}
 						</td>
 						<td>
-							<a href="/titulares/{{p.plantacion.plantacion.titular.id}}">
-								{{p.plantacion.plantacion.titular.nombre}}
-							</a>
+							{% if p.plantacion.plantacion.titular %}
+								<a href="/titulares/{{p.plantacion.plantacion.titular.id}}">
+									{{p.plantacion.plantacion.titular.nombre}}
+								</a>
+							{% endif %}
 						</td>
 						<td>
-							{{p.plantacion.plantacion.especie.first.nombreCientifico}}
+							{% if p.plantacion.plantacion.especie.first %}
+								{{p.plantacion.plantacion.especie.first.nombreCientifico}}
+							{% endif %}
 						</td>
 						<td>
 							{{p.plantacion.plantacion.tipoPlantacion}}
