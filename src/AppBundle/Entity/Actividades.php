@@ -85,7 +85,7 @@ class Actividades
     private $tipoActividad;
 
     /**
-        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad",fetch="LAZY",cascade={"persist","remove"}, orphanRemoval=false)
+        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad",fetch="LAZY")
         * @ORM\JoinTable(
         *      name="actividades_plantaciones",
         *      joinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id")},
