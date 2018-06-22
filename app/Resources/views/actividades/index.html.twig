@@ -34,7 +34,7 @@
 					<dt>Sup. Certificada:</dt>
 					<dd>
 						{% if actividad.superficieCertificada %}
-							{{actividad.superficieCertificada|number_format(2)|round(1, 'ceil')}}
+							{{actividad.superficieCertificada|round(1, 'ceil')}}
 						{% else %}
 							0.0
 						{% endif %}
