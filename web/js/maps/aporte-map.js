@@ -21,13 +21,13 @@
     map = L.map('map');
 
     var argenmapUrl = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{y}.png'; //Mapa base de IGN
-  	var argenmapBase = new L.TileLayer(argenmapUrl, {minZoom: 4, tms: true});
+  	var argenmapBase = new L.TileLayer(argenmapUrl, {minZoom: 4, tms: true, attribution: '&copy; <a href="www.ign.gob.ar/">Instituto Geográfico Nacional</a>'});
 
     /* Capa WMS base de información del IGN */
     eoxBase = L.tileLayer.wms("https://tiles.maps.eox.at/wms", {
       layers: 's2cloudless_3857',
       format: 'image/jpeg',
-      attribution: 'EOX',
+      attribution: '&copy; <a href="https://s2maps.eu/">Sentinel-2 cloudless</a> by <a href="https://eox.at/">EOX IT Services GmbH</a>',
       transparent: true
     });
 
