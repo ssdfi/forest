@@ -17,22 +17,17 @@
   $(document).ready(function() {
 
     /* Define el objeto map y el div que lo contiene */
-    var geoJson, googleSatelital, ignBase, ignSatelital, map, osm, osmMini;
+    var geoJson, googleSatelital, ignBase, ignSatelital, map, osm, osmMini, exoBase;
     map = L.map('map');
 
-    /* Capa WMS de imagen satelital del IGN y CONAE */
-    ignSatelital = L.tileLayer.wms("http://wms.ign.gob.ar/geoserver/wms", {
-      layers: 'argentina500k:argentina500k_satelital',
-      format: 'image/png',
-      attribution: 'IGN - CONAE',
-      transparent: true
-    });
+    var argenmapUrl = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{y}.png'; //Mapa base de IGN
+  	var argenmapBase = new L.TileLayer(argenmapUrl, {minZoom: 4, tms: true});
 
     /* Capa WMS base de información del IGN */
-    ignBase = L.tileLayer.wms("http://wms.ign.gob.ar/geoserver/wms", {
-      layers: 'capabasesigign',
-      format: 'image/png',
-      attribution: 'IGN',
+    eoxBase = L.tileLayer.wms("https://tiles.maps.eox.at/wms", {
+      layers: 's2cloudless_3857',
+      format: 'image/jpeg',
+      attribution: 'EOX',
       transparent: true
     });
 
@@ -78,8 +73,8 @@
     L.control.layers({
       "OpenStreetMap": osm,
       "Google Satelital": googleSatelital,
-      "IGN Satelital": ignSatelital,
-      "IGN Base": ignBase
+      "IGN": argenmapBase,
+      "EOX Base": eoxBase,
     }, {
       "Plantaciones": geoJson
     }).addTo(map);
