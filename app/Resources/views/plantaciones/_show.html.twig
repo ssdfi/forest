@@ -1,13 +1,18 @@
 <ul class="nav nav-tabs" role="tablist">
 	{% if expedientes|length > 0 %}
-	<li class="active" role="presentation">
-		<a href="#expedientes-tab" aria-controls="expedientes-tab" role="tab" data-toggle="tab" aria-expanded="true">Expedientes</a>
-	</li>
+		<li class="active" role="presentation">
+			<a href="#expedientes-tab" aria-controls="expedientes-tab" role="tab" data-toggle="tab" aria-expanded="true">Expedientes</a>
+		</li>
 	{% endif %}
 	{% if (plantacione.getHistorico() is not empty) or (plantacionAnterior is not empty) %}
-	<li class="" role="presentation">
-		<a href="#historial-tab" aria-controls="historial-tab" role="tab" data-toggle="tab" aria-expanded="false">Historial</a>
-	</li>
+		<li class="" role="presentation">
+			<a href="#historial-tab" aria-controls="historial-tab" role="tab" data-toggle="tab" aria-expanded="false">Historial</a>
+		</li>
+	{% endif %}
+	{% if errores is not empty %}
+		<li {% if expedientes|length < 1 and ((plantacione.getHistorico()|length < 1) or (plantacionAnterior|length < 1)) %}class="active" {% else %} class="tab-pane" {% endif %} role="presentation">
+			<a href="#errores-tab" aria-controls="errores-tab" role="tab" data-toggle="tab" aria-expanded="false">Posibles Errores <span class="glyphicon glyphicon-info-sign errores" aria-hidden="true"></span></a>
+		</li>
 	{% endif %}
 </ul>
 <div class="tab-content">
@@ -194,6 +199,26 @@
 								</a>
 							</td>
 						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+	</div>
+	<div id="errores-tab" role="tabpanel" {% if expedientes|length < 1 and ((plantacione.getHistorico()|length < 1) or (plantacionAnterior|length < 1)) %}class="fade in active" {% else %} class="tab-pane" {% endif %}>
+		{% if errores is not empty%}
+			<table id="posibles_errores" class="table table-hover table-grid">
+				<thead>
+					<tr>
+						<th>Error</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in errores.mensaje %}
+					<tr>
+						<td>
+							{{loop.index}} - {{item}}
+						</td>
+					</tr>
 					{% endfor %}
 				</tbody>
 			</table>

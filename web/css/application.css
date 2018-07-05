@@ -76,3 +76,7 @@ ul, ol {
   width: 50%;
   margin: 0 auto;
 }
+
+.errores {
+  color: red!important;
+}

@@ -84,22 +84,22 @@ class Actividades
      */
     private $tipoActividad;
 
-    /**
-        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad",fetch="LAZY",cascade={"persist"})
-        * @ORM\JoinTable(
-        *      name="actividades_plantaciones",
-        *      joinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id")},
-        *      inverseJoinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")}
-        * )
-        */
+   /**
+    * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad",fetch="LAZY",cascade={"persist"})
+    * @ORM\JoinTable(
+    *      name="actividades_plantaciones",
+    *      joinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id")},
+    *      inverseJoinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")}
+    * )
+    */
     private $plantaciones;
 
-    /**
-        * @ORM\OneToMany(targetEntity="ActividadesTitulares",mappedBy="actividad",fetch="LAZY")
-        * @ORM\JoinColumns({
-        *   @ORM\JoinColumn(name="tipo_actividad_id", referencedColumnName="id")
-        * })
-        */
+   /**
+    * @ORM\OneToMany(targetEntity="ActividadesTitulares",mappedBy="actividad",fetch="LAZY")
+    * @ORM\JoinColumns({
+    *   @ORM\JoinColumn(name="tipo_actividad_id", referencedColumnName="id")
+    * })
+    */
     private $actividadesTitulares;
 
     public function __construct() {
