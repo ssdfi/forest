@@ -530,16 +530,34 @@ class PlantacionesController extends Controller
         $errores['mensaje']['fuera_faja']=$value['error'];
       }
 
-      if ($plantacion->getId() < 141389) {
-        $errores['mensaje']['migrada_redigitalizar']='Plantacion migrada se deberia redigitalizar';
+      if ($plantacion->getActivo() == null && $plantacion->getTipoPlantacion() == null) {
+        $errores['mensaje']['activa_inactiva']='Plantacion deberia estar activa o inactiva';
       }
 
-      if ($plantacion->getActivo() == true && $plantacion->getId() < 141389) {
+      if ($plantacion->getId() < 141389) {
+        foreach ($plantacion->getActividad() as $key => $actividad) {
+          if (date("Y-m-d H:i:s", strtotime('+0 hours', strtotime($actividad->getCreatedAt()->format('Y-m-d')))) >= '2015-03-10') {
+            $errores['mensaje']['migrada_redigitalizar']='Plantacion migrada se deberia redigitalizar';
+          }
+        }
+      }
+
+      if ($plantacion->getActivo() == null && $plantacion->getId() < 141389) {
         $errores['mensaje']['nulo_campo_activo']='Plantacion con dato nulo en campo activo';
       }
 
       if ($plantacion->getFuenteInformacion() && $plantacion->getFuenteInformacion()->getId() <> 11 && $plantacion->getId() > 141389){
-        $errores['mensaje']['fuente_informacion']='Plantacion con fuente informacion equivocada';
+        if (!$plantacion->getActividad()){
+            $errores['mensaje']['fuente_informacion']='Plantacion con fuente informacion equivocada';
+        }
+
+        if ($plantacion->getHistorico()){
+          foreach ($plantacion->getHistorico() as $key => $value) {
+            if($value->getPlantacionNueva()->getId() == $plantacion->getId()){
+              $errores['mensaje']['plantacion_inactiva_sin_reemplazo']='Plantacion inactiva sin reemplazar';
+            }
+          }
+        }
       }
 
       if (!$plantacion->getFuenteImagen() && $plantacion->getId() > 141389){
@@ -550,23 +568,19 @@ class PlantacionesController extends Controller
         $errores['mensaje']['nomenclatura_catastral']='Plantacion sin nomenclatura catastral';
       }
 
-      if ($plantacion->getActivo() === false && $plantacion->getId() > 141389){
-        $errores['mensaje']['inactivo_campo_activo']='Plantacion con dato inactivo en campo activo';
-      }
-
       if ($plantacion->getId() > 141389 && $plantacion->getEspecie() && $plantacion->getEspecie()->isEmpty()){
-        $errores['mensaje']['especie']='Plantacion sin especie en un expediente';
+        $errores['mensaje']['especie']='Plantacion sin especie';
       }
 
       if ($plantacion->getId() > 141389 && !$plantacion->getTitular()){
-        $errores['mensaje']['titular']='Plantacion sin titular en un expediente';
+        $errores['mensaje']['titular']='Plantacion sin titular';
       }
 
       if ($plantacion->getId() > 141389 && (!$plantacion->getProvincia() || !$plantacion->getDepartamento() )){
-        $errores['mensaje']['departamento_provincia']='Plantacion sin dato departamento y/o provincia en un expediente';
+        $errores['mensaje']['departamento_provincia']='Plantacion sin dato departamento y/o provincia';
       }
 
-      if ($plantacion->getId() > 141389 && $plantacion->getActivo()){
+      if ($plantacion->getActivo()){
         if ($plantacion->getHistorico()){
           foreach ($plantacion->getHistorico() as $key => $value) {
             if(!$value->getPlantacionNueva()){
@@ -576,7 +590,7 @@ class PlantacionesController extends Controller
         }
       }
 
-      if ($plantacion->getId() > 141389 && $plantacion->getActivo()){
+      if ($plantacion->getActivo()){
         if ($plantacion->getHistorico()){
           foreach ($plantacion->getHistorico() as $key => $value) {
             if($value->getPlantacionAnterior()->getId() === $plantacion->getId()){
@@ -586,26 +600,16 @@ class PlantacionesController extends Controller
         }
       }
 
-      if (!$plantacion->getComentarios()){
-        if ($plantacion->getActividad()){
-          foreach ($plantacion->getActividad() as $key => $value) {
-            if($value->getEstadoAprobacion()->getId() <> 1 && !$value->getObservaciones()){
-              $errores['mensaje']['no_aprobada_no_observacion']='Plantacion no aprobada y no se registran observaciones';
-            }
-          }
-        }
-      }
-
       if ($plantacion->getId() > 141389) {
         foreach ($plantacion->getActividad() as $key => $actividadPlantacion) {
           if($actividadPlantacion->getNumeroPlantas() == $plantacion->getDensidad()) {
-            if($actividadPlantacion->getActividad() && $actividadPlantacion->getActividad()->getTipoActividad()->getId() <> 1) {
+            if($actividadPlantacion->getActividad() && $actividadPlantacion->getActividad()->getTipoActividad()->getId() === 3) {
               $errores['mensaje']['densidad_inconsistente']='Plantacion con densidad inconsistente';
             }
           }
         }
         if (!$plantacion->getDensidad()){
-          $errores['mensaje']['densidad_inconsistente']='Plantacion con densidad inconsistente';
+          $errores['mensaje']['sin_densidad']='Plantacion sin densidad';
         }
       }
 
