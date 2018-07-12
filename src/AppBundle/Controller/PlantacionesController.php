@@ -530,7 +530,7 @@ class PlantacionesController extends Controller
         $errores['mensaje']['fuera_faja']=$value['error'];
       }
 
-      if ($plantacion->getActivo() == null && $plantacion->getTipoPlantacion() == null) {
+      if ($plantacion->getActivo() === null && $plantacion->getTipoPlantacion() === null) {
         $errores['mensaje']['activa_inactiva']='Plantacion deberia estar activa o inactiva';
       }
 
@@ -541,8 +541,7 @@ class PlantacionesController extends Controller
           }
         }
       }
-
-      if ($plantacion->getActivo() == null && $plantacion->getId() < 141389) {
+      if ($plantacion->getActivo() === null && $plantacion->getId() < 141389) {
         $errores['mensaje']['nulo_campo_activo']='Plantacion con dato nulo en campo activo';
       }
 
