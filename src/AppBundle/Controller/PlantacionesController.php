@@ -288,29 +288,29 @@ class PlantacionesController extends Controller
             $copiarDatos = $editForm->get("copiarDatos")->getData();
             $activarNuevas = $editForm->get("activarNuevas")->getData();
 
-            if (count($plantacione->getHistorico()) > 0) {
+            if (count($plantacione->getPlantacionesNuevas()) > 0) {
                 $plantacione->setActivo(false);
             }
 
             if ($copiarDatos === true) {
-                foreach ($plantacione->getHistorico() as $key => $plantacionNueva) {
-                    $plantacionNueva->getPlantacionNueva()->setActivo($activarNuevas);
-                    $plantacionNueva->getPlantacionNueva()->setTitular($plantacione->getTitular());
-                    $plantacionNueva->getPlantacionNueva()->setEspecie($plantacione->getEspecie());
-                    $plantacionNueva->getPlantacionNueva()->setAnioPlantacion($plantacione->getAnioPlantacion());
-                    $plantacionNueva->getPlantacionNueva()->setTipoPlantacion($plantacione->getTipoPlantacion());
-                    $plantacionNueva->getPlantacionNueva()->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
-                    $plantacionNueva->getPlantacionNueva()->setProvincia($plantacione->getProvincia());
-                    $plantacionNueva->getPlantacionNueva()->setDepartamento($plantacione->getDepartamento());
-                    $plantacionNueva->getPlantacionNueva()->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
-                    $plantacionNueva->getPlantacionNueva()->setUsoForestal($plantacione->getUsoForestal());
-                    $plantacionNueva->getPlantacionNueva()->setUsoAnterior($plantacione->getUsoAnterior());
-                    $plantacionNueva->getPlantacionNueva()->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
+                foreach ($plantacione->getPlantacionesNuevas() as $key => $value) {
+                  $value->setActivo($activarNuevas);
+                  $value->setTitular($plantacione->getTitular());
+                  $value->setEspecie($plantacione->getEspecie());
+                  $value->setAnioPlantacion($plantacione->getAnioPlantacion());
+                  $value->setTipoPlantacion($plantacione->getTipoPlantacion());
+                  $value->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
+                  $value->setProvincia($plantacione->getProvincia());
+                  $value->setDepartamento($plantacione->getDepartamento());
+                  $value->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
+                  $value->setUsoForestal($plantacione->getUsoForestal());
+                  $value->setUsoAnterior($plantacione->getUsoAnterior());
+                  $value->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
                 }
             }
             if ($activarNuevas === true) {
-                foreach ($plantacione->getHistorico() as $key => $plantacionNueva) {
-                    $plantacionNueva->getPlantacionNueva()->setActivo($activarNuevas);
+                foreach ($plantacione->getPlantacionesNuevas() as $key => $value) {
+                    $value->setActivo($activarNuevas);
                 }
             }
             try {

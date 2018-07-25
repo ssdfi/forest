@@ -45,7 +45,7 @@ class PlantacionesAportesController extends Controller
                 try {
                     foreach ($param as $value) {
                         $plantacion_actualizar = $em->getRepository('AppBundle:PlantacionesAportes')->findOneById($value);
-                        if ($plantacion_actualizar && $plantacion_actualizar->getUsuario()== $this->getUser()->getUsername()) {
+                        if ($plantacion_actualizar && $plantacion_actualizar->getUsuario() == $this->getUser()->getUsername()) {
                           if ($plantacione->getNumeroInterno()) { $plantacion_actualizar->setNumeroInterno($plantacione->getNumeroInterno()); }
                           if ($plantacione->getAnioPlantacion()) { $plantacion_actualizar->setAnioPlantacion($plantacione->getAnioPlantacion()); }
                           if ($plantacione->getNomenclaturaCatastral()) { $plantacion_actualizar->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral()); }
@@ -72,8 +72,7 @@ class PlantacionesAportesController extends Controller
                           if ($plantacione->getUsoForestal()) { $plantacion_actualizar->setUsoForestal($plantacione->getUsoForestal()); }
                           if ($plantacione->getProvincia()) { $plantacion_actualizar->setProvincia($plantacione->getProvincia()); }
                           if ($plantacione->getDepartamento()) { $plantacion_actualizar->setDepartamento($plantacione->getDepartamento()); }
-                          // if ($plantacione->getDosel()) { $plantacion_actualizar->setDosel($plantacione->getDosel()); }
-                          if (!$plantacione->getEspecie()->isEmpty()) { $plantacion_actualizar->setEspecie($plantacione->getEspecie()); }
+                          if (!$plantacione->getEspecie()->isEmpty()) { $plantacion_actualizar->addEspecie($plantacione->getEspecie()); }
                           $em->persist($plantacion_actualizar);
                         }
                     }

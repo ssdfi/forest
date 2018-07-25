@@ -37,7 +37,6 @@ class PlantacionesAportesType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transformer = new EspeciesToNumberTransformer($this->manager);
         $id_plantacion = $builder->getData() ? $builder->getData()->getId() : '';
         $builder
             ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
@@ -79,7 +78,7 @@ class PlantacionesAportesType extends AbstractType
             ->add('activo', CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
             ->add('comentarios');
 
-        $builder->addEventSubscriber(new AddEspeciesListener())->addModelTransformer($transformer);
+        $builder->addEventSubscriber(new AddEspeciesListener());
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
               function (FormEvent $event) {

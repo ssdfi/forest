@@ -37,7 +37,7 @@ class PlantacionesAportesEditarType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transformer = new EspeciesToNumberTransformer($this->manager);
+        // $transformer = new EspeciesToNumberTransformer($this->manager);
         $id_plantacion = $builder->getData() ? $builder->getData()->getId() : '';
         $ids='';
         foreach ($options['param'] as $key => $value) {
@@ -89,8 +89,8 @@ class PlantacionesAportesEditarType extends AbstractType
             ->add('objetivoPlantacion', EntityType::class, array('class'=>'AppBundle\Entity\ObjetivosPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('activo', CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
             ->add('comentarios');
-        $builder->addEventSubscriber(new AddEspeciesListener())->addModelTransformer($transformer);
 
+        $builder->addEventSubscriber(new AddEspeciesListener());
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
               function (FormEvent $event) {
                   $form=$event->getForm();

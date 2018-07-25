@@ -1165,7 +1165,7 @@ class PlantacionesAportes
     /**
     * @param Especie $titular
     */
-     public function addEspecies($especie)
+     public function addEspecie($especie)
      {
        if (true === $this->especie->contains($especie)) {
          return;
@@ -1173,16 +1173,16 @@ class PlantacionesAportes
        $this->especie=$especie;
      }
 
-     /**
-     * @param Especie $titular
-     */
-      public function setEspecie($especie)
-      {
-        if (true === $this->especie->contains($especie)) {
-          return;
-        }
-        $this->especie=$especie;
-      }
+    //  /**
+    //  * @param Especie $titular
+    //  */
+    //   public function setEspecie($especie)
+    //   {
+    //     if (true === $this->especie->contains($especie)) {
+    //       return;
+    //     }
+    //     $this->especie=$especie;
+    //   }
 
      /**
      * @param Especie $titular

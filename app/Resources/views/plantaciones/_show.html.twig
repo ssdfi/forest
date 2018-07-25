@@ -1,4 +1,4 @@
-{% if errores and errores.mensaje.geom %}
+{% if errores and errores.mensaje.geom is defined %}
 	<div class="alert alert-danger no-close">
 		{{errores.mensaje.geom}}
 	</div>
@@ -15,7 +15,7 @@
 		</li>
 	{% endif %}
 	{% if errores is not empty %}
-		<li {% if expedientes|length < 1 and ((plantacione.getHistorico()|length < 1) or (plantacionAnterior|length < 1)) %} class="active" {% else %} class="tab-pane" {% endif %} role="presentation">
+		<li {% if expedientes|length < 1 and ((plantacione.getHistorico()|length < 1) or (plantacionAnterior is defined and plantacionAnterior|length < 1)) %} class="active" {% else %} class="tab-pane" {% endif %} role="presentation">
 			<a href="#errores-tab" aria-controls="errores-tab" role="tab" data-toggle="tab" aria-expanded="false">Posibles Errores <span class="glyphicon glyphicon-info-sign errores" aria-hidden="true"></span></a>
 		</li>
 	{% endif %}
@@ -215,7 +215,7 @@
 			</table>
 		{% endif %}
 	</div>
-	<div id="errores-tab" role="tabpanel" {% if expedientes|length < 1 and ((plantacione.getHistorico()|length < 1) or (plantacionAnterior|length < 1)) %}class="fade in active" {% else %} class="tab-pane" {% endif %}>
+	<div id="errores-tab" role="tabpanel" {% if expedientes|length < 1 and ((plantacione.getHistorico()|length < 1) or (plantacionAnterior is defined and plantacionAnterior|length < 1)) %}class="fade in active" {% else %} class="tab-pane" {% endif %}>
 		{% if errores is not empty%}
 			<table id="posibles_errores" class="table table-hover table-grid">
 				<thead>
