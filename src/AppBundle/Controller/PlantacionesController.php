@@ -259,8 +259,6 @@ class PlantacionesController extends Controller
             }
         }
         $errores = $this->controlPlantacion($plantacione);
-        $plantaciones_anteriores = $em->getRepository('AppBundle:PlantacionesHistorico')->findPlantacionNuevaWithArea($plantacione->getId());
-        $plantaciones_nuevas = $em->getRepository('AppBundle:PlantacionesHistorico')->findPlantacionAnteriorWithArea($plantacione->getId());
         $deleteForm = $this->createDeleteForm($plantacione);
         return $this->render('plantaciones/show.html.twig', array(
             'plantacione' => $plantacione,
@@ -268,8 +266,6 @@ class PlantacionesController extends Controller
             'movimientos' => (array_key_exists('movimientos', $arr_query)) ? $arr_query['movimientos'] : null,
             'actividades' => (array_key_exists('actividades', $arr_query)) ? $arr_query['actividades'] : null,
             'expedientes' => (array_key_exists('expedientes', $arr_query)) ? $arr_query['expedientes'] : null,
-            'plantacionAnterior' => $plantaciones_anteriores,
-            'plantacionNueva'=> $plantaciones_nuevas,
             'delete_form' => $deleteForm->createView(),
             'errores' => $errores,
         ));
@@ -285,31 +281,12 @@ class PlantacionesController extends Controller
         $em = $this->getDoctrine()->getManager();
         $deleteForm = $this->createDeleteForm($plantacione);
         $generos = $em->getRepository('AppBundle:Generos')->findAll();
-        $plantaciones_historicos = $em->getRepository('AppBundle:PlantacionesHistorico')->findByPlantacionAnterior($plantacione->getId());
-        $originalHistoricos = new ArrayCollection();
-        foreach ($plantaciones_historicos as $plantacionHistorico) {
-            $originalHistoricos->add($plantacionHistorico);
-        }
         $editForm = $this->createForm('AppBundle\Form\PlantacionesType', $plantacione);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $copiarDatos = $editForm->get("copiarDatos")->getData();
             $activarNuevas = $editForm->get("activarNuevas")->getData();
-            foreach ($originalHistoricos as $key => $value) {
-                if (false == $plantacione->getHistorico()->contains($value->getPlantacionNueva()->getId())) {
-                    $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
-                    $plantacione->removeHistorico($value);
-                    $em->remove($value);
-                }
-            }
-            foreach ($plantacione->getHistorico() as $key => $value) {
-                $historico = $em->getRepository('AppBundle:PlantacionesHistorico')->findOneBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$plantacione->getId()));
-                $plantacione->setHistorico($historico);
-                if (is_integer($value)) {
-                    $plantacione->getHistorico()->removeElement($value);
-                }
-            }
 
             if (count($plantacione->getHistorico()) > 0) {
                 $plantacione->setActivo(false);
@@ -377,6 +354,19 @@ class PlantacionesController extends Controller
         }
         $response->headers->set('Content-Type', 'application/json');
         return $response;
+    }
+    /* Obtengo Plantacion*/
+    /**
+     * Finds and displays a Plantaciones entity.
+     *
+     * @Route("/area/{id}", name="area")
+     * @Method("GET")
+     */
+    function getAreaAction($id) {
+      $em    = $this->getDoctrine()->getManager();
+      $area = $em->getRepository('AppBundle:Plantaciones')->findArea($id);
+      return $this->render('default/area.html.twig', array(
+          'area' => $area['area']));
     }
     /* Obtengo Plantacion*/
     /**
@@ -528,6 +518,18 @@ class PlantacionesController extends Controller
       $fueraFaja = $stmt->fetchAll();
       foreach ($fueraFaja as $key => $value) {
         $errores['mensaje']['fuera_faja']=$value['error'];
+      }
+
+      if (strpos(get_class($plantacion->getGeom()), 'LineString') && $plantacion->getTipoPlantacion() && $plantacion->getTipoPlantacion()->getId() == 1) {
+        $errores['mensaje']['geom']='El tipo de Plantación debe ser CORTINA';
+      }
+
+      if (strpos(get_class($plantacion->getGeom()), 'Polygon') && $plantacion->getTipoPlantacion() && $plantacion->getTipoPlantacion()->getId() == 2) {
+        $errores['mensaje']['geom']='El tipo de Plantación debe ser MACIZO';
+      }
+
+      if ($plantacion->getTipoPlantacion() == null) {
+        $errores['mensaje']['geom']='No hay tipo de Plantación definida';
       }
 
       if ($plantacion->getActivo() === null && $plantacion->getTipoPlantacion() === null) {

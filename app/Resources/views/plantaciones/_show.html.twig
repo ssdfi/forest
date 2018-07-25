@@ -1,16 +1,21 @@
+{% if errores and errores.mensaje.geom %}
+	<div class="alert alert-danger no-close">
+		{{errores.mensaje.geom}}
+	</div>
+{% endif %}
 <ul class="nav nav-tabs" role="tablist">
 	{% if expedientes|length > 0 %}
 		<li class="active" role="presentation">
 			<a href="#expedientes-tab" aria-controls="expedientes-tab" role="tab" data-toggle="tab" aria-expanded="true">Expedientes</a>
 		</li>
 	{% endif %}
-	{% if (plantacione.getHistorico() is not empty) or (plantacionAnterior is not empty) %}
+	{% if (plantacione.getHistorico() is not empty) or (plantacione.getPlantacionesAnteriores() is not empty) %}
 		<li class="" role="presentation">
 			<a href="#historial-tab" aria-controls="historial-tab" role="tab" data-toggle="tab" aria-expanded="false">Historial</a>
 		</li>
 	{% endif %}
 	{% if errores is not empty %}
-		<li {% if expedientes|length < 1 and ((plantacione.getHistorico()|length < 1) or (plantacionAnterior|length < 1)) %}class="active" {% else %} class="tab-pane" {% endif %} role="presentation">
+		<li {% if expedientes|length < 1 and ((plantacione.getHistorico()|length < 1) or (plantacionAnterior|length < 1)) %} class="active" {% else %} class="tab-pane" {% endif %} role="presentation">
 			<a href="#errores-tab" aria-controls="errores-tab" role="tab" data-toggle="tab" aria-expanded="false">Posibles Errores <span class="glyphicon glyphicon-info-sign errores" aria-hidden="true"></span></a>
 		</li>
 	{% endif %}
@@ -112,7 +117,7 @@
 		{% endif %}
 	</div>
 	<div id="historial-tab" class="tab-pane" role="tabpanel">
-		{% if plantacionNueva is not empty%}
+		{% if plantacione.getPlantacionesNuevas() is not empty%}
 			<h4>Nuevas Plantaciones</h4>
 			<table id="plantaciones_nuevas" class="table table-hover table-grid">
 				<thead>
@@ -127,28 +132,33 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for item in plantacionNueva %}
-						<tr data-link="/plantaciones/{{item.plantacionNueva.getId()}}">
-							<td>{{item.plantacionNueva.getId()}}</td>
+					{% for item in plantacione.getPlantacionesNuevas() %}
+						<tr data-link="/plantaciones/{{item.getId()}}">
+							<td>{{item.getId()}}</td>
 							<td>
-								<a href="/titulares/{{item.plantacionNueva.getTitular().getId()}}">{{item.plantacionNueva.getTitular()}}</a>
+								<a href="/titulares/{{item.getTitular().getId()}}">{{item.getTitular()}}</a>
 							</td>
 							<td>
-								{% if item.plantacionNueva.getEspecie() %}
-									{{ item.plantacionNueva.getEspecie().first.nombreCientifico }}
+								{% if item.getEspecie() %}
+									{{ item.getEspecie().first.nombreCientifico }}
 								{% endif %}
 							</td>
-							<td>{{item.plantacionNueva.getTipoPlantacion().descripcion}}</td>
-							<td>{{item.area|round(1,'common')|number_format(1)}}</td>
+							<td>{% if item.getTipoPlantacion() %}
+										{{item.getTipoPlantacion().descripcion}}
+									{% endif %}
+							</td>
+							<td>
+									{{ render(controller('AppBundle:Plantaciones:getArea', { 'id': item.getId() })) }}
+							</td>
 							<td class="icon">
-								{% if item.plantacionNueva.getActivo %}
+								{% if item.getActivo %}
 										<span class="glyphicon glyphicon-ok"></span>
 								{% else %}
 										<span class="glyphicon glyphicon-remove"></span>
 								{% endif %}
 							</td>
 							<td class="icon icon-lg">
-								<a href="/plantaciones/{{item.plantacionNueva.getId()}}/mapa" onclick="event.stopPropagation()" target="_blank">
+								<a href="/plantaciones/{{item.getId()}}/mapa" onclick="event.stopPropagation()" target="_blank">
 									<span class="glyphicon glyphicon-globe"></span>
 								</a>
 							</td>
@@ -158,7 +168,7 @@
 			</table>
 		{% endif %}
 
-		{% if plantacionAnterior is not empty %}
+		{% if plantacione.getPlantacionesAnteriores() is not empty %}
 		<h4>Plantaciones Anteriores</h4>
 			<table id="plantaciones_anteriores" class="table table-hover table-grid">
 				<thead>
@@ -173,28 +183,29 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for item in plantacionAnterior %}
-						<tr data-link="/plantaciones/{{item.plantacionAnterior.getId()}}">
-							<td>{{item.plantacionAnterior.getId()}}</td>
+					{% for item in plantacione.getPlantacionesAnteriores() %}
+						<tr data-link="/plantaciones/{{item.getId()}}">
+							<td>{{item.getId()}}</td>
 							<td>
-								<a href="/titulares/{{item.plantacionAnterior.getTitular().getId()}}">{{item.plantacionAnterior.getTitular()}}</a>
+								<a href="/titulares/{{item.getTitular().getId()}}">{{item.getTitular()}}</a>
 							</td>
 							<td>
-								{% if item.plantacionAnterior.getEspecie() %}
-									{{ item.plantacionAnterior.getEspecie().first.nombreCientifico }}
+								{% if item.getEspecie().first %}
+									{{ item.getEspecie().first.nombreCientifico }}
 								{% endif %}
 							</td>
-							<td>{{item.plantacionAnterior.getTipoPlantacion().descripcion}}</td>
-							<td>{{item.area|round(1,'floor')|number_format(1)}}</td>
+							<td>{{item.getTipoPlantacion().descripcion}}</td>
+							<td>
+								{{ render(controller('AppBundle:Plantaciones:getArea', { 'id': item.getId() })) }}
 							<td class="icon">
-								{% if item.plantacionAnterior.getActivo %}
+								{% if item.getActivo %}
 										<span class="glyphicon glyphicon-ok"></span>
 								{% else %}
 										<span class="glyphicon glyphicon-remove"></span>
 								{% endif %}
 							</td>
 							<td class="icon icon-lg">
-								<a href="/plantaciones/{{item.plantacionAnterior.getId()}}/mapa" onclick="event.stopPropagation()" target="_blank">
+								<a href="/plantaciones/{{item.getId()}}/mapa" onclick="event.stopPropagation()" target="_blank">
 									<span class="glyphicon glyphicon-globe"></span>
 								</a>
 							</td>

@@ -1,11 +1,10 @@
 <?php
 namespace AppBundle\Form\DataTransformer;
 
-use AppBundle\Entity\PlantacionesHistorico;
+use AppBundle\Entity\Titulares;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class PlantacionesHistoricoToNumberTransformer implements DataTransformerInterface
 {
@@ -24,12 +23,14 @@ class PlantacionesHistoricoToNumberTransformer implements DataTransformerInterfa
      */
     public function transform($issue)
     {
+        // dump($issue);
         if (null === $issue) {
             return null;
-        }
+        }sadf;
         $choices = array();
-        foreach ($issue as $key => $value) {
-          $choices[] = $value->getPlantacionNueva();
+        foreach ($issue->getPlantacionesNuevas() as $object)
+        {
+           $choices[] = $object->getId();
         }
         return $choices;
     }
@@ -46,28 +47,16 @@ class PlantacionesHistoricoToNumberTransformer implements DataTransformerInterfa
         if (!$issueNumber) {
             return;
         }
-
         $issue = $this->manager
             ->getRepository('AppBundle:Plantaciones')
             ->findById($issueNumber)
         ;
-        $plantacioneshistorico = new ArrayCollection();
-        foreach ($issue as $key => $value) {
-          $historico = new PlantacionesHistorico($value,null);
-          $historico->setPlantacionNueva($value);
-          $historico->setPlantacionAnterior(null);
-          $plantacioneshistorico->add($historico);
-        }
-
-        if (null === $issue) {
-            // causes a validation error
-            // this message is not shown to the user
-            // see the invalid_message option
+        if (empty($issue)) {
             throw new TransformationFailedException(sprintf(
                 'An issue with number "%s" does not exist!',
                 $issueNumber
             ));
         }
-        return $plantacioneshistorico;
+        return $issue[0];
     }
 }

@@ -1195,4 +1195,14 @@ class PlantacionesAportes
         $this->especie->removeElement($especie);
       }
 
+      /**
+       * Get titular
+       *
+       * @return \AppBundle\Entity\Titulares
+       */
+      public function getVerificado()
+      {
+          return $this->verificado;
+      }
+
 }

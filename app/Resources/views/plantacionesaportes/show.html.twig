@@ -13,6 +13,8 @@
 					<dd></dd>
 					<dt>Id Plantación</dt>
 					<dd>{{ plantacione.id }}</dd>
+					<dt>Número Interno</dt>
+					<dd>{{ plantacione.numeroInterno }}</dd>
 					<dt>Superficie</dt>
 					{% if plantacion.0. superficieOriginal %}
 						<dd>{{plantacion.0.superficieOriginal|round(1,'ceil')}}</dd>
@@ -83,6 +85,11 @@
 			<div class="panel-footer">
 				{% if plantacione.activo %}
 					<span class="label label-success">Activo</span>
+				{% else %}
+					<span class="label label-danger">Inactivo</span>
+				{% endif %}
+				{% if plantacione.verificado %}
+					<span class="label label-success">Verificado</span>
 				{% else %}
 					<span class="label label-danger">Inactivo</span>
 				{% endif %}
