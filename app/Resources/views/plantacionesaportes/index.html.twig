@@ -33,8 +33,8 @@
               <th>Titular</th>
               <th>Especie</th>
               <th>Tipo</th>
-              <th>Activo</th>
               <th>Usuario</th>
+							<th>Verificado</th>
             </tr>
           </thead>
           <tbody>
@@ -49,14 +49,14 @@
                 {% endfor %}{% endif %}
               </td>
               <td>{% if plantacion.tipoPlantacion %}{{ plantacion.tipoPlantacion.descripcion }}{% else %} {% endif %} </td>
+							<td>{% if plantacion.usuario %}{{plantacion.usuario}}{% endif %}</td>
               <td class="icon">
-                {% if plantacion.activo %}
+                {% if plantacion.verificado %}
                   <span class="glyphicon glyphicon-ok"></span>
                 {% else %}
                   <span class="glyphicon glyphicon-remove"></span>
                 {% endif %}
               </td>
-              <td>{% if plantacion.usuario %}{{plantacion.usuario}}{% endif %}</td>
               <td class="icon icon-lg"></td>
             </tr>
             {% endfor %}
