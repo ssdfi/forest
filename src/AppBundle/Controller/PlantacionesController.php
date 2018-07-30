@@ -83,7 +83,7 @@ class PlantacionesController extends Controller
                           if ($plantacione->getUsoForestal()) { $plantacion_actualizar->setUsoForestal($plantacione->getUsoForestal()); }
                           if ($plantacione->getProvincia()) { $plantacion_actualizar->setProvincia($plantacione->getProvincia()); }
                           if ($plantacione->getDepartamento()) { $plantacion_actualizar->setDepartamento($plantacione->getDepartamento()); }
-                          if ($plantacione->getDosel()) { $plantacion_actualizar->setDosel($plantacione->getDosel()); }
+                          if ($plantacione->getDosel() !== null) { $plantacion_actualizar->setDosel($plantacione->getDosel()); }
                           if (!$plantacione->getEspecie()->isEmpty()) { $plantacion_actualizar->setEspecie($plantacione->getEspecie()); }
                           $em->persist($plantacion_actualizar);
                         }
@@ -520,11 +520,17 @@ class PlantacionesController extends Controller
         $errores['mensaje']['fuera_faja']=$value['error'];
       }
 
-      if (strpos(get_class($plantacion->getGeom()), 'LineString') && $plantacion->getTipoPlantacion() && $plantacion->getTipoPlantacion()->getId() == 1) {
+      if (strpos(get_class($plantacion->getGeom()), 'LineString') && $plantacion->getTipoPlantacion()
+          && $plantacion->getTipoPlantacion()->getId() == 1
+          && $plantacion->getId() > 141389
+          ) {
         $errores['mensaje']['geom']='El tipo de Plantación debe ser CORTINA';
       }
 
-      if (strpos(get_class($plantacion->getGeom()), 'Polygon') && $plantacion->getTipoPlantacion() && $plantacion->getTipoPlantacion()->getId() == 2) {
+      if (strpos(get_class($plantacion->getGeom()), 'Polygon') && $plantacion->getTipoPlantacion()
+          && $plantacion->getTipoPlantacion()->getId() == 2
+          && $plantacion->getId() > 141389
+          ) {
         $errores['mensaje']['geom']='El tipo de Plantación debe ser MACIZO';
       }
 
