@@ -21,10 +21,10 @@
 						{% endif %}
 					</td>
 					<td>
-						{% if p.actividad.superficiePresentada %}{{p.actividad.superficiePresentada|number_format(1)}}{% endif %}
+						{% if p.actividad.superficiePresentada %}{{p.actividad.superficiePresentada|number_format(2)}}{% endif %}
 					</td>
 					<td>
-						{% if p.actividad.superficieCertificada %}{{p.actividad.superficieCertificada|number_format(1)}}{% endif %}
+						{% if p.actividad.superficieCertificada %}{{p.actividad.superficieCertificada|number_format(2)}}{% endif %}
 					</td>
 					<td>
 						{% if p.actividad.superficieInspeccionada %}{{p.actividad.superficieInspeccionada|number_format(2)}}{% endif %}
@@ -49,7 +49,7 @@
 						{% endif %}
 					</td>
 					<td>
-						{% if actividad.superficiePresentada %}{{actividad.superficiePresentada|number_format(1)}}{% endif %}
+						{% if actividad.superficiePresentada %}{{actividad.superficiePresentada|number_format(2)}}{% endif %}
 					</td>
 					<td>
 						{% if actividad.superficieCertificada %}{{actividad.superficieCertificada|number_format(2)}}{% endif %}
