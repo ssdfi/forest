@@ -21,14 +21,17 @@ class Movimientos
      */
     public function validate(ExecutionContextInterface $context)
     {
-        $flag = FALSE;
         $now = new \DateTime("now");
+
         if($this->getFechaEntrada() > $now){
-          $flag = TRUE;
-        }
-        if ($flag == TRUE){
           $context->buildViolation('No se puede cargar Fecha de entrada futura')->addViolation();
         }
+
+        if($this->getFechaEntrada() > $this->getFechaSalida() && $this->getFechaSalida()!=null){
+          dump($this->getFechaSalida());
+          $context->buildViolation('No se puede cargar una Fecha de entrada que sea superior a la Fecha de salida')->addViolation();
+        }
+
     }
     /**
      * @var integer
