@@ -47,6 +47,7 @@
     /* Elimina el titular seleccionado */
     $("#remove-titular").click(function() {
       $("#plantaciones_titular").val('');
+      $("#plantaciones_plantacion_titular_id").val('');
       return $("#plantaciones_titular").val('');
     });
 
