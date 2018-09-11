@@ -34,7 +34,7 @@
 					<dt>Sup. Certificada:</dt>
 					<dd>
 						{% if actividad.superficieCertificada %}
-							{{actividad.superficieCertificada|round(1, 'ceil')}}
+							{{actividad.superficieCertificada|number_format(2)}}
 						{% else %}
 							0.0
 						{% endif %}
@@ -49,10 +49,14 @@
 					</dd>
 					<dt>Sup. Registrada:</dt>
 					<dd>
-						{% if actividad.getSupTotalSuma >= 0%}
-							{{ actividad.getSupTotalSuma|number_format(2) }}
+						{% if actividad.createdAt|date('Y-m-d') <= "2015-03-10" %}
+							{{ actividad.superficieRegistrada|number_format(2) }}
 						{% else %}
-							0.0
+							{% if actividad.getSupTotalSuma >= 0%}
+								{{ actividad.getSupTotalSuma|number_format(2) }}
+							{% else %}
+								0.0
+							{% endif %}
 						{% endif %}
 					</dd>
 				</dl>
