@@ -30,7 +30,11 @@
 						{% if p.actividad.superficieInspeccionada %}{{p.actividad.superficieInspeccionada|number_format(2)}}{% endif %}
 					</td>
 					<td>
-						{{p.actividad.getSupTotalSuma()}}
+						{% if p.actividad.createdAt|date('Y-m-d') <= "2015-03-10" %}
+							{{ p.actividad.superficieRegistrada|number_format(2) }}
+						{% else %}
+							{{p.actividad.getSupTotalSuma()}}
+						{% endif %}
 					</td>
 					<td class="icon icon-lg hidden-print">
 						<a href="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/actividades/{{p.actividad.id}}/mapa" onclick="event.stopPropagation()" target="_blank">
