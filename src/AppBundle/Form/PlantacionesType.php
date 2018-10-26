@@ -39,6 +39,8 @@ class PlantacionesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $id_plantacion = $builder->getData() ? $builder->getData()->getId() : '';
+        $id_provincia = $builder->getData()->getProvincia() ? $builder->getData()->getProvincia()->getId() : null;
+
         $builder
             ->add('anioPlantacion', TextType::class, array('label'=>'Año de Plantación','required'=>false))
             ->add('tipoPlantacion', EntityType::class, array('class'=>'AppBundle\Entity\TiposPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>true))
@@ -57,9 +59,14 @@ class PlantacionesType extends AbstractType
                                                                                                                 return $er->createQueryBuilder('p')
                                                                                                                     ->orderBy('p.nombre', 'ASC');
                                                                                                             },'choice_label' => 'nombre','placeholder' => "Seleccione una opción"))
-            ->add('departamento', EntityType::class, array('class'=>'AppBundle\Entity\Departamentos','query_builder' => function (EntityRepository $er) {
-                                                                                                                return $er->createQueryBuilder('d')
-                                                                                                                    ->orderBy('d.nombre', 'ASC');
+            ->add('departamento', EntityType::class, array('class'=>'AppBundle\Entity\Departamentos','query_builder' => function (EntityRepository $er) use ($id_provincia) {
+                                                                                                              $query = $er->createQueryBuilder('d')
+                                                                                                                  ->orderBy('d.nombre', 'ASC');
+                                                                                                                  if ($id_provincia){
+                                                                                                                    $query->where('d.provincia = :id_provincia')
+                                                                                                                    ->setParameter('id_provincia', $id_provincia);
+                                                                                                                  }
+                                                                                                                return $query;
                                                                                                             }, 'placeholder' => "Seleccione una opción" ))
             ->add('estratoDesarrollo', EntityType::class, array('class'=>'AppBundle\Entity\EstratosDesarrollo', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('usoForestal')
