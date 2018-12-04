@@ -137,13 +137,13 @@ class PlantacionesAportesController extends Controller
           $ck->andWhere('p.id IN (:Ids)');
           $ck->setParameter('Ids',$ids);
         }
-        $query = $ck->getQuery()->getResult();
+        $query = $ck->getQuery();
         $paginator = $this->get('knp_paginator');
         $plantaciones = $paginator->paginate(
               $query,
               $request->query->getInt('page', 1),
               15,
-              array('defaultSortFieldName' => 'id', 'defaultSortDirection' => 'asc')
+              array('defaultSortFieldName' => 'p.id', 'defaultSortDirection' => 'asc')
           );
         return $this->render('plantacionesaportes/index.html.twig', array('plantaciones' => $plantaciones,'param'=>$param));
     }
