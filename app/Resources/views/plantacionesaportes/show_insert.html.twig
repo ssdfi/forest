@@ -81,6 +81,14 @@
 					<dd>{% if plantacione.usoForestal %} {{ plantacione.usoForestal }}{% endif %}</dd>
 					<dt>Uso Anterior</dt>
 					<dd>{% if plantacione.usoAnterior %} {{ plantacione.usoAnterior }}{% endif %}</dd>
+					<dt>DAP</dt>
+					<dd>{{ plantacione.dap|number_format(2) }}</dd>
+					<dt>Altura Promedio</dt>
+					<dd>{{ plantacione.alturaPromedio|number_format(2) }}</dd>
+					<dt>Altura Dominante</dt>
+					<dd>{{ plantacione.alturaDominante|number_format(2) }}</dd>
+					<dt>Volumen</dt>
+					<dd>{{ plantacione.volumen|number_format(2) }}</dd>
 					<dt>Objetivo de Plantación</dt>
 					<dd>{% if plantacione.objetivoPlantacion %} {{ plantacione.objetivoPlantacion }}{% endif %}</dd>
 					<dt>Comentarios</dt>

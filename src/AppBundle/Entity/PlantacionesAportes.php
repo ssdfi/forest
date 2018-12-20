@@ -327,6 +327,34 @@ class PlantacionesAportes
        */
       private $especie;
 
+      /**
+       * @var string
+       *
+       * @ORM\Column(name="dap", type="decimal", precision=10, scale=0, nullable=true)
+       */
+      private $dap;
+
+      /**
+       * @var string
+       *
+       * @ORM\Column(name="altura_promedio", type="decimal", precision=10, scale=0, nullable=true)
+       */
+      private $alturaPromedio;
+
+      /**
+       * @var string
+       *
+       * @ORM\Column(name="altura_dominante", type="decimal", precision=10, scale=0, nullable=true)
+       */
+      private $alturaDominante;
+
+      /**
+       * @var string
+       *
+       * @ORM\Column(name="volumen", type="decimal", precision=10, scale=0, nullable=true)
+       */
+      private $volumen;
+
       public function __construct() {
         $this->especie = new \Doctrine\Common\Collections\ArrayCollection();
       }
@@ -1172,18 +1200,6 @@ class PlantacionesAportes
        }
        $this->especie=$especie;
      }
-
-    //  /**
-    //  * @param Especie $titular
-    //  */
-    //   public function setEspecie($especie)
-    //   {
-    //     if (true === $this->especie->contains($especie)) {
-    //       return;
-    //     }
-    //     $this->especie=$especie;
-    //   }
-
      /**
      * @param Especie $titular
      */
@@ -1203,6 +1219,74 @@ class PlantacionesAportes
       public function getVerificado()
       {
           return $this->verificado;
+      }
+
+      public function setDap($dap)
+      {
+          $this->dap = $dap;
+
+          return $this;
+      }
+
+      /**
+       * Get Dap
+       *
+       * @return string
+       */
+      public function getDap()
+      {
+          return $this->dap;
+      }
+
+      public function setAlturaPromedio($alturaPromedio)
+      {
+          $this->alturaPromedio = $alturaPromedio;
+
+          return $this;
+      }
+
+      /**
+       * Get alturaPromedio
+       *
+       * @return string
+       */
+      public function getAlturaPromedio()
+      {
+          return $this->alturaPromedio;
+      }
+
+      public function setAlturaDominante($alturaDominante)
+      {
+          $this->alturaDominante = $alturaDominante;
+
+          return $this;
+      }
+
+      /**
+       * Get alturaDominante
+       *
+       * @return string
+       */
+      public function getAlturaDominante()
+      {
+          return $this->alturaDominante;
+      }
+
+      public function setVolumen($volumen)
+      {
+          $this->volumen = $volumen;
+
+          return $this;
+      }
+
+      /**
+       * Get volumen
+       *
+       * @return string
+       */
+      public function getVolumen()
+      {
+          return $this->volumen;
       }
 
 }
