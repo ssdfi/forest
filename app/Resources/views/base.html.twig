@@ -39,7 +39,7 @@
             <li><a href="/">Expedientes</a></li>
             <li><a href="/titulares/">Titulares</a></li>
             <li><a href="/tecnicos/">Técnicos</a></li>
-            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR') %}
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR') or is_granted('ROLE_TECNICO_REGIONAL') %}
               <li><a href="/plantaciones/">Plantaciones</a></li>
             {% endif %}
             <li><a href="/aportes/">Aportes</a></li>
