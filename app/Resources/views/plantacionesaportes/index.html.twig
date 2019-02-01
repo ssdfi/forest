@@ -19,7 +19,9 @@
               </div>
               <hr>
               <input id="search" class="btn btn-primary pull-right" type="submit" value="Buscar" name="commit" data-url="/aportes/">
-              <input id="edit" class="btn btn-primary" type="submit" data-url="/aportes/editar" value="Editar" name="commit" >
+							{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR') or is_granted('ROLE_TECNICO_REGIONAL') %}
+              	<input id="edit" class="btn btn-primary" type="submit" data-url="/aportes/editar" value="Editar" name="commit" >
+							{% endif %}
             </form>
           </div>
         </div>
