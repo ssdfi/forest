@@ -17,7 +17,7 @@
   $(document).ready(function() {
 
     /* Define el objeto map y el div que lo contiene */
-    var geoJson,geoJsonAporte, googleSatelital, ignBase, ignSatelital, map, osm, osmMini, exoBase;
+    var geoJson,geoJsonAporte, googleSatelital, ignBase, ignSatelital, map, osm, osmMini, exoBase, geoinfra;
     map = L.map('map');
 
     var argenmapUrl = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{y}.png'; //Mapa base de IGN
@@ -28,6 +28,12 @@
       layers: 's2cloudless_3857',
       format: 'image/jpeg',
       attribution: '&copy; <a href="https://s2maps.eu/">Sentinel-2 cloudless</a> by <a href="https://eox.at/">EOX IT Services GmbH</a>',
+      transparent: true
+    });
+
+    geoinfra = L.tileLayer.wms("http://www.geoinfra.minfra.gba.gov.ar/geoserver/ows?service=wms", {
+      layers: 'Geoinfra:parcelario_completo',
+      format: 'image/png',
       transparent: true
     });
 
@@ -89,7 +95,8 @@
       "EOX Base": eoxBase,
     }, {
       "Plantaciones": geoJson,
-      "Plantaciones Aporte": geoJsonAporte
+      "Plantaciones Aporte": geoJsonAporte,
+      "GeoInfra": geoinfra,
     }).addTo(map);
 
     /* Agrega otros controles al mapa */

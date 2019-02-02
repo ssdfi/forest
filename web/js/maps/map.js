@@ -17,7 +17,7 @@
   $(document).ready(function() {
 
     /* Define el objeto map y el div que lo contiene */
-    var geoJson, googleSatelital, ignBase, ignSatelital, map, osm, osmMini, exoBase;
+    var geoJson, googleSatelital, ignBase, ignSatelital, map, osm, osmMini, exoBase, misiones, geoinfra;
     map = L.map('map');
 
     var argenmapUrl = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{y}.png'; //Mapa base de IGN
@@ -37,6 +37,18 @@
     });
     osmMini = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
 
+    geoinfra = L.tileLayer.wms("http://www.geoinfra.minfra.gba.gov.ar/geoserver/ows?service=wms", {
+      layers: 'Geoinfra:parcelario_completo',
+      format: 'image/png',
+      transparent: true
+    });
+
+    // misiones = L.tileLayer.wms("http://www.ide.misiones.gov.ar/cgi-bin/mapserv?map=/var/www/ide/htdocs/00_INFO_PORTAL_IDE/WMSMinEcologia.map&version=1.1.1&service=WMS&request=GetLegendGraphic&format=image/png&style=default", {
+    //   // srs : 'EPSG:22187',
+    //   layers: 'parcelario_mnes',
+    //   format: 'image/png',
+    //   transparent: true
+    // });
     /* Capa de imagen satelital de Google */
     googleSatelital = new L.Google('SATELLITE');
     /* Capa vectorial GeoJSON de las plantaciones */
@@ -76,7 +88,9 @@
       "IGN": argenmapBase,
       "EOX Base": eoxBase,
     }, {
-      "Plantaciones": geoJson
+      "Plantaciones": geoJson,
+      "GeoInfra": geoinfra,
+      // "Misiones": misiones
     }).addTo(map);
 
     /* Agrega otros controles al mapa */
