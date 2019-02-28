@@ -17,22 +17,17 @@
   $(document).ready(function() {
 
     /* Define el objeto map y el div que lo contiene */
-    var geoJson, googleSatelital, ignBase, ignSatelital, map, osm, osmMini;
+    var geoJson, googleSatelital, ignBase, ignSatelital, map, osm, osmMini, exoBase, misiones, geoinfra;
     map = L.map('map');
 
-    /* Capa WMS de imagen satelital del IGN y CONAE */
-    ignSatelital = L.tileLayer.wms("http://wms.ign.gob.ar/geoserver/wms", {
-      layers: 'argentina500k:argentina500k_satelital',
-      format: 'image/png',
-      attribution: 'IGN - CONAE',
-      transparent: true
-    });
+    var argenmapUrl = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{y}.png'; //Mapa base de IGN
+  	var argenmapBase = new L.TileLayer(argenmapUrl, {minZoom: 4, tms: true, attribution: '&copy; <a href="www.ign.gob.ar/">Instituto Geográfico Nacional</a>'});
 
     /* Capa WMS base de información del IGN */
-    ignBase = L.tileLayer.wms("http://wms.ign.gob.ar/geoserver/wms", {
-      layers: 'capabasesigign',
-      format: 'image/png',
-      attribution: 'IGN',
+    eoxBase = L.tileLayer.wms("https://tiles.maps.eox.at/wms", {
+      layers: 's2cloudless_3857',
+      format: 'image/jpeg',
+      attribution: '&copy; <a href="https://s2maps.eu/">Sentinel-2 cloudless</a> by <a href="https://eox.at/">EOX IT Services GmbH</a>',
       transparent: true
     });
 
@@ -42,6 +37,18 @@
     });
     osmMini = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
 
+    geoinfra = L.tileLayer.wms("http://www.geoinfra.minfra.gba.gov.ar/geoserver/ows?service=wms", {
+      layers: 'Geoinfra:parcelario_completo',
+      format: 'image/png',
+      transparent: true
+    });
+
+    // misiones = L.tileLayer.wms("http://www.ide.misiones.gov.ar/cgi-bin/mapserv?map=/var/www/ide/htdocs/00_INFO_PORTAL_IDE/WMSMinEcologia.map&version=1.1.1&service=WMS&request=GetLegendGraphic&format=image/png&style=default", {
+    //   // srs : 'EPSG:22187',
+    //   layers: 'parcelario_mnes',
+    //   format: 'image/png',
+    //   transparent: true
+    // });
     /* Capa de imagen satelital de Google */
     googleSatelital = new L.Google('SATELLITE');
     /* Capa vectorial GeoJSON de las plantaciones */
@@ -78,10 +85,12 @@
     L.control.layers({
       "OpenStreetMap": osm,
       "Google Satelital": googleSatelital,
-      "IGN Satelital": ignSatelital,
-      "IGN Base": ignBase
+      "IGN": argenmapBase,
+      "EOX Base": eoxBase,
     }, {
-      "Plantaciones": geoJson
+      "Plantaciones": geoJson,
+      "GeoInfra": geoinfra,
+      // "Misiones": misiones
     }).addTo(map);
 
     /* Agrega otros controles al mapa */

@@ -37,9 +37,9 @@ class PlantacionesAportesType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // $transformer = new EspeciesToNumberTransformer($this->manager);
         $id_plantacion = $builder->getData() ? $builder->getData()->getId() : '';
         $builder
+            ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
             ->add('anioPlantacion', TextType::class, array('label'=>'Año de Plantación','required'=>false))
             ->add('tipoPlantacion', EntityType::class, array('class'=>'AppBundle\Entity\TiposPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('nomenclaturaCatastral', TextType::class, array('label'=>'Nomenclatura Catrastal','required'=>false))
@@ -58,28 +58,31 @@ class PlantacionesAportesType extends AbstractType
             ->add('estratoDesarrollo', EntityType::class, array('class'=>'AppBundle\Entity\EstratosDesarrollo', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('usoForestal')
             ->add('usoAnterior')
-            // ->add($builder->create('especie', EntityType::class, array(
-            //               'class' =>  \AppBundle\Entity\Especies::class,
-            //               'multiple'=>true,
-            //               'required'=>false,
-            //               'compound'=>false,
-            //               'query_builder' => function (EntityRepository $er) use ($id_plantacion) {
-            //                   return $er->createQueryBuilder('u')
-            //                   ->leftJoin('u.plantacion', 'p')
-            //                   ->where('p.id = :id_plantacion')
-            //                   ->setParameter('id_plantacion', $id_plantacion);
-            //               },
-            //               'choice_value'=>function ($data) {
-            //                   return $data->getId();
-            //               },
-            //           )))
+            ->add($builder->create('especie', EntityType::class, array(
+                          'class' =>  \AppBundle\Entity\Especies::class,
+                          'multiple'=>true,
+                          'required'=>false,
+                          'compound'=>false,
+                          'query_builder' => function (EntityRepository $er) use ($id_plantacion) {
+                              $pruebi = $er->createQueryBuilder('u')
+                              ->leftJoin('u.plantacionAporte', 'p')
+                              ->where('p.id = :id_plantacion')
+                              ->setParameter('id_plantacion', $id_plantacion);
+                              return $pruebi;
+                          },
+                          'choice_value'=>function ($data) {
+                              return $data->getId();
+                          },
+                      )))
             ->add('objetivoPlantacion', EntityType::class, array('class'=>'AppBundle\Entity\ObjetivosPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('activo', CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
+            ->add('dap')
+            ->add('alturaPromedio')
+            ->add('alturaDominante')
+            ->add('volumen')
             ->add('comentarios');
-            // ->add('copiarDatos', CheckboxType::class, array('attr' => array('data-label' => 'Copiar Datos'), 'mapped'=> false, 'label' => false, 'required'=>false))
-            // ->add('activarNuevas', CheckboxType::class, array('attr' => array('data-label' => 'Activar Nuevas'), 'mapped'=> false, 'label' => false, 'required'=>false));
 
-        // $builder->addEventSubscriber(new AddEspeciesListener())->addModelTransformer($transformer);
+        $builder->addEventSubscriber(new AddEspeciesListener());
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
               function (FormEvent $event) {
@@ -101,59 +104,16 @@ class PlantacionesAportesType extends AbstractType
                 ));
               });
 
-        // $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-        //     $form=$event->getForm();
-        //     $data=$event->getData();
-        //     if ($data->getHistorico()) {
-        //         $choices = array();
-        //         foreach ($data->getHistorico() as $key => $value) {
-        //             $choices[]=$value->getPlantacionNueva()->getId();
-        //         }
-        //     } else {
-        //         $choices=[];
-        //     }
-        //     $form->add('plantacion_nuevas_ids', HiddenType::class, array(
-        //             'mapped' => false,
-        //           ));
-        //     $form->add('historico', EntityType::class, array(
-        //                         'class' =>  \AppBundle\Entity\PlantacionesHistorico::class,
-        //                         'multiple'=>true,
-        //                         'required'=>false,
-        //                         'choices'=> $choices,
-        //                         'choice_value'=>function ($value) {
-        //                             return (string)$value;
-        //                         },
-        //                     ));
-        // });
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form=$event->getForm();
             $data=$event->getData();
-            $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
-            $data['titular'] = $titular;
-            $event->setData($data);
+            if(array_key_exists('plantacion_titular_id',$data) && $data['plantacion_titular_id']) {
+              $titular = $this->manager->getRepository('AppBundle:Titulares')->findOneById($data['plantacion_titular_id']);
+              $data['titular'] = $titular;
+              $event->setData($data);
+            }
         });
 
-        // $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
-        //     $form=$event->getForm();
-        //     $data=$event->getData();
-        //
-        //     $id_plantacion = $form->getData()->getId();
-        //     $plantacioneshistorico = new ArrayCollection();
-        //     foreach ($event->getForm()->get('historico')->getViewData() as $key => $value) {
-        //         $historico = $this->manager->getRepository('AppBundle:PlantacionesHistorico')->findBy(array('plantacionNueva'=>$value,'plantacionAnterior'=>$id_plantacion));
-        //         if (!$historico) {
-        //             $plantacionNueva = $this->manager->getRepository('AppBundle:Plantaciones')->findOneById((integer)$value);
-        //             $plantacionAnterior = $this->manager->getRepository('AppBundle:Plantaciones')->findOneById($id_plantacion);
-        //             $historico = new PlantacionesHistorico($plantacionNueva, $plantacionAnterior);
-        //             $this->manager->persist($historico);
-        //             $this->manager->flush();
-        //             $event->getData()->addHistorico($historico);
-        //         }
-        //     }
-        // });
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
-            $event->stopPropagation();
-        }, 900);
     }
 
     /**

@@ -23,7 +23,7 @@ use Doctrine\ORM\EntityRepository;
 use AppBundle\Form\EventListener\AddEspeciesListener;
 use AppBundle\Form\EventListener\AddHistoricoListener;
 
-class PlantacionesEditarType extends AbstractType
+class PlantacionesAportesEditarType extends AbstractType
 {
     private $manager;
 
@@ -37,6 +37,7 @@ class PlantacionesEditarType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // $transformer = new EspeciesToNumberTransformer($this->manager);
         $id_plantacion = $builder->getData() ? $builder->getData()->getId() : '';
         $ids='';
         foreach ($options['param'] as $key => $value) {
@@ -47,6 +48,7 @@ class PlantacionesEditarType extends AbstractType
           }
         }
         $builder
+            ->add('numeroInterno', TextType::class, array("attr"=> array("class"=>"form-group"),'required'=>false))
             ->add('param', TextType::class, array('mapped'=> false, 'label' => 'Plantaciones', 'data' => $ids,'attr' => ['disabled' => 'disabled']))
             ->add('anioPlantacion', TextType::class, array('label'=>'Año de Plantación','required'=>false))
             ->add('tipoPlantacion', EntityType::class, array('class'=>'AppBundle\Entity\TiposPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
@@ -86,10 +88,9 @@ class PlantacionesEditarType extends AbstractType
                       )))
             ->add('objetivoPlantacion', EntityType::class, array('class'=>'AppBundle\Entity\ObjetivosPlantacion', 'placeholder' => "Seleccione una opción" ,'required'=>false))
             ->add('activo', CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
-            ->add('dosel', ChoiceType::class, array('choices'  => array('' => null,'Regular' => true,'Irregular' => false)))
             ->add('comentarios');
-        $builder->addEventSubscriber(new AddEspeciesListener());
 
+        $builder->addEventSubscriber(new AddEspeciesListener());
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
               function (FormEvent $event) {
                   $form=$event->getForm();
@@ -110,21 +111,6 @@ class PlantacionesEditarType extends AbstractType
                 ));
               });
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $form=$event->getForm();
-            $data=$event->getData();
-            if ($data->getHistorico()) {
-                $choices = array();
-                foreach ($data->getHistorico() as $key => $value) {
-                    $choices[]=$value->getPlantacionNueva()->getId();
-                }
-            } else {
-                $choices=[];
-            }
-            $form->add('plantacion_nuevas_ids', HiddenType::class, array(
-                    'mapped' => false,
-                  ));
-        });
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form=$event->getForm();
             $data=$event->getData();
@@ -147,7 +133,7 @@ class PlantacionesEditarType extends AbstractType
     {
         $resolver->setDefaults(array(
             'param' => null,
-            'data_class' => 'AppBundle\Entity\Plantaciones'
+            'data_class' => 'AppBundle\Entity\PlantacionesAportes'
         ));
     }
 }

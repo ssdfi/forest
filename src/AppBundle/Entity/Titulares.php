@@ -6,12 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\Expedientes;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Titulares
  *
  * @ORM\Table(name="titulares", indexes={@ORM\Index(name="index_titulares_on_dni", columns={"dni"}), @ORM\Index(name="index_titulares_on_cuit", columns={"cuit"}), @ORM\Index(name="index_titulares_on_nombre", columns={"id","nombre"})})
  * @ORM\Entity
+ * @UniqueEntity("dni", message="Este valor ya existe y no puede repetirse")
+ * @UniqueEntity("cuit", message="Este valor ya existe y no puede repetirse")
  * @ORM\HasLifecycleCallbacks
  */
 class Titulares
@@ -29,7 +32,7 @@ class Titulares
     /**
      * @var string
      *
-     * @ORM\Column(name="nombre", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=255)
      * @Assert\NotBlank(message="El campo no puede estar vacío")
      *
      */
@@ -38,9 +41,8 @@ class Titulares
     /**
      * @var string
      *
-     * @ORM\Column(name="dni", type="string", length=255, nullable=true)
+     * @ORM\Column(name="dni", type="string", length=255, nullable=true, unique=TRUE)
      * @Assert\Type(type="numeric", message="El valor debe que ser numérico")
-     * @Assert\NotBlank(message="El campo no puede estar vacío")
      * @Assert\Length(min = 8, max=8 ,exactMessage="El DNI debe tener {{ limit }} dígitos.")
      */
     private $dni;
@@ -48,9 +50,8 @@ class Titulares
     /**
      * @var string
      *
-     * @ORM\Column(name="cuit", type="string", length=255, nullable=true)
+     * @ORM\Column(name="cuit", type="string", length=255, nullable=true, unique=TRUE)
      * @Assert\Type(type="numeric", message="El valor debe que ser numérico")
-     * @Assert\NotBlank(message="El campo no puede estar vacío")
      * @Assert\Length(min = 11, max=11 ,exactMessage="El CUIT debe tener {{ limit }} dígitos.")
      */
     private $cuit;

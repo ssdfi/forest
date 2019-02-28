@@ -11,6 +11,8 @@
 				<dl class="dl-horizontal">
 					<dt>Id Plantación</dt>
 					<dd>{% if plantacione.id %} {{ plantacione.id }}{% endif %}</dd>
+					<dt>Número Interno</dt>
+					<dd>{{ plantacione.numeroInterno }}</dd>
 					<dt>Titular</dt>
 					<dd>
 					{% if plantacione.titular %}
@@ -79,20 +81,16 @@
 					<dd>{% if plantacione.usoForestal %} {{ plantacione.usoForestal }}{% endif %}</dd>
 					<dt>Uso Anterior</dt>
 					<dd>{% if plantacione.usoAnterior %} {{ plantacione.usoAnterior }}{% endif %}</dd>
+					<dt>DAP</dt>
+					<dd>{{ plantacione.dap|number_format(2) }}</dd>
+					<dt>Altura Promedio</dt>
+					<dd>{{ plantacione.alturaPromedio|number_format(2) }}</dd>
+					<dt>Altura Dominante</dt>
+					<dd>{{ plantacione.alturaDominante|number_format(2) }}</dd>
+					<dt>Volumen</dt>
+					<dd>{{ plantacione.volumen|number_format(2) }}</dd>
 					<dt>Objetivo de Plantación</dt>
 					<dd>{% if plantacione.objetivoPlantacion %} {{ plantacione.objetivoPlantacion }}{% endif %}</dd>
-					<dt>Dosel</dt>
-					<dd>
-						{% if plantacione.dosel is null %}
-						{% else %}
-							{% if plantacione.dosel == TRUE %}
-								Regular
-							{% endif %}
-							{% if plantacione.dosel == FALSE %}
-								Irregular
-							{% endif %}
-						{% endif %}
-						</dd>
 					<dt>Comentarios</dt>
 					<dd>{% if plantacione.comentarios %} {{ plantacione.comentarios }}{% endif %}</dd>
 				</dl>
@@ -103,12 +101,15 @@
 				{% else %}
 					<span class="label label-danger">Inactivo</span>
 				{% endif %}
+				{% if plantacione.verificado %}
+					<span class="label label-success">Verificado</span>
+				{% else %}
+					<span class="label label-danger">No Verificado</span>
+				{% endif %}
 			</div>
 		</div>
-
 	</div>
 	<div class="col-md-9">
-		{{ include('plantaciones/_show.html.twig', {'plantacione': plantacione}) }}
+		{{ include('plantacionesaportes/map_insert.html.twig', {'plantacion': plantacione, 'geom':geom, 'area':area}) }}
 	</div>
-
 {% endblock %}

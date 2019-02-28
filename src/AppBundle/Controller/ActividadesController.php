@@ -71,7 +71,7 @@ class ActividadesController extends Controller
         $actividades = $em->getRepository('AppBundle:Actividades')->findOneById($idAct);
         $deleteForm = $this->createDeleteForm($actividades);
 
-        $dql_p   = "SELECT p as plantacion,
+        $dql_p   = "SELECT ap as plantacion,
                     st_area(p.geom)/10000 as area
                     FROM AppBundle:Actividades a
                     JOIN AppBundle:ActividadesPlantaciones ap WITH a.id = ap.actividad
@@ -193,7 +193,7 @@ class ActividadesController extends Controller
      * @Route("/expedientes/{idExp}/movimientos/{idMov}/actividades/{id}", name="actividades_delete")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request, Actividades $actividade)
+    public function deleteAction(Request $request, Actividades $actividade, $idExp, $idMov)
     {
         $form = $this->createDeleteForm($actividade);
         $form->handleRequest($request);
@@ -202,8 +202,9 @@ class ActividadesController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($actividade);
             $em->flush($actividade);
+            $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => '', 'message' => 'Actividad eliminada satisfactoriamente.'));
         }
-        return $this->redirectToRoute('list_movimientos', array('id'=>$actividade->getMovimiento()->getExpediente()->getId(), 'idMov'=>$actividade->getMovimiento()->getId()));
+        return $this->redirectToRoute('list_movimientos', array('idExp'=>$idExp, 'id'=>$idMov));
     }
 
     /**

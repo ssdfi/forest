@@ -1,252 +1,258 @@
 {% set route = app.request.attributes.get('_route') %}
 {% set path = app.request.pathInfo %}
 
+{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR') %}
 {# ----------------------------EXPEDIENTES---------------------------- #}
-{% if route == "list_expedientes" %}
-	<li>
-		<a id="nav-new-expediente" href="{{path('expedientes_new')}}">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-			Nuevo Expediente
-		</a>
-	</li>
-{% endif %}
-
-{% if route == "expedientes_show" %}
-	<li>
-		<a id="nav-new-expediente" href="{{ path('expedientes_edit', {'id': expediente.id }) }}">
-			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-			Editar Expediente
-		</a>
-	</li>
-	<li>
-		<a id="nav-new-expediente" href="{{ path('movimientos_new', {'id': expediente.id }) }}">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-			Nuevo Movimiento
-		</a>
-	</li>
-	{% if is_granted('ROLE_ADMIN') %}
+	{% if route == "list_expedientes" %}
 		<li>
-			<a>
-				{{ form_start(delete_form) }}
-				<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Expediente?')">
-					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-					Eliminar Expediente
-				</button>
-				{{ form_end(delete_form) }}
+			<a id="nav-new-expediente" href="{{path('expedientes_new')}}">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+				Nuevo Expediente
 			</a>
 		</li>
 	{% endif %}
-	<li class="navbar-primary">
-		<a id="nav_expediente" href="{{ path('expedientes_show', {'id': expediente.id }) }}">{{expediente.numeroInterno}}</a>
-	</li>
-{% endif %}
 
-{% if route == "expedientes_edit" %}
-	<li class="navbar-primary">
-		<a id="nav_expediente" href="{{ path('expedientes_show', {'id': expediente.id }) }}">{{expediente.numeroInterno}}</a>
-	</li>
-{% endif %}
-
-{#  -------------------------TITULARES---------------------------- #}
-{% if route == "titulares_index" %}
-	<li class="navbar-primary">
-		<a id="nav-new-titular" href="/titulares/new">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-			Nuevo Titular
-		</a>
-	</li>
-{% endif %}
-
-{% if route == "titulares_show" %}
-	<li>
-		<a id="nav-edit-titular" href="/titulares/{{titular.id}}/edit">
-			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-			Editar Titular
-		</a>
-	</li>
-	{% if is_granted('ROLE_ADMIN') %}
+	{% if route == "expedientes_show" %}
 		<li>
-			<a>
-				{{ form_start(delete_form) }}
-				<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Titular?')">
-					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-					Eliminar Titular
-				</button>
-				{{ form_end(delete_form) }}
+			<a id="nav-new-expediente" href="{{ path('expedientes_edit', {'id': expediente.id }) }}">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+				Editar Expediente
+			</a>
+		</li>
+		<li>
+			<a id="nav-new-expediente" href="{{ path('movimientos_new', {'id': expediente.id }) }}">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+				Nuevo Movimiento
+			</a>
+		</li>
+		{% if is_granted('ROLE_ADMIN') %}
+			<li>
+				<a>
+					{{ form_start(delete_form) }}
+					<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Expediente?')">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						Eliminar Expediente
+					</button>
+					{{ form_end(delete_form) }}
+				</a>
+			</li>
+		{% endif %}
+		<li class="navbar-primary">
+			<a id="nav_expediente" href="{{ path('expedientes_show', {'id': expediente.id }) }}">{{expediente.numeroInterno}}</a>
+		</li>
+	{% endif %}
+
+	{% if route == "expedientes_edit" %}
+		<li class="navbar-primary">
+			<a id="nav_expediente" href="{{ path('expedientes_show', {'id': expediente.id }) }}">{{expediente.numeroInterno}}</a>
+		</li>
+	{% endif %}
+
+	{#  -------------------------TITULARES---------------------------- #}
+	{% if route == "titulares_index" %}
+		<li class="navbar-primary">
+			<a id="nav-new-titular" href="/titulares/new">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+				Nuevo Titular
 			</a>
 		</li>
 	{% endif %}
-{% endif %}
 
-{#  -------------------------TECNICOS---------------------------- #}
-{% if route == "tecnicos_index" %}
-	<li class="navbar-primary">
-		<a id="nav-new-tecnico" href="/tecnicos/new">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-			Nuevo Tecnico
-		</a>
-	</li>
-{% endif %}
-
-{% if route == "tecnicos_show" %}
-	<li>
-		<a id="nav-new-expediente" href="/tecnicos/{{tecnico.id}}/edit">
-			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-			Editar Tecnico
-		</a>
-	</li>
-	{% if is_granted('ROLE_ADMIN') %}
+	{% if route == "titulares_show" %}
 		<li>
-			<a>
-				{{ form_start(delete_form) }}
-				<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Técnico?')">
-					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-					Eliminar Técnico
-				</button>
-				{{ form_end(delete_form) }}
+			<a id="nav-edit-titular" href="/titulares/{{titular.id}}/edit">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+				Editar Titular
+			</a>
+		</li>
+		{% if is_granted('ROLE_ADMIN') %}
+			<li>
+				<a>
+					{{ form_start(delete_form) }}
+					<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Titular?')">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						Eliminar Titular
+					</button>
+					{{ form_end(delete_form) }}
+				</a>
+			</li>
+		{% endif %}
+	{% endif %}
+
+	{#  -------------------------TECNICOS---------------------------- #}
+	{% if route == "tecnicos_index" %}
+		<li class="navbar-primary">
+			<a id="nav-new-tecnico" href="/tecnicos/new">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+				Nuevo Tecnico
 			</a>
 		</li>
 	{% endif %}
-{% endif %}
 
-{#  -------------------------PLANTACIONES---------------------------- #}
-{% if route == "plantaciones_index" %}
-	<!-- <li class="navbar-primary">
-		<a id="nav-new-plantacion" href="/plantaciones/new">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-			Nueva Plantacion
-		</a>
-	</li> -->
-{% endif %}
-
-{% if route == "plantaciones_show" %}
-	<li>
-		<a id="nav-edit-plantacion" href="/plantaciones/{{plantacione.id}}/edit">
-			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-			Editar
-		</a>
-	</li>
-	<li>
-		<a id="nav-map-plantacion" href="/plantaciones/{{plantacione.id}}/mapa" target="_blank">
-			<span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-			Mapa
-		</a>
-	</li>
-	{% if is_granted('ROLE_ADMIN') %}
+	{% if route == "tecnicos_show" %}
 		<li>
-			<a>
-				{{ form_start(delete_form) }}
-				<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar la Plantación?')">
-					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-					Eliminar Plantación
-				</button>
-				{{ form_end(delete_form) }}
+			<a id="nav-new-expediente" href="/tecnicos/{{tecnico.id}}/edit">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+				Editar Tecnico
 			</a>
 		</li>
+		{% if is_granted('ROLE_ADMIN') %}
+			<li>
+				<a>
+					{{ form_start(delete_form) }}
+					<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Técnico?')">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						Eliminar Técnico
+					</button>
+					{{ form_end(delete_form) }}
+				</a>
+			</li>
+		{% endif %}
 	{% endif %}
-{% endif %}
-{#  -------------------------MOVIMIENTOS---------------------------- #}
-{% if route == "list_movimientos" %}
-	<li>
-		<a id="nav-edit-plantacion" href="{{path}}/edit">
-			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-			Editar
-		</a>
-	</li>
-	<li>
-		<a id="nav-edit-plantacion" href="{{path}}/actividades/new">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-			Nueva Actividad
-		</a>
-	</li>
-	<li>
-		<a id="nav-create-report" href="{{path}}/report" target="_blank">
-			<span class="glyphicon glyphicon-print" aria-hidden="true"></span>
-			Generar Reporte
-		</a>
-	</li>
-	{% if archivo is not null %}
-		<li>
-			<a href="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/informe" id="nav-ef-report-movimiento" target="_blank">
-				<span class="glyphicon glyphicon-book" aria-hidden="true"></span>
-				Bajar Informe
-			</a>
-		</li>
-	{% endif %}
-	{% if is_granted('ROLE_ADMIN') %}
-		<li>
-			<a>
-				{{ form_start(delete_form) }}
-				<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Movimiento?')">
-					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-					Eliminar Movimiento
-				</button>
-				{{ form_end(delete_form) }}
-			</a>
-		</li>
-	{% endif %}
-	<li class="navbar-primary">
-		<a id="nav_expediente" href="/expedientes/{{movimiento.expediente.id}}">{{movimiento.expediente.numeroInterno}}</a>
-	</li>
-{% endif %}
-{% if route == "nuevo_movimiento" %}
-	<li class="navbar-primary">
-		<a>EXPEDIENTE</a>
-	</li>
-{% endif %}
 
-{% if route == "edit_movimientos" %}
-	<li>
-		<a id="nav_expediente" href="/expedientes/{{movimiento.expediente.id}}">{{movimiento.expediente.numeroInterno}}</a>
-	</li>
-{% endif %}
+	{#  -------------------------PLANTACIONES---------------------------- #}
+	{% if route == "plantaciones_index" %}
+		<!-- <li class="navbar-primary">
+			<a id="nav-new-plantacion" href="/plantaciones/new">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+				Nueva Plantacion
+			</a>
+		</li> -->
+	{% endif %}
 
-{#  -------------------------ACTIVIDADES---------------------------- #}
-{% if route == "list_actividades" %}
-	<li>
-		<a id="nav-add-productor" href="{{path}}/actividadesTitular/new">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-			Agregar Productor
-		</a>
-	</li>
-	<li>
-		<a id="nav-edit-plantacion" href="{{path}}/edit">
-			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-			Editar Actividad
-		</a>
-	</li>
-	<li>
-		<a id="nav-edit-plantacion" href="{{path}}/edit">
-			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-			Editar Plantaciones
-		</a>
-	</li>
-	{% if is_granted('ROLE_ADMIN') %}
+	{% if route == "plantaciones_show" %}
 		<li>
-			<a>
-				{{ form_start(delete) }}
-				<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar la Actividad?')">
-					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-					Eliminar Actividad
-				</button>
-				{{ form_end(delete) }}
+			<a id="nav-edit-plantacion" href="/plantaciones/{{plantacione.id}}/edit">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+				Editar
 			</a>
 		</li>
+		<li>
+			<a id="nav-map-plantacion" href="/plantaciones/{{plantacione.id}}/mapa" target="_blank">
+				<span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+				Mapa
+			</a>
+		</li>
+		{% if is_granted('ROLE_ADMIN') %}
+			<li>
+				<a>
+					{{ form_start(delete_form) }}
+					<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar la Plantación?')">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						Eliminar Plantación
+					</button>
+					{{ form_end(delete_form) }}
+				</a>
+			</li>
+		{% endif %}
 	{% endif %}
-	<li>
-		<a id="nav_expediente" href="/expedientes/{#expediente.id#}">{#expediente.numeroInterno#}</a>
-	</li>
-{% endif %}
-{% if route == "actividades_new" %}
-	<li>
-		<a id="nav_expediente" href="/expedientes/{#expediente.id#}">{#expediente.numeroInterno#}</a>
-	</li>
+	{#  -------------------------MOVIMIENTOS---------------------------- #}
+	{% if route == "list_movimientos" %}
+		<li>
+			<a id="nav-edit-plantacion" href="{{path}}/edit">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+				Editar
+			</a>
+		</li>
+		<li>
+			<a id="nav-edit-plantacion" href="{{path}}/actividades/new">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+				Nueva Actividad
+			</a>
+		</li>
+		<li>
+			<a id="nav-create-report" href="{{path}}/report" target="_blank">
+				<span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+				Generar Reporte
+			</a>
+		</li>
+		{% if archivo is not null %}
+			<li>
+				<a href="/expedientes/{{expediente}}/movimientos/{{movimiento.id}}/informe" id="nav-ef-report-movimiento" target="_blank">
+					<span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+					Bajar Informe
+				</a>
+			</li>
+		{% endif %}
+		{% if is_granted('ROLE_ADMIN') %}
+			<li>
+				<a>
+					{{ form_start(delete_form) }}
+					<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar el Movimiento?')">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						Eliminar Movimiento
+					</button>
+					{{ form_end(delete_form) }}
+				</a>
+			</li>
+		{% endif %}
+		<li class="navbar-primary">
+			<a id="nav_expediente" href="/expedientes/{{movimiento.expediente.id}}">{{movimiento.expediente.numeroInterno}}</a>
+		</li>
+	{% endif %}
+	{% if route == "nuevo_movimiento" %}
+		<li class="navbar-primary">
+			<a>EXPEDIENTE</a>
+		</li>
+	{% endif %}
+
+	{% if route == "edit_movimientos" %}
+		<li>
+			<a id="nav_expediente" href="/expedientes/{{movimiento.expediente.id}}">{{movimiento.expediente.numeroInterno}}</a>
+		</li>
+	{% endif %}
+
+	{#  -------------------------ACTIVIDADES---------------------------- #}
+	{% if route == "list_actividades" %}
+		<li>
+			<a id="nav-add-productor" href="{{path}}/actividadesTitular/new">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+				Agregar Productor
+			</a>
+		</li>
+		<li>
+			<a id="nav-edit-plantacion" href="{{path}}/edit">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+				Editar Actividad
+			</a>
+		</li>
+		<li>
+			{% if plantaciones|length > 0 %}
+			<a id="nav-edit-plantacion" href="{{path('plantaciones_editar', {'actividad_id': actividad.id})}}">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+				Editar Plantaciones
+			</a>
+			{% endif %}
+		</li>
+		{% if is_granted('ROLE_ADMIN') %}
+			<li>
+				<a>
+					{{ form_start(delete) }}
+					<button type="submit" class="btn btn-default btn-xs" onclick="return confirm('¿Está seguro que desea eliminar la Actividad?')">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						Eliminar Actividad
+					</button>
+					{{ form_end(delete) }}
+				</a>
+			</li>
+		{% endif %}
+		<li class="navbar-primary">
+			<a id="nav_expediente" href="/expedientes/{{actividad.movimiento.expediente.id}}">{{actividad.movimiento.expediente.numeroInterno}}</a>
+		</li>
+	{% endif %}
+	{% if route == "actividades_new" %}
+		<li>
+			<a id="nav_expediente" href="/expedientes/{#expediente.id#}">{#expediente.numeroInterno#}</a>
+		</li>
+	{% endif %}
 {% endif %}
 {% if route == 'plantacionesaportes_show' %}
+	{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_TECNICO_REGIONAL') %}
 	<li>
 		<a id="nav-edit-plantacion" href="{{path('plantacionesaportes_edit',{'id': aporte.getId()})}}">
 			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 			Editar Aporte
 		</a>
 	</li>
+{% endif %}
 {% endif %}

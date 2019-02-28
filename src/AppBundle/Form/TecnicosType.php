@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class TecnicosType extends AbstractType
 {
@@ -18,8 +19,8 @@ class TecnicosType extends AbstractType
         $builder
             ->add('nombre')
             ->add('activo',CheckboxType::class, array('attr' => array('data-label' => 'Activo'), 'label' => false, 'required'=>false))
-            ->add('dni')
-            ->add('cuit');
+            ->add('dni',TextType::class,array('label'=>'DNI','required'=>false))
+            ->add('cuit',TextType::class,array('label'=>'DNI','required'=>false));
     }
 
     /**

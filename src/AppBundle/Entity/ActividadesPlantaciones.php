@@ -88,7 +88,7 @@ class ActividadesPlantaciones
     /**
      * @var \Plantaciones
      *
-     * @ORM\ManyToOne(targetEntity="Plantaciones", inversedBy="actividad", cascade={"persist","merge", "refresh", "remove"})
+     * @ORM\ManyToOne(targetEntity="Plantaciones", inversedBy="actividad", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")
      * })

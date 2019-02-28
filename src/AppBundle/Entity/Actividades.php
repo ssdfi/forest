@@ -84,23 +84,27 @@ class Actividades
      */
     private $tipoActividad;
 
-    /**
-        * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad",fetch="LAZY",cascade={"persist","remove"}, orphanRemoval=true)
-        * @ORM\JoinTable(
-        *      name="actividades_plantaciones",
-        *      joinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id",onDelete="CASCADE")},
-        *      inverseJoinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")}
-        * )
-        */
+   /**
+    * @ORM\OneToMany(targetEntity="ActividadesPlantaciones",mappedBy="actividad",fetch="LAZY",cascade={"persist"})
+    * @ORM\JoinTable(
+    *      name="actividades_plantaciones",
+    *      joinColumns={@ORM\JoinColumn(name="actividad_id", referencedColumnName="id")},
+    *      inverseJoinColumns={@ORM\JoinColumn(name="plantacion_id", referencedColumnName="id")}
+    * )
+    */
     private $plantaciones;
 
-    /**
-        * @ORM\OneToMany(targetEntity="ActividadesTitulares",mappedBy="actividad",fetch="LAZY")
-        * @ORM\JoinColumns({
-        *   @ORM\JoinColumn(name="tipo_actividad_id", referencedColumnName="id")
-        * })
-        */
+   /**
+    * @ORM\OneToMany(targetEntity="ActividadesTitulares",mappedBy="actividad",fetch="LAZY")
+    * @ORM\JoinColumns({
+    *   @ORM\JoinColumn(name="tipo_actividad_id", referencedColumnName="id")
+    * })
+    */
     private $actividadesTitulares;
+
+    public function __construct() {
+      $this->plantaciones = new ArrayCollection();
+    }
 
     public function getActividadesTitulares()
     {
@@ -112,36 +116,21 @@ class Actividades
         return $this->plantaciones;
     }
 
-    /**
-     * Set Plantaciones
-     *
-     * @var ArrayCollection $plantaciones
-     *
-     * @return Plantaciones
-     */
-   public function setPlantaciones($plantaciones=null)
-   {
-     if ($this->plantaciones->contains($plantaciones)) {
+    public function addPlantacione($plantacion){
+      if (true === $this->plantaciones->contains($plantacion)) {
          return;
-     }
-      foreach ($plantaciones as $key => $plantacion) {
-        $plantacion->addActividad($this);
-        $this->plantaciones[]=$plantacion;
-      }
-      return $this->plantaciones;
-   }
-
-   public function removePlantaciones($plantaciones=null)
-   {
-       foreach ($plantacion as $key => $value) {
-         $planta = $value;
-         if (false === $this->plantaciones->contains($planta)) {
-             return;
-         }
-         $this->plantaciones->removeElement($planta);
        }
-   }
+       $plantacion->setActividad($this);
+       $this->plantaciones[]=$plantacion;
+    }
 
+    public function removePlantacione($plantacion){
+      if (true === $this->plantaciones->contains($plantacion->getActividad())) {
+          return;
+      }
+      $this->plantaciones->removeElement($plantacion);
+
+    }
     /**
      * Get id
      *
@@ -350,9 +339,5 @@ class Actividades
         $total += $value->getSuperficieRegistrada();
       }
       return $total;
-    }
-
-    public function __construct() {
-      $this->plantaciones = new ArrayCollection();
     }
 }

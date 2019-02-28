@@ -31,103 +31,110 @@ class ExpedientesController extends Controller
     public function listExpedientes(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-
         $expediente = new Expedientes();
         $search_form = $this->createForm('AppBundle\Form\ExpedientesSearchType', $expediente, array(
-        'action' => '/',
-        'method' => 'get'
-      ));
-        $param=$request->query->get('expedientes_search');
-        $wheres=array();
-        $join=array();
-        if ($param['numeroInterno']) {
-            $numeroInterno = $param['numeroInterno'];
-            $wheres[]="lower(a.numeroInterno) like lower('%$numeroInterno%')";
+          'action' => '/',
+          'method' => 'get',
+          'user'=>$this->getUser()
+        ));
+        $param=($request->query->get('expedientes_search'))? $request->query->get('expedientes_search'):[];
+        $dqql = $em->createQueryBuilder();
+        $dqql->select('DISTINCT a, m.fechaEntrada, m.fechaSalida')
+             ->from('AppBundle:Expedientes','a')
+             ->leftJoin(
+                          'AppBundle:Movimientos',
+                          'm',
+                          \Doctrine\ORM\Query\Expr\Join::WITH,
+                          'a.id = m.expediente'
+                      )
+             ->where('a.numeroExpediente is not null');
+
+        if(array_key_exists('numeroInterno',$param) && $param['numeroInterno']){
+          $dqql->andwhere($dqql->expr()->like('UPPER(a.numeroInterno)', $dqql->expr()->literal('%'.strtoupper($param['numeroInterno']).'%')));
         }
-        if ($param['numeroExpediente']) {
-            $numeroExpediente = $param['numeroExpediente'];
-            $wheres[]="lower(a.numeroExpediente) like lower('%$numeroExpediente%')";
+        if(array_key_exists('numeroExpediente',$param) && $param['numeroExpediente']){
+          $dqql->andwhere($dqql->expr()->like('UPPER(a.numeroExpediente)', $dqql->expr()->literal('%'.strtoupper($param['numeroExpediente']).'%')));
         }
-        if ($param['zona']) {
-            $zona = $param['zona'];
-            $wheres[]="a.zona = $zona";
+        if(array_key_exists('zona',$param) && $param['zona']){
+          $dqql->andwhere('a.zona ='.$param['zona']);
         }
-        if ($param['anio']) {
-            $anio = $param['anio'];
-            $wheres[]="a.anio = $anio OR m.etapa = $anio";
+        if(array_key_exists('anio',$param) && $param['anio']){
+          $dqql->andwhere( $dqql->expr()->orX($dqql->expr()->eq('a.anio', $param['anio']),$dqql->expr()->eq('m.etapa', $param['anio'])));
         }
-        if ($param['tecnico']) {
-            $tecnico = $param['tecnico'];
-            $wheres[]="a.tecnico = $tecnico";
+        if(array_key_exists('tecnico',$param) && $param['tecnico']){
+          $dqql->andwhere('a.tecnico ='.$param['tecnico']);
         }
-        if ($param['activo']) {
-            $activo = $param['activo'] == 1 ? 'TRUE' : 'FALSE';
-            $wheres[]="a.activo = $activo";
+        if(array_key_exists('activo',$param) && $param['activo']){
+          $activo = $param['activo'] == 1 ? 'TRUE' : 'FALSE';
+          $dqql->andwhere('a.activo ='.$activo);
         }
-        if ($param['plurianual']) {
-            $plurianual = $param['plurianual'] == 1 ? 'TRUE' : 'FALSE';
-            $wheres[]="a.plurianual = $plurianual";
+        if(array_key_exists('plurianual',$param) && $param['plurianual']){
+          $plurianual = $param['plurianual'] == 1 ? 'TRUE' : 'FALSE';
+          $dqql->andwhere('a.plurianual ='.$plurianual);
         }
-        if ($param['agrupado']) {
-            $agrupado = $param['agrupado'] == 1 ? 'TRUE' : 'FALSE';
-            $wheres[]="a.agrupado = $agrupado";
+        if(array_key_exists('agrupado',$param) && $param['agrupado']){
+          $agrupado = $param['agrupado'] == 1 ? 'TRUE' : 'FALSE';
+          $dqql->andwhere('a.agrupado ='.$agrupado);
+        }
+        if(array_key_exists('responsable',$param) && $param['responsable']){
+          $dqql->andwhere('m.responsable ='.$param['responsable']);
+        }
+        if(array_key_exists('validador',$param) && $param['validador']){
+          $dqql->andwhere('m.validador ='.$param['validador']);
+        }
+        if(array_key_exists('fechaEntradaDesde',$param) && $param['fechaEntradaDesde']){
+          $dqql->andwhere('m.fechaEntrada >= :fechaEntradaDesde');
+          $dqql->setParameter('fechaEntradaDesde',$param['fechaEntradaDesde']);
+        }
+        if(array_key_exists('fechaEntradaHasta',$param) && $param['fechaEntradaHasta']){
+          $dqql->andwhere('m.fechaEntrada >= :fechaEntradaDesde');
+          $dqql->setParameter('fechaEntradaDesde',$param['fechaEntradaDesde']);
+        }
+        if(array_key_exists('fechaSalidaDesde',$param) && $param['fechaSalidaDesde']){
+          $dqql->andwhere('m.fechaSalida >= :fechaSalidaDesde');
+          $dqql->setParameter('fechaSalidaDesde',$param['fechaSalidaDesde']);
+        }
+        if (array_key_exists('fechaSalidaHasta',$param) && $param['fechaSalidaHasta']) {
+          $dqql->andwhere('m.fechaSalida <= :fechaSalidaHasta');
+          $dqql->setParameter('fechaSalidaHasta',$param['fechaSalidaHasta']);
+        }
+        if (array_key_exists('analizar',$param) && $param['analizar']) {
+          $analizar = $param['analizar'] == 1 ? 'true' : 'false';
+          if ($analizar == 'true') {
+            $dqql->andwhere('m.fechaSalida is null');
+          } else {
+            $dqql->andwhere('m.fechaSalida is not null');
+          }
+
+        }
+        if (array_key_exists('validado',$param) && $param['validado']) {
+          $validado =$param['validado'] == 1 ? 'true' : 'false';
+          if ($validado == 'true') {
+            $dqql->andwhere('m.validador is not null');
+          } else {
+            $dqql->andwhere('m.validador is null');
+          }
+        }
+        if (array_key_exists('estabilidad_fiscal',$param) && $param['estabilidad_fiscal']) {
+          $estabilidad_fiscal = $param['estabilidad_fiscal'] == 1 ? 'true' : 'false';
+          $dqql->andwhere('m.estabilidadFiscal ='.$estabilidad_fiscal);
         }
 
-        if ($param['responsable']) {
-            $responsable = $param['responsable'];
-            $wheres[]="m.responsable = $responsable";
+        if($this->isGranted('ROLE_USER') || $this->isGranted('ROLE_TECNICO_REGIONAL')) {
+            $dqql->andwhere('m.fechaSalida is not null');
         }
-        if ($param['validador']) {
-            $validador = $param['validador'];
-            $wheres[]="m.validador = $validador";
-        }
-        if ($param['fechaEntradaDesde']) {
-            $fechaEntradaDesde = $param['fechaEntradaDesde'];
-            $wheres[]="m.fechaEntrada > '$fechaEntradaDesde'";
-        }
-        if ($param['fechaEntradaHasta']) {
-            $fechaEntradaHasta = $param['fechaEntradaHasta'];
-            $wheres[]="m.fechaEntrada <= '$fechaEntradaHasta'";
-        }
-        if ($param['fechaSalidaDesde']) {
-            $fechaSalidaaDesde = $param['fechaSalidaDesde'];
-            $wheres[]="m.fechaSalida >= '$fechaSalidaaDesde'";
-        }
-        if ($param['fechaSalidaHasta']) {
-            $fechaSalidaHasta = $param['fechaSalidaHasta'];
-            $wheres[]="m.fechaSalida <= '$fechaSalidaHasta'";
-        }
-        if ($param['estabilidad_fiscal']) {
-            $estabilidad_fiscal = $param['estabilidad_fiscal'] == 1 ? 'true' : 'false';
-            $wheres[]="m.estabilidadFiscal = $estabilidad_fiscal";
-        }
-        $dql   = "SELECT a
-                  FROM AppBundle:Expedientes a
-                  INNER JOIN AppBundle:Movimientos m WITH a.id = m.expediente";
-        $filter = '';
-        foreach ($wheres as $key => $value) {
-            $filter = $filter .' '.$value;
-            if (count($wheres) > 1 && $value != end($wheres)) {
-                $filter = $filter .' AND';
-            }
-        }
-        if (!empty($wheres)) {
-            $dql = $dql .' WHERE '.$filter;
-        }
-        $dql = $dql . ' ORDER BY a.createdAt DESC';
-        $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $expedientes = $paginator->paginate(
-              $query,
-              $request->query->getInt('page', 1),
+              $dqql,
+              $request->query->getInt('page',1),
               15,
-              array('orderBy' => 'a.createdAt', 'defaultSortDirection' => 'ASC')
+              array('distinct' => true,'defaultSortFieldName' => 'a.updatedAt', 'defaultSortDirection' => 'desc')
           );
         $search_form->handleRequest($request);
-        if ($search_form->get('exportar')->isClicked()) {
-            return $this->render('expedientes/export.csv.twig', array('data' => $this->exportCSV($dql)));
+        if ($search_form->has('exportar') && $search_form->get('exportar')->isClicked()) {
+            return $this->render('expedientes/export.csv.twig', array('data' => $this->exportCSV($dqql)));
         }
-        return $this->render('expedientes/list.html.twig', array('expedientes' => $expedientes, 'search_form'=>$search_form->createView(),'param' => $param,'dql'=>$dql));
+        return $this->render('expedientes/list.html.twig', array('expedientes' => $expedientes, 'search_form'=>$search_form->createView(),'param' => $param));
     }
 
     /**
@@ -293,7 +300,7 @@ class ExpedientesController extends Controller
         fputcsv($output, array('Número Interno', 'Número Expediente','Titular', 'Zona','Zona departamento','Técnico','Responsable'));
         $result = $em->createQuery($dql)->getResult();
         foreach ($result as $key => $value) {
-            fputcsv($output, array($value->getNumeroInterno(), $value->getNumeroExpediente(), $value->getTitularesGroup(), $value->getZona()? $value->getZona()->getDescripcion(): '', $value->getZonaDepartamento()? $value->getZonaDepartamento()->getDescripcion() : '',$value->getTecnico()? $value->getTecnico()->getNombre() : '',$value->getResponsablesGroup()));
+            fputcsv($output, array($value[0]->getNumeroInterno(), $value[0]->getNumeroExpediente(), $value[0]->getTitularesGroup(), $value[0]->getZona()? $value[0]->getZona()->getDescripcion(): '', $value[0]->getZonaDepartamento()? $value[0]->getZonaDepartamento()->getDescripcion() : '',$value[0]->getTecnico()? $value[0]->getTecnico()->getNombre() : '',$value[0]->getResponsablesGroup()));
         }
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=expedientes.csv');

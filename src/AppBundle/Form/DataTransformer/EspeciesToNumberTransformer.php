@@ -24,12 +24,10 @@ class EspeciesToNumberTransformer implements DataTransformerInterface
      */
     public function transform($issue)
     {
-        if (true === $issue->getEspecie()) {
+        if (true === $issue) {
             return null;
         }
-        foreach ($issue as $key => $value) {
-          return $value;
-        }
+
         return $issue;
     }
 
@@ -43,11 +41,13 @@ class EspeciesToNumberTransformer implements DataTransformerInterface
     public function reverseTransform($issueNumber)
     {
         // no issue number? It's optional, so that's ok
-        if ($issueNumber->getEspecie()->isEmpty()) {
+        // dump($issueNumber);
+        // sdiosd;
+        if ($issueNumber->isEmpty()) {
             return;
         }
         $especies = new ArrayCollection();
-        foreach ($issueNumber->getEspecie() as $key => $value) {
+        foreach ($issueNumber as $key => $value) {
           $issue = $this->manager
           ->getRepository('AppBundle:Especies')->findOneById($value);
           $especies->add($issue);

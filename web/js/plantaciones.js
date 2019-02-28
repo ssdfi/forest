@@ -47,6 +47,7 @@
     /* Elimina el titular seleccionado */
     $("#remove-titular").click(function() {
       $("#plantaciones_titular").val('');
+      $("#plantaciones_plantacion_titular_id").val('');
       return $("#plantaciones_titular").val('');
     });
 
@@ -176,7 +177,7 @@
  del formulario */
     $("form").submit(function(e) {
       $("#plantaciones_especie option").prop('selected', true);
-      return $("#plantaciones_historico option").prop('selected', true);
+      return $("#plantaciones_plantacionesNuevas option").prop('selected', true);
     });
 
     /* Activa/Descativa el campo asociado al label */
@@ -198,7 +199,7 @@
     $("#plantaciones-modal-add").click(function() {
       $.each($('#plantaciones_nuevas_ids').val().split('\n'), function(key, value) {
         if (value !== '') {
-          return $('#plantaciones_historico').append("<option value='" + value + "'>" + value
+          return $('#plantaciones_plantacionesNuevas').append("<option value='" + value + "'>" + value
  + "</option>");
         }
       });
@@ -208,7 +209,7 @@
     /* Elimina las plantaciones seleccionadas */
     $("#remove-nueva-plantacion").click(function() {
       var nuevaPlantacion, _i, _len, _ref, _results;
-      _ref = $("#plantaciones_historico option:selected");
+      _ref = $("#plantaciones_plantacionesNuevas option:selected");
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         nuevaPlantacion = _ref[_i];
@@ -224,6 +225,6 @@
   });
   /* Selecciona todos los titulares del listado antes ejectuar el submit del formulario */
   return $("form").submit(function() {
-    return $("#plantaciones_historico option").prop('selected', true);
+    return $("#plantaciones_plantacionesNuevas option").prop('selected', true);
   });
 }).call(this);

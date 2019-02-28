@@ -17,22 +17,23 @@
   $(document).ready(function() {
 
     /* Define el objeto map y el div que lo contiene */
-    var geoJson,geoJsonAporte, googleSatelital, ignBase, ignSatelital, map, osm, osmMini;
+    var geoJson,geoJsonAporte, googleSatelital, ignBase, ignSatelital, map, osm, osmMini, exoBase, geoinfra;
     map = L.map('map');
 
-    /* Capa WMS de imagen satelital del IGN y CONAE */
-    ignSatelital = L.tileLayer.wms("http://wms.ign.gob.ar/geoserver/wms", {
-      layers: 'argentina500k:argentina500k_satelital',
-      format: 'image/png',
-      attribution: 'IGN - CONAE',
+    var argenmapUrl = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{y}.png'; //Mapa base de IGN
+  	var argenmapBase = new L.TileLayer(argenmapUrl, {minZoom: 4, tms: true, attribution: '&copy; <a href="www.ign.gob.ar/">Instituto Geográfico Nacional</a>'});
+
+    /* Capa WMS base de información del IGN */
+    eoxBase = L.tileLayer.wms("https://tiles.maps.eox.at/wms", {
+      layers: 's2cloudless_3857',
+      format: 'image/jpeg',
+      attribution: '&copy; <a href="https://s2maps.eu/">Sentinel-2 cloudless</a> by <a href="https://eox.at/">EOX IT Services GmbH</a>',
       transparent: true
     });
 
-    /* Capa WMS base de información del IGN */
-    ignBase = L.tileLayer.wms("http://wms.ign.gob.ar/geoserver/wms", {
-      layers: 'capabasesigign',
+    geoinfra = L.tileLayer.wms("http://www.geoinfra.minfra.gba.gov.ar/geoserver/ows?service=wms", {
+      layers: 'Geoinfra:parcelario_completo',
       format: 'image/png',
-      attribution: 'IGN',
       transparent: true
     });
 
@@ -90,11 +91,12 @@
     L.control.layers({
       "OpenStreetMap": osm,
       "Google Satelital": googleSatelital,
-      "IGN Satelital": ignSatelital,
-      "IGN Base": ignBase
+      "IGN": argenmapBase,
+      "EOX Base": eoxBase,
     }, {
       "Plantaciones": geoJson,
-      "Plantaciones Aporte": geoJsonAporte
+      "Plantaciones Aporte": geoJsonAporte,
+      "GeoInfra": geoinfra,
     }).addTo(map);
 
     /* Agrega otros controles al mapa */

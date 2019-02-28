@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Movimientos
@@ -14,6 +15,24 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Movimientos
 {
+
+    /**
+     * @Assert\Callback()
+     */
+    public function validate(ExecutionContextInterface $context)
+    {
+        $now = new \DateTime("now");
+
+        if($this->getFechaEntrada() > $now){
+          $context->buildViolation('No se puede cargar Fecha de entrada futura')->addViolation();
+        }
+
+        if($this->getFechaEntrada() > $this->getFechaSalida() && $this->getFechaSalida()!=null){
+          dump($this->getFechaSalida());
+          $context->buildViolation('No se puede cargar una Fecha de entrada que sea superior a la Fecha de salida')->addViolation();
+        }
+
+    }
     /**
      * @var integer
      *

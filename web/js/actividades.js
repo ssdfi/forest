@@ -4,6 +4,11 @@ $(document).ready(function () {
     ActividadPlantacionAdd();
     return;
   });
+  // $('#add-planta').click(function (e) {
+  //   e.preventDefault();
+  //   ActividadPlantacionAdd();
+  //   return;
+  // });
   $(document).on( "click",'.remove-plantacion',function (e) {
     e.preventDefault();
     ActividadPlantacionRemove(this);

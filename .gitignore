@@ -51,3 +51,6 @@
 npm-debug.log
 app/config/security.yml
 app/config/config.yml
+app/Resources/TwigBundle/views/Exception/sexception.html.twig
+app/Resources/TwigBundle/views/Exception/exception.html.twig
+app/config/parameters-old.yml

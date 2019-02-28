@@ -30,8 +30,20 @@
             {{ form_widget(edit_form.superficieRegistrada) }}
           </div>
         </div>
+        <hr>
+        <h3>Plantaciones</h3>
         <div class="row">
           <div class="col-md-12">
+            <!-- { if edit_form.plantaciones|length > 4 %}
+              <a id="add-plantacion" class="btn btn-primary btn-sm add_nested_fields" data-association="actividades_plantaciones" data-blueprint-id="actividades_plantaciones_fields_blueprint" data-target="#plantaciones" href="javascript:void(0)">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                Agregar Plantación
+              </a>
+              <button id="add-plantaciones" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#plantaciones-modal">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                Agregar Lista de Plantaciones
+              </button>
+            { endif %} -->
             <table id="plantaciones" class="table">
               <thead>
                 <tr>

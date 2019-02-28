@@ -20,7 +20,8 @@ class LdapUserProvider extends SymfonyLdapUserProvider
     private $groupNameRegExp = '/^CN=(?P<group>[^,]+),ou.*$/i'; // You might want to change it to match your ldap server
     protected function loadUser($username, Entry $entry)
     {
-        $roles = ['ROLE_USER']; // Actually we should be using $this->defaultRoles, but it's private. Has to be redesigned.
+        $roles = [];
+        // $roles = ['ROLE_USER']; // Actually we should be using $this->defaultRoles, but it's private. Has to be redesigned.
         if (!$entry->hasAttribute('memberOf')) { // Check if the entry has attribute with the group
             return new User($username, '', $roles);
         }
@@ -29,6 +30,9 @@ class LdapUserProvider extends SymfonyLdapUserProvider
             if (array_key_exists($groupName, $this->groupMapping)) { // Check if the group is in the mapping
                 $roles[] = $this->groupMapping[$groupName]; // Map the group to the role the user will have
             }
+        }
+        if (count($roles) == 0) {
+          $roles = ['ROLE_USER'];
         }
         return new User($username, '', $roles); // Create and return the user object
     }

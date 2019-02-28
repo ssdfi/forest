@@ -40,7 +40,9 @@
             <li><a href="/titulares/">Titulares</a></li>
             <li><a href="/tecnicos/">Técnicos</a></li>
             <li><a href="/plantaciones/">Plantaciones</a></li>
-            <!-- <li><a href="/aportes/">Aportes</a></li> -->
+            <li><a href="/aportes/">Aportes</a></li>
+            {% if is_granted('ROLE_TECNICO_REGIONAL') %}
+            {% endif %}
           </ul>
           <ul class="nav navbar-nav navbar-right">
             {{ include('navbar_right.html.twig') }}

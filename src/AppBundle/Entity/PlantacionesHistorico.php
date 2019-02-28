@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * PlantacionesHistorico
  *
  * @ORM\Table(name="plantaciones_historico", indexes={@ORM\Index(name="index_plantaciones_historico_on_plantacion_nueva_id", columns={"plantacion_nueva_id"}), @ORM\Index(name="index_plantaciones_historico_on_plantacion_anterior_id", columns={"plantacion_anterior_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PlantacionesHistoricoRepository")
  */
 class PlantacionesHistorico
 {

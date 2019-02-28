@@ -130,7 +130,7 @@ class TecnicosController extends Controller
               $query,
               $request->query->getInt('page', 1),
               15,
-              array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'desc')
+              array('defaultSortDirection' => 'desc')
           );
         $deleteForm = $this->createDeleteForm($tecnico);
         return $this->render('tecnicos/show.html.twig', array(

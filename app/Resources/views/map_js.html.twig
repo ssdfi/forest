@@ -2,7 +2,7 @@
 {% block javascripts %}
   <script src="{{ asset('js/jquery-3.1.1.js') }}"></script>
   {% if params == 'plantacionesaportes_show' %}
-    <script src="{{ asset('js/maps/aporte-map.js') }}"></script>
+    <script src="{{ asset('js/maps/map.js') }}"></script>
   {% else %}
     <script src="{{ asset('js/maps/map.js') }}"></script>
   {% endif %}
@@ -11,5 +11,5 @@
   <script src="{{ asset('js/L.Control.ZoomBox.js') }}"></script>
   <script src="{{ asset('js/Control.MiniMap.js') }}"></script>
   <script src="{{ asset('js/leaflet.label.js') }}"></script>
-  <script src="http://maps.google.com/maps/api/js?v=3&sensor=false&key={{google_maps_apikey}}" style=""></script>
+  <script src="https://maps.google.com/maps/api/js?v=3&sensor=false&key={{google_maps_apikey}}" style=""></script>
 {% endblock %}

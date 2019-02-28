@@ -94,6 +94,7 @@ class ActividadesTitularesController extends Controller
         $actividadesTitulares = $em->getRepository('AppBundle:ActividadesTitulares')->findOneById($id);
         $editForm = $this->createForm('AppBundle\Form\ActividadesTitularesType', $actividadesTitulares);
         $editForm->handleRequest($request);
+        $generos = $em->getRepository('AppBundle:Generos')->findAll();
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             try {
@@ -109,6 +110,7 @@ class ActividadesTitularesController extends Controller
 
         return $this->render('actividadestitulares/edit.html.twig', array(
             'actividadesTitulare' => $actividadesTitulares,
+            'generos'=>$generos,
             'form' => $editForm->createView(),
         ));
     }

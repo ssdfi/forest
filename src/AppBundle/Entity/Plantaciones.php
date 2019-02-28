@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Plantaciones
  *
  * @ORM\Table(name="plantaciones", indexes={@ORM\Index(name="index_plantaciones_on_tipo_plantacion_id", columns={"tipo_plantacion_id"}), @ORM\Index(name="index_plantaciones_on_provincia_id", columns={"provincia_id"}), @ORM\Index(name="index_plantaciones_on_estado_plantacion_id", columns={"estado_plantacion_id"}), @ORM\Index(name="index_plantaciones_on_titular_id", columns={"titular_id"}), @ORM\Index(name="index_plantaciones_on_departamento_id", columns={"departamento_id"}), @ORM\Index(name="index_plantaciones_on_uso_anterior_id", columns={"uso_anterior_id"}), @ORM\Index(name="index_plantaciones_on_estrato_desarrollo_id", columns={"estrato_desarrollo_id"}), @ORM\Index(name="index_plantaciones_on_objetivo_plantacion_id", columns={"objetivo_plantacion_id"}), @ORM\Index(name="index_plantaciones_on_activo", columns={"activo"}), @ORM\Index(name="index_plantaciones_on_uso_forestal_id", columns={"uso_forestal_id"}), @ORM\Index(name="index_plantaciones_on_base_geometrica_id", columns={"base_geometrica_id"}), @ORM\Index(name="index_plantaciones_on_fuente_informacion_id", columns={"fuente_informacion_id"}), @ORM\Index(name="index_plantaciones_on_geom", columns={"geom"}), @ORM\Index(name="index_plantaciones_on_error_id", columns={"error_id"}), @ORM\Index(name="index_plantaciones_on_fuente_imagen_id", columns={"fuente_imagen_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PlantacionesRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Plantaciones
@@ -129,6 +129,13 @@ class Plantaciones
      * @ORM\Column(name="geom", type="geometry", nullable=true)
      */
     private $geom;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="dosel", type="boolean", nullable=true)
+     */
+    private $dosel;
 
     /**
      * @var \BasesGeometricas
@@ -284,6 +291,21 @@ class Plantaciones
      private $historico;
 
      /**
+     * Many Users have Many Users.
+     * @ORM\ManyToMany(targetEntity="Plantaciones", mappedBy="plantacionesAnteriores", fetch="EAGER")
+     */
+     private $plantacionesNuevas;
+     /**
+     * Many Users have many Users.
+     * @ORM\ManyToMany(targetEntity="Plantaciones", inversedBy="plantacionesNuevas", fetch="EAGER")
+     * @ORM\JoinTable(name="plantaciones_historico",
+     *      joinColumns={@ORM\JoinColumn(name="plantacion_nueva_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="plantacion_anterior_id", referencedColumnName="id")}
+     *      )
+     */
+     private $plantacionesAnteriores;
+
+     /**
       * Set Historico
       *
       * @param \AppBundle\Entity\PlantacionesHistorico $historico
@@ -323,6 +345,49 @@ class Plantaciones
            return;
        }
        $this->historico->removeElement($historico);
+     }
+
+     /**
+      * Get getPlantacionesNuevas
+      *
+      * @return \AppBundle\Entity\PlantacionesHistorico
+      */
+     public function getPlantacionesNuevas()
+     {
+         return $this->plantacionesNuevas->toArray();
+     }
+
+     /**
+     * @param Especie $titular
+     */
+      public function addPlantacionesNueva(Plantaciones $pn)
+      {
+        if (true === $this->plantacionesNuevas->contains($pn)) {
+          return;
+        }
+        $this->plantacionesNuevas[] = $pn;
+        $pn->plantacionesAnteriores[] = $this;
+      }
+      /**
+      * @param Especie $titular
+      */
+       public function removePlantacionesNueva(Plantaciones $pn)
+       {
+         if (false === $this->plantacionesNuevas->contains($pn)) {
+             return;
+         }
+         $this->plantacionesNuevas->removeElement($pn);
+         $pn->plantacionesAnteriores->removeElement($this);
+       }
+
+     /**
+      * Get getPlantacionesNuevas
+      *
+      * @return \AppBundle\Entity\PlantacionesHistorico
+      */
+     public function getPlantacionesAnteriores()
+     {
+         return $this->plantacionesAnteriores;
      }
 
      /**
@@ -1089,9 +1154,34 @@ class Plantaciones
         $this->especie = new \Doctrine\Common\Collections\ArrayCollection();
         $this->actividad = new \Doctrine\Common\Collections\ArrayCollection();
         $this->historico = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->plantacionesNuevas = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->plantacionesAnteriores = new \Doctrine\Common\Collections\ArrayCollection();
     }
     public function __toString() {
       return (string)$this->id;
-  }
+    }
 
+    /**
+     * Set dosel
+     *
+     * @param boolean $dosel
+     *
+     * @return Plantaciones
+     */
+    public function setDosel($dosel)
+    {
+        $this->dosel = $dosel;
+
+        return $this;
+    }
+
+    /**
+     * Get /**
+     *
+     * @return boolean
+     */
+    public function getDosel()
+    {
+        return $this->dosel;
+    }
 }
