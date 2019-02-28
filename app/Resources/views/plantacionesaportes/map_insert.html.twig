@@ -1,3 +1,4 @@
+{% set params = app.request.attributes.get('_route') %}
 <div class="row">
 	<div class="col-md-12 hidden-print">
 		<div class="panel panel-primary">
@@ -5,7 +6,11 @@
 				<h3 class="panel-title">Plantaciones</h3>
 			</div>
 			<div class="panel-body">
-				<div id='map' class="map"></div>
+                                {% if params == 'plantacionesaportes_edit' %}
+				<div id='map' class="map map_edit"></div>
+                                {% else %}
+                                <div id='map' class="map"></div>
+                                {% endif %}
 			</div>
 		</div>
 		<!-- <div class="col-md-12 hidden-print">
@@ -34,6 +39,7 @@
 				"Area": {{area|round(2)}}
 			}
 		}
+                var id = {{app.request.attributes.get('id')}}
 	</script>
 {% endblock %}
 {{ include('map_js.html.twig') }}
