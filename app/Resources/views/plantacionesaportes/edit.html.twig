@@ -190,6 +190,10 @@
 			<input id="save-plantacion" class="btn btn-primary pull-right" type="submit" value="Guardar"/>
 			{{ form_end(edit_form) }}
 		</div>
+    <div class="col-md-7">
+        {{ include('plantacionesaportes/map_insert.html.twig', {'plantacion': plantacione, 'geom':geom, 'area':area}) }}
+        <div class="btn btn-primary" id="guardarCapa"> Guardar poligono</div>
+    </div>
 	</div>
 	{{ include('titulares/modal_search.html.twig') }}
 	{{ include('plantaciones/modal_especies.html.twig', { 'generos': generos }) }}

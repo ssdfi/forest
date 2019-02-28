@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Plantaciones;
 use AppBundle\Form\PlantacionesType;
@@ -223,6 +224,8 @@ class PlantacionesAportesController extends Controller
           $generos = $em->getRepository('AppBundle:Generos')->findAll();
           $editForm->handleRequest($request);
 
+          $plantacion = $em->getRepository('AppBundle:PlantacionesAportes')->findPlantacionWithArea($plantacionesAporte->getId());
+
           if ($editForm->isSubmitted() && $editForm->isValid()) {
               try {
                 $this->getDoctrine()->getManager()->flush();
@@ -241,6 +244,9 @@ class PlantacionesAportesController extends Controller
               'edit_form' => $editForm->createView(),
               'generos'=>$generos,
               'delete_form' => $deleteForm->createView(),
+              'plantacione' => $plantacion['plantacion'],
+              'area' => $plantacion['area'],
+              'geom' => $plantacion['geom'],
           ));
       }
       $this->get('session')->getFlashBag()->add('notice', array('type' => 'error', 'title' => '', 'message' => 'No puede editar un aporte que no sea el de usted.'));
@@ -281,5 +287,29 @@ class PlantacionesAportesController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * AJAX para guardar el poligono
+     *
+     * @Route("/{id}/edit/geom", name="plantacionesaportes_edit_geom")
+     * @Method({"POST"})
+     */
+    public function editGeomAction(Request $request)
+    {
+       if($this->isGranted('ROLE_ADMIN')){
+
+           $em    = $this->get('doctrine.orm.entity_manager');
+           $db = $em->getConnection();
+           $geoms = $request->request->get("geoms");
+           $id = $request->request->get("id");
+
+           $query = "UPDATE plantaciones_aportes SET geom = ST_SetSRID(ST_GeomFromGeoJSON(:geom), 4326) where id = :id";
+           $sql = $db->prepare($query);
+           $sql->bindParam("id", $id, \PDO::PARAM_INT);
+           $sql->bindParam("geom", $geoms, \PDO::PARAM_STR);
+           $sql->execute();
+       }
+       return new JsonResponse([true]);
     }
 }
