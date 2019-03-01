@@ -297,7 +297,9 @@ class PlantacionesAportesController extends Controller
      */
     public function editGeomAction(Request $request)
     {
-       if($this->isGranted('ROLE_ADMIN')){
+       if($this->isGranted('ROLE_ADMIN') ||
+          $this->isGranted('ROLE_TECNICO_REGIONAL')||
+          $this->isGranted('ROLE_EDITOR')){
 
            $em    = $this->get('doctrine.orm.entity_manager');
            $db = $em->getConnection();
