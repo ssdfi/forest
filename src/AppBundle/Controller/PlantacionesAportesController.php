@@ -474,7 +474,7 @@ class PlantacionesAportesController extends Controller
           $editForm = $this->createForm('AppBundle\Form\PlantacionesAportesType', $plantacionesAporte);
           $generos = $em->getRepository('AppBundle:Generos')->findAll();
           $editForm->handleRequest($request);
-          
+
           $plantacion = $em->getRepository('AppBundle:PlantacionesAportes')->findPlantacionWithArea($plantacionesAporte->getId());
 
           if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -585,7 +585,7 @@ class PlantacionesAportesController extends Controller
             ->getForm()
         ;
     }
-    
+
     /**
      * AJAX para guardar el poligono
      *

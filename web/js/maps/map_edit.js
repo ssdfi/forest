@@ -36,11 +36,11 @@
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     });
     osmMini = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
-   
+
     // FeatureGroup is to store editable layers
     var drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
-    
+
     /* Capa de imagen satelital de Google */
     googleSatelital = new L.Google('SATELLITE');
     /* Capa vectorial GeoJSON de las plantaciones */
@@ -82,7 +82,7 @@
     }, {
       "Plantaciones": geoJson
     }).addTo(map);
-    
+
     /* Agrega el control para importar archivos */
     L.Control.FileLayerLoad.LABEL = '<span class="glyphicon glyphicon-folder-open"></span>';
     var control = L.Control.fileLayerLoad({
@@ -107,7 +107,7 @@
         ]
     });
     control.addTo(map);
-    
+
     /* Agrega controles de dibujo */
      var drawControl = new L.Control.Draw({
         draw: {
@@ -119,7 +119,7 @@
          }
      });
      map.addControl(drawControl);
-     
+
      map.on(L.Draw.Event.CREATED, function (event) {
         var layer = event.layer;
         nuevo = layer.toGeoJSON();
@@ -139,7 +139,7 @@
           });
 
     });
-    
+
      map.on('draw:edited', function (e) {
          var layers = e.layers;
          layers.eachLayer(function (layer) {
@@ -156,7 +156,7 @@
               });
          });
      });
-    
+
     $("#guardarCapa").on('click', function(){
         var geoms = '';
         $.each(drawnItems.getLayers(), function(index, val) {
@@ -170,7 +170,11 @@
                 id:id,
                 geoms:JSON.stringify(geoms)
             },
-        })
+        }).done(function() {
+          alert("El polígono se ha guardado correctamente");
+        }).fail(function() {
+          alert("Hubo un error al guardar el polígono");
+        });
     });
 
     /* Agrega otros controles al mapa */
