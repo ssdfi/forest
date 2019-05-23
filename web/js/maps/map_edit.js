@@ -113,7 +113,6 @@
         draw: {
              circle: false,
              marker: false,
-             polyline: false,
          },
         edit: {
              featureGroup: drawnItems
@@ -131,9 +130,14 @@
               };
             },
             onEachFeature: function(feature, layer) {
+              layer.properties = {"id": 'Nuevo'};
+
+              console.log(layer);
                 drawnItems.addLayer(layer);
+
             }
           });
+
     });
     
      map.on('draw:edited', function (e) {

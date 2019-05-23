@@ -2,7 +2,7 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button class="close" type="button" data-dismiss="modal">
+				<button class="close cerrarEspecies" type="button">
 					<span aria-hidden="true">×</span>
 					<span class="sr-only">Cerrar</span>
 				</button>
@@ -55,9 +55,15 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-default" type="button" data-dismiss="modal">Cancelar</button>
+				<button class="btn btn-default cerrarEspecies" type="button">Cancelar</button>
 				<button id="especies-modal-add" class="btn btn-primary" type="button">Agregar</button>
 			</div>
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+$(document).on('click', '.cerrarEspecies', function(event) {
+      event.preventDefault();
+      $('#especies-modal').modal('hide');
+    });
+</script>

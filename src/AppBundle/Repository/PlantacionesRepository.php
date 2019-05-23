@@ -20,4 +20,16 @@ class PlantacionesRepository extends EntityRepository
       $plantaciones = $query->getSingleResult();
       return $plantaciones;
   }
+
+    public function findPlantacionWithArea($id)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT p as plantacion, ST_AREA(p.geom)/10000 as area, ST_AsGeoJson(ST_TRANSFORM(p.geom,4326)) as geom
+                FROM AppBundle:Plantaciones p
+                where p.id = :id";
+        $query = $em->createQuery($dql);
+        $query->setParameter('id', $id);
+        $plantaciones = $query->getSingleResult();
+        return $plantaciones;
+    }
 }
