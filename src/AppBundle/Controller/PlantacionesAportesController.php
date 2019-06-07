@@ -40,6 +40,11 @@ class PlantacionesAportesController extends Controller
 
         $provincia = $request->request->get("provincia");
         $departamento = $request->request->get("departamento");
+
+        $session = $request->getSession();
+        $session->set('provincia', $provincia);
+        $session->set('departamento', $departamento);
+        //dump($session);die;
         
         $plantacionesArray = [];
         if(!is_null($provincia) && !is_null($departamento)){
@@ -153,10 +158,14 @@ class PlantacionesAportesController extends Controller
             $em    = $this->get('doctrine.orm.entity_manager');
             $db = $em->getConnection();
             $geoms = $request->request->get("geoms");
+            $idDepto = $request->request->get("idDepto");
+            $idProv = $request->request->get("idProv");
            
-            $query = "INSERT INTO plantaciones_aportes (geom, activo, usuario) VALUES(ST_SetSRID(ST_GeomFromGeoJSON(:geom), 4326), true, '".$this->getUser()->getUsername()."')";
+            $query = "INSERT INTO plantaciones_aportes (geom, activo, usuario, provincia_id, departamento_id) VALUES(ST_SetSRID(ST_GeomFromGeoJSON(:geom), 4326), true, '".$this->getUser()->getUsername()."', :idProv, :idDepto)";
             $sql = $db->prepare($query);
             $sql->bindParam("geom", $geoms, \PDO::PARAM_STR);
+            $sql->bindParam("idProv", $idProv, \PDO::PARAM_INT);
+            $sql->bindParam("idDepto", $idDepto, \PDO::PARAM_INT);
             $sql->execute();
             $id = $db->lastInsertId();
 
@@ -169,7 +178,7 @@ class PlantacionesAportesController extends Controller
             $nuevo->id = $plantacion['id'];
             $nuevo->type = "Feature";
             $nuevo->geometry = json_decode($plantacion['geom']);
-            $nuevo->properties = array("Id"=> $plantacion['id'], "Area"=> round($plantacion['area'],2)." Ha&sup2;");
+            $nuevo->properties = array("Id"=> $plantacion['id'], "Tipo" => 1,"Area"=> round($plantacion['area'],2)." Ha&sup2;");
        }
        return new JsonResponse($nuevo);
     }
@@ -602,7 +611,7 @@ class PlantacionesAportesController extends Controller
         $tipo = $request->request->get("tipo");
 
         if($tipo == 1){
-            $plantacionesAporte = $em->getRepository('AppBundle:PlantacionesAporte')->find($id);
+            $plantacionesAporte = $em->getRepository('AppBundle:PlantacionesAportes')->find($id);
             if ($plantacionesAporte->getUsuario() == $this->getUser()->getUsername() || $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_EDITOR')) {
                 $query = "UPDATE plantaciones_aportes SET geom = ST_SetSRID(ST_GeomFromGeoJSON(:geom), 4326) where id = :id";
                 $sql = $db->prepare($query);
@@ -615,6 +624,8 @@ class PlantacionesAportesController extends Controller
                 $sql->execute();
                 $plantacion = $sql->fetch();
                 return new JsonResponse(array("Area"=> round($plantacion['area'],2)." Ha&sup2;"));
+            }else{
+                return new JsonResponse([false]);
             }
         }else{
 
@@ -680,18 +691,23 @@ class PlantacionesAportesController extends Controller
      */
     public function eliminarAction(Request $request)
     {
-       if ($plantacionesAporte->getUsuario() == $this->getUser()->getUsername() || $this->isGranted('ROLE_ADMIN')) {
-           
-           $em    = $this->get('doctrine.orm.entity_manager');
-           $db = $em->getConnection();
-           $id = $request->request->get("id");
-           
-           $query = "DELETE FROM plantaciones_aportes where id = :id";
-           //$query = "UPDATE plantaciones_aportes SET activo = false where id = :id";
-           $sql = $db->prepare($query);
-           $sql->bindParam("id", $id, \PDO::PARAM_INT);
-           $sql->execute();
-       }
-       return new JsonResponse([true]);
+        $em    = $this->get('doctrine.orm.entity_manager');
+        $db = $em->getConnection();
+        $id = $request->request->get("id");
+
+        $plantacionesAporte = $em->getRepository('AppBundle:PlantacionesAportes')->find($id);
+
+        if ($plantacionesAporte->getUsuario() == $this->getUser()->getUsername() || $this->isGranted('ROLE_ADMIN')) {           
+            $query = "DELETE FROM plantaciones_aportes where id = :id";
+            //$query = "UPDATE plantaciones_aportes SET activo = false where id = :id";
+            $sql = $db->prepare($query);
+            $sql->bindParam("id", $id, \PDO::PARAM_INT);
+            $sql->execute();
+
+            return new JsonResponse([true]);
+        }else{
+            return new JsonResponse([false]);
+        }
+        
     }
 }

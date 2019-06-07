@@ -201,17 +201,24 @@ $(document).ready(function() {
                     mouseout: resetHighlight,
                     click: zoomToFeature
                 });
+
+                idProv = $('#provincia').val();
+                idDepto = $('#departamento').val();
                 
                 $.ajax({
                     url: '/aportes/crear',
                     type: 'POST',
                     dataType: "json",
                     data: {
-                        geoms:JSON.stringify(feature.geometry)
+                        geoms:JSON.stringify(feature.geometry),
+                        idProv:idProv,
+                        idDepto:idDepto
                     },
                 }).done(function(data, textStatus, jqXHR){
                     feature.id = data.id;
-                    feature.properties = {"Id" : data.id, "Area": data.area};                       
+                    feature.properties = {"Id" : data.id, "Area": data.properties.Area, "Tipo":data.properties.Tipo};     
+                    console.log(data);
+                    console.log(feature);
                 })
                 items.addLayer(layer);
 
@@ -608,6 +615,15 @@ $(document).on("click", ".editarSeleccionP", function(){
 
 $(document).on("change", "#provincia", function(){
     id = $(this).val();
+    cambiarProv(id);
+});
+
+if (depto != '') {
+    cambiarProv(prov);
+}
+
+
+function cambiarProv(id) {
     $.ajax({
         url: '/aportes/getPartidos/'+id,
         type: 'GET',
@@ -615,10 +631,14 @@ $(document).on("change", "#provincia", function(){
     }).done(function(data, textStatus, jqXHR){
         $('#departamento').html('');
         $.each( data, function( key, value ) {  
-            $('#departamento').append('<option value="'+value.id+'">'+value.nombre+'</option>')
+            if (value.id == depto) {
+                $('#departamento').append('<option value="'+value.id+'" selected>'+value.nombre+'</option>')
+            }else{
+                $('#departamento').append('<option value="'+value.id+'">'+value.nombre+'</option>')
+            }
         });
     })
-});
+}
 
 }).call(this);
 

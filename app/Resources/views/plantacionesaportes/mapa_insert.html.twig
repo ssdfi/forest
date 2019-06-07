@@ -16,6 +16,8 @@
 	<script>
 	var plantacionesArray = {{plantaciones|raw}};
 	var plantacionesActivasArray = {{plantacionesActivas|raw}};
+	var depto = '{{app.session.get('departamento')|default('')}}';
+	var prov = '{{app.session.get('provincia')|default('')}}';
 	
 	</script>
 {% endblock %}

@@ -47,7 +47,7 @@
 							<option value="">Seleccione provincia</option>
 							
 							{% for provincia in provincias %}
-							<option value="{{provincia.id}}">{{provincia.nombre}}</option>
+							<option value="{{provincia.id}}" {% if app.session.get('provincia') == provincia.id %} selected{% endif %}>{{provincia.nombre}}</option>
 							{% endfor %}
 							</select></div>
 							<div><select name="departamento" id="departamento" class="form-control">
