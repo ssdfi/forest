@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Plantaciones;
+use AppBundle\Entity\PlantacionesAportes;
 use AppBundle\Form\PlantacionesType;
 use CrEOF\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
@@ -692,5 +693,115 @@ class PlantacionesController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * Finds and displays a plantacionesAporte entity.
+     *
+     * @Route("/{id}/detalle", name="plantaciones_show_detalle")
+     * @Method("GET")
+     */
+    public function showDetalleAction($id)
+    {
+        $em    = $this->get('doctrine.orm.entity_manager');
+        $plantacion = $em->getRepository('AppBundle:Plantaciones')->findPlantacionWithArea($id);
+        return $this->render('plantaciones/show_detalle.html.twig', array(
+            'plantacione' => $plantacion['plantacion'],
+            'area' => $plantacion['area'],
+            'geom' => $plantacion['geom'],
+        ));
+    }
+
+    /**
+     * Displays a form to edit an existing Plantaciones entity.
+     * @Route("/editarActiva", name="plantaciones_editar_unico")
+     * @Method({"GET", "POST"})
+     */
+    public function editarActivaAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $ids=$request->request->get('plantacion');
+
+        if ($ids) {
+            
+            $param = array_filter(explode(",", $ids));
+            if(count($param) == 1){
+                $plantacione = $em->getRepository('AppBundle:Plantaciones')->find($param[0]);
+            }else{
+                $plantacione = new Plantaciones();
+            }
+     
+            $generos = $em->getRepository('AppBundle:Generos')->findAll();
+            $editForm = $this->createForm('AppBundle\Form\PlantacionesEditarType', $plantacione, array('param'=>$param));
+            $editForm->handleRequest($request);
+            
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+                try {
+                    foreach ($param as $value) {
+                        $plantacion_actualizar = new PlantacionesAportes();
+                        if ($plantacion_actualizar && $plantacion_actualizar->getUsuario() == $this->getUser()->getUsername() || $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_EDITOR')) {
+                          if ($plantacione->getAnioPlantacion()) { $plantacion_actualizar->setAnioPlantacion($plantacione->getAnioPlantacion()); }
+                          if ($plantacione->getNomenclaturaCatastral()) { $plantacion_actualizar->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral()); }
+                          if ($plantacione->getDistanciaPlantas()) { $plantacion_actualizar->setDistanciaPlantas($plantacione->getDistanciaPlantas()); }
+                          if ($plantacione->getCantidadFilas()) { $plantacion_actualizar->setCantidadFilas($plantacione->getCantidadFilas()); }
+                          if ($plantacione->getDistanciaFilas()) { $plantacion_actualizar->setDistanciaFilas($plantacione->getDistanciaFilas()); }
+                          if ($plantacione->getDensidad()) { $plantacion_actualizar->setDensidad($plantacione->getDensidad()); }
+                          if ($plantacione->getAnioInformacion()) { $plantacion_actualizar->setAnioInformacion($plantacione->getAnioInformacion()); }
+                          if ($plantacione->getFechaImagen()) { $plantacion_actualizar->setFechaImagen($plantacione->getFechaImagen()); }
+                          if ($plantacione->getActivo()) { $plantacion_actualizar->setActivo($plantacione->getActivo()); }
+                          if ($plantacione->getComentarios()) { $plantacion_actualizar->setComentarios($plantacione->getComentarios()); }
+                          if ($plantacione->getMpfId()) { $plantacion_actualizar->setMpfId($plantacione->getMpfId()); }
+                          if ($plantacione->getUnificadoId()) { $plantacion_actualizar->setUnificadoId($plantacione->getUnificadoId()); }
+                          if ($plantacione->getBaseGeometricaId()) { $plantacion_actualizar->setBaseGeometricaId($plantacione->getBaseGeometricaId()); }
+                          if ($plantacione->getError()) { $plantacion_actualizar->setError($plantacione->getError()); }
+                          if ($plantacione->getEstadoPlantacion()) { $plantacion_actualizar->setEstadoPlantacion($plantacione->getEstadoPlantacion()); }
+                          if ($plantacione->getEstratoDesarrollo()) { $plantacion_actualizar->setEstratoDesarrollo($plantacione->getEstratoDesarrollo()); }
+                          if ($plantacione->getFuenteImagen()) { $plantacion_actualizar->setFuenteImagen($plantacione->getFuenteImagen()); }
+                          if ($plantacione->getFuenteInformacion()) { $plantacion_actualizar->setFuenteInformacion($plantacione->getFuenteInformacion()); }
+                          if ($plantacione->getObjetivoPlantacion()) { $plantacion_actualizar->setObjetivoPlantacion($plantacione->getObjetivoPlantacion()); }
+                          if ($plantacione->getTipoPlantacion()) { $plantacion_actualizar->setTipoPlantacion($plantacione->getTipoPlantacion()); }
+                          if ($plantacione->getTitular()) { $plantacion_actualizar->setTitular($plantacione->getTitular()); }
+                          if ($plantacione->getUsoAnterior()) { $plantacion_actualizar->setUsoAnterior($plantacione->getUsoAnterior()); }
+                          if ($plantacione->getUsoForestal()) { $plantacion_actualizar->setUsoForestal($plantacione->getUsoForestal()); }
+                          if ($plantacione->getProvincia()) { $plantacion_actualizar->setProvincia($plantacione->getProvincia()); }
+                          if ($plantacione->getDepartamento()) { $plantacion_actualizar->setDepartamento($plantacione->getDepartamento()); }
+                          if ($plantacione->getDosel() !== null) { $plantacion_actualizar->setDosel($plantacione->getDosel()); }
+                          if (!$plantacione->getEspecie()->isEmpty()) { $plantacion_actualizar->addEspecie($plantacione->getEspecie()); }
+                          if ($plantacione->getGeom()) { $plantacion_actualizar->setGeom($plantacione->getGeom()); }
+                          $plantacion_actualizar->setUsuario($this->getUser()->getUsername());
+                          $em->persist($plantacion_actualizar);
+                        }
+                    }
+                    $em->refresh($plantacione);
+                    $em->flush();
+                    $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha editado correctamente la plantación.'));
+                    return $this->redirectToRoute('plantacionesaportes_index_mapa');
+                } catch (\Doctrine\ORM\ORMException $e) {
+                    $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar la plantación');
+                    $this->get('logger')->error($e->getMessage());
+                    return $this->redirect('plantacionesaportes_index_mapa');
+                }
+            }
+
+            return $this->render('plantaciones/editarActiva.html.twig', array(
+            'param' => $ids,
+            'plantacione' => $plantacione,
+            'generos' => $generos,
+            'edit_form' => $editForm->createView(),
+        ));
+        } else {
+            $dql   = "SELECT a FROM AppBundle:Plantaciones a";
+            $query = $em->createQuery($dql);
+            $paginator = $this->get('knp_paginator');
+            $this->get('session')->getFlashBag()->add('error', "Debe ingresar al menos un 'id' de plantación para editar");
+            $plantaciones = $paginator->paginate(
+                $query,
+                $request->query->getInt('page', 1),
+                15,
+                array('defaultSortFieldName' => 'a.id', 'defaultSortDirection' => 'asc')
+            );
+            return $this->render('plantaciones/index.html.twig', array('plantaciones' => $plantaciones, 'param'=> $param));
+        }
     }
 }

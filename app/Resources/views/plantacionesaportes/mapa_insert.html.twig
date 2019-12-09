@@ -1,0 +1,24 @@
+{% set params = app.request.attributes.get('_route') %}
+<div class="row">
+	<div class="col-md-12 hidden-print">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Plantaciones</h3>
+			</div>
+			<div class="panel-body">
+				<div id='map' class="map map_edit"></div>                                
+			</div>
+		</div>
+	</div>
+</div>
+
+{% block javascripts %}
+	<script>
+	var plantacionesArray = {{plantaciones|raw}};
+	var plantacionesActivasArray = {{plantacionesActivas|raw}};
+	var depto = '{{app.session.get('departamento')|default('')}}';
+	var prov = '{{app.session.get('provincia')|default('')}}';
+	
+	</script>
+{% endblock %}
+{{ include('map_js.html.twig') }}

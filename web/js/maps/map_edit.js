@@ -113,7 +113,6 @@
         draw: {
              circle: false,
              marker: false,
-             polyline: false,
          },
         edit: {
              featureGroup: drawnItems
@@ -131,15 +130,18 @@
               };
             },
             onEachFeature: function(feature, layer) {
+                layer.properties = {"id": 'Nuevo'};
                 drawnItems.addLayer(layer);
+
             }
           });
+
     });
 
-     map.on('draw:edited', function (e) {
-         var layers = e.layers;
-         layers.eachLayer(function (layer) {
-             nuevo = layer.toGeoJSON();
+    map.on('draw:edited', function (e) {
+        var layers = e.layers;
+        layers.eachLayer(function (layer) {
+            nuevo = layer.toGeoJSON();
             L.geoJson(nuevo, {
                 style: function(feature) {
                   return {
@@ -149,9 +151,30 @@
                 onEachFeature: function(feature, layer) {
                     drawnItems.addLayer(layer);
                 }
-              });
-         });
-     });
+            });
+        });
+    });
+
+    map.on('draw:deleted', function (e) {
+        var layers = e.layers;
+        layers.eachLayer(function (layer) {
+            $.ajax({
+               url: '/aportes/'+layer.feature.properties.Id+'/eliminar',
+               type: 'POST',
+               dataType: "json",
+               data: {
+                   id:layer.feature.properties.Id,
+               },
+            }).done(function(data, textStatus, jqXHR) {
+                if(data[0] == true){
+                    alert("El polígono se ha eliminado correctamente");
+                    window.location.href = "/aportes";
+                }else{
+                    alert("No tiene permisos para eliminar el poligono");
+                }
+            })
+       });
+   });
 
     $("#guardarCapa").on('click', function(){
         var geoms = '';
@@ -164,10 +187,16 @@
             dataType: "json",
             data: {
                 id:id,
-                geoms:JSON.stringify(geoms)
+                geoms:JSON.stringify(geoms),
+                tipo:1
             },
-        }).done(function() {
-          alert("El polígono se ha guardado correctamente");
+        }).done(function(data, textStatus, jqXHR) {
+            if(data[0] == false){
+                alert("No tiene permisos para editar el poligono");
+            }else{
+                alert("El polígono se ha guardado correctamente");
+            }
+          
         }).fail(function() {
           alert("Hubo un error al guardar el polígono");
         });

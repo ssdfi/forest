@@ -1,10 +1,13 @@
 {% set params = app.request.attributes.get('_route') %}
 {% block javascripts %}
   <script src="{{ asset('js/jquery-3.1.1.js') }}"></script>
+  <script src="{{ asset('js/typeahead.bundle.js') }}"></script>
   {% if params == 'plantacionesaportes_show' %}
     <script src="{{ asset('js/maps/map.js') }}"></script>
   {% elseif params == 'plantacionesaportes_edit' %}
     <script src="{{ asset('js/maps/map_edit.js') }}"></script>
+  {% elseif params == 'plantacionesaportes_index_mapa' %}
+    <script src="{{ asset('js/maps/mapa.js') }}"></script>
   {% else %}
     <script src="{{ asset('js/maps/map.js') }}"></script>
   {% endif %}
