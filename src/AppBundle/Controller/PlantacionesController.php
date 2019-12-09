@@ -40,12 +40,12 @@ class PlantacionesController extends Controller
         $param=$request->query->get('plantacion');
         $actividad = $request->query->get('actividad_id');
         if ($param['ids'] || $actividad) {
-          $p_actividad = array();
-            if($actividad){
-              $plantaciones_actividad = $em->getRepository('AppBundle:Actividades')->findOneById($actividad);
-              foreach ($plantaciones_actividad->getPlantaciones() as $k => $v) {
-                $p_actividad[$k] = $v->getPlantacion();
-              }
+            $p_actividad = array();
+            if ($actividad) {
+                $plantaciones_actividad = $em->getRepository('AppBundle:Actividades')->findOneById($actividad);
+                foreach ($plantaciones_actividad->getPlantaciones() as $k => $v) {
+                    $p_actividad[$k] = $v->getPlantacion();
+                }
             }
             $param = ($p_actividad)? $p_actividad : array_filter(explode("\r\n", $param['ids']));
             $plantacione = new Plantaciones();
@@ -58,39 +58,93 @@ class PlantacionesController extends Controller
                     foreach ($param as $value) {
                         $plantacion_actualizar = $em->getRepository('AppBundle:Plantaciones')->findOneById($value);
                         if ($plantacion_actualizar) {
-                          if ($plantacione->getAnioPlantacion()) { $plantacion_actualizar->setAnioPlantacion($plantacione->getAnioPlantacion()); }
-                          if ($plantacione->getNomenclaturaCatastral()) { $plantacion_actualizar->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral()); }
-                          if ($plantacione->getDistanciaPlantas()) { $plantacion_actualizar->setDistanciaPlantas($plantacione->getDistanciaPlantas()); }
-                          if ($plantacione->getCantidadFilas()) { $plantacion_actualizar->setCantidadFilas($plantacione->getCantidadFilas()); }
-                          if ($plantacione->getDistanciaFilas()) { $plantacion_actualizar->setDistanciaFilas($plantacione->getDistanciaFilas()); }
-                          if ($plantacione->getDensidad()) { $plantacion_actualizar->setDensidad($plantacione->getDensidad()); }
-                          if ($plantacione->getAnioInformacion()) { $plantacion_actualizar->setAnioInformacion($plantacione->getAnioInformacion()); }
-                          if ($plantacione->getFechaImagen()) { $plantacion_actualizar->setFechaImagen($plantacione->getFechaImagen()); }
-                          if ($plantacione->getActivo()) { $plantacion_actualizar->setActivo($plantacione->getActivo()); }
-                          if ($plantacione->getComentarios()) { $plantacion_actualizar->setComentarios($plantacione->getComentarios()); }
-                          if ($plantacione->getMpfId()) { $plantacion_actualizar->setMpfId($plantacione->getMpfId()); }
-                          if ($plantacione->getUnificadoId()) { $plantacion_actualizar->setUnificadoId($plantacione->getUnificadoId()); }
-                          if ($plantacione->getBaseGeometricaId()) { $plantacion_actualizar->setBaseGeometricaId($plantacione->getBaseGeometricaId()); }
-                          if ($plantacione->getError()) { $plantacion_actualizar->setError($plantacione->getError()); }
-                          if ($plantacione->getEstadoPlantacion()) { $plantacion_actualizar->setEstadoPlantacion($plantacione->getEstadoPlantacion()); }
-                          if ($plantacione->getEstratoDesarrollo()) { $plantacion_actualizar->setEstratoDesarrollo($plantacione->getEstratoDesarrollo()); }
-                          if ($plantacione->getFuenteImagen()) { $plantacion_actualizar->setFuenteImagen($plantacione->getFuenteImagen()); }
-                          if ($plantacione->getFuenteInformacion()) { $plantacion_actualizar->setFuenteInformacion($plantacione->getFuenteInformacion()); }
-                          if ($plantacione->getObjetivoPlantacion()) { $plantacion_actualizar->setObjetivoPlantacion($plantacione->getObjetivoPlantacion()); }
-                          if ($plantacione->getTipoPlantacion()) { $plantacion_actualizar->setTipoPlantacion($plantacione->getTipoPlantacion()); }
-                          if ($plantacione->getTitular()) { $plantacion_actualizar->setTitular($plantacione->getTitular()); }
-                          if ($plantacione->getUsoAnterior()) { $plantacion_actualizar->setUsoAnterior($plantacione->getUsoAnterior()); }
-                          if ($plantacione->getUsoForestal()) { $plantacion_actualizar->setUsoForestal($plantacione->getUsoForestal()); }
-                          if ($plantacione->getProvincia()) { $plantacion_actualizar->setProvincia($plantacione->getProvincia()); }
-                          if ($plantacione->getDepartamento()) { $plantacion_actualizar->setDepartamento($plantacione->getDepartamento()); }
-                          if ($plantacione->getDosel() !== null) { $plantacion_actualizar->setDosel($plantacione->getDosel()); }
-                          if (!$plantacione->getEspecie()->isEmpty()) { $plantacion_actualizar->setEspecie($plantacione->getEspecie()); }
-                          $em->persist($plantacion_actualizar);
+                            if ($plantacione->getAnioPlantacion()) {
+                                $plantacion_actualizar->setAnioPlantacion($plantacione->getAnioPlantacion());
+                            }
+                            if ($plantacione->getNomenclaturaCatastral()) {
+                                $plantacion_actualizar->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
+                            }
+                            if ($plantacione->getDistanciaPlantas()) {
+                                $plantacion_actualizar->setDistanciaPlantas($plantacione->getDistanciaPlantas());
+                            }
+                            if ($plantacione->getCantidadFilas()) {
+                                $plantacion_actualizar->setCantidadFilas($plantacione->getCantidadFilas());
+                            }
+                            if ($plantacione->getDistanciaFilas()) {
+                                $plantacion_actualizar->setDistanciaFilas($plantacione->getDistanciaFilas());
+                            }
+                            if ($plantacione->getDensidad()) {
+                                $plantacion_actualizar->setDensidad($plantacione->getDensidad());
+                            }
+                            if ($plantacione->getAnioInformacion()) {
+                                $plantacion_actualizar->setAnioInformacion($plantacione->getAnioInformacion());
+                            }
+                            if ($plantacione->getFechaImagen()) {
+                                $plantacion_actualizar->setFechaImagen($plantacione->getFechaImagen());
+                            }
+                            if ($plantacione->getActivo()) {
+                                $plantacion_actualizar->setActivo($plantacione->getActivo());
+                            }
+                            if ($plantacione->getComentarios()) {
+                                $plantacion_actualizar->setComentarios($plantacione->getComentarios());
+                            }
+                            if ($plantacione->getMpfId()) {
+                                $plantacion_actualizar->setMpfId($plantacione->getMpfId());
+                            }
+                            if ($plantacione->getUnificadoId()) {
+                                $plantacion_actualizar->setUnificadoId($plantacione->getUnificadoId());
+                            }
+                            if ($plantacione->getBaseGeometricaId()) {
+                                $plantacion_actualizar->setBaseGeometricaId($plantacione->getBaseGeometricaId());
+                            }
+                            if ($plantacione->getError()) {
+                                $plantacion_actualizar->setError($plantacione->getError());
+                            }
+                            if ($plantacione->getEstadoPlantacion()) {
+                                $plantacion_actualizar->setEstadoPlantacion($plantacione->getEstadoPlantacion());
+                            }
+                            if ($plantacione->getEstratoDesarrollo()) {
+                                $plantacion_actualizar->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
+                            }
+                            if ($plantacione->getFuenteImagen()) {
+                                $plantacion_actualizar->setFuenteImagen($plantacione->getFuenteImagen());
+                            }
+                            if ($plantacione->getFuenteInformacion()) {
+                                $plantacion_actualizar->setFuenteInformacion($plantacione->getFuenteInformacion());
+                            }
+                            if ($plantacione->getObjetivoPlantacion()) {
+                                $plantacion_actualizar->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
+                            }
+                            if ($plantacione->getTipoPlantacion()) {
+                                $plantacion_actualizar->setTipoPlantacion($plantacione->getTipoPlantacion());
+                            }
+                            if ($plantacione->getTitular()) {
+                                $plantacion_actualizar->setTitular($plantacione->getTitular());
+                            }
+                            if ($plantacione->getUsoAnterior()) {
+                                $plantacion_actualizar->setUsoAnterior($plantacione->getUsoAnterior());
+                            }
+                            if ($plantacione->getUsoForestal()) {
+                                $plantacion_actualizar->setUsoForestal($plantacione->getUsoForestal());
+                            }
+                            if ($plantacione->getProvincia()) {
+                                $plantacion_actualizar->setProvincia($plantacione->getProvincia());
+                            }
+                            if ($plantacione->getDepartamento()) {
+                                $plantacion_actualizar->setDepartamento($plantacione->getDepartamento());
+                            }
+                            if ($plantacione->getDosel() !== null) {
+                                $plantacion_actualizar->setDosel($plantacione->getDosel());
+                            }
+                            if (!$plantacione->getEspecie()->isEmpty()) {
+                                $plantacion_actualizar->setEspecie($plantacione->getEspecie());
+                            }
+                            $em->persist($plantacion_actualizar);
                         }
                     }
                     $em->flush();
                     $this->get('session')->getFlashBag()->add('notice', array('type' => 'success', 'title' => 'Editar Plantación', 'message' => 'Se ha editado correctamente la plantación.'));
-                    return $this->redirectToRoute('plantaciones_index',array('plantacion[ids]'=>implode("\r\n",$param)));
+                    return $this->redirectToRoute('plantaciones_index', array('plantacion[ids]'=>implode("\r\n", $param)));
                 } catch (\Doctrine\ORM\ORMException $e) {
                     $this->get('session')->getFlashBag()->add('error', 'Ocurrió un error al editar la plantación');
                     $this->get('logger')->error($e->getMessage());
@@ -134,24 +188,24 @@ class PlantacionesController extends Controller
             $param = explode("\r\n", $str);
             $ids = [];
             foreach ($param as $key => $value) {
-              if (!empty($value)) {
-                $ids[]= $value;
-              }
+                if (!empty($value)) {
+                    $ids[]= $value;
+                }
             }
             $queries = $em->createQuery('SELECT p as plantacion, st_area(p.geom)/10000 as area FROM AppBundle:Plantaciones p WHERE p.id IN (:ids)');
             $queries->setParameter('ids', $ids);
         } else {
-          $qb = $em->createQueryBuilder();
-          $qb->select('p as plantacion, st_area(p.geom)/10000 as area')
+            $qb = $em->createQueryBuilder();
+            $qb->select('p as plantacion, st_area(p.geom)/10000 as area')
              ->from('AppBundle:Plantaciones', 'p')
              ->orderBy('p.id', 'ASC');
         }
         $paginator = $this->get('knp_paginator');
         $plantaciones = $paginator->paginate(
-                $queries ? $queries : $qb,
-                $request->query->getInt('page', 1),
-                15,
-                array('wrap-queries'=>true,'distinct' => false)
+            $queries ? $queries : $qb,
+            $request->query->getInt('page', 1),
+            15,
+            array('wrap-queries'=>true,'distinct' => false)
             );
 
         return $this->render('plantaciones/index.html.twig', array('plantaciones' => $plantaciones, 'param'=> $param));
@@ -253,8 +307,8 @@ class PlantacionesController extends Controller
         $arr_query = array();
         foreach ($query as $item) {
             foreach ($item as $key => $value) {
-                if ($value != null){
-                  $arr_query[$key][] = $value;
+                if ($value != null) {
+                    $arr_query[$key][] = $value;
                 }
             }
         }
@@ -294,18 +348,18 @@ class PlantacionesController extends Controller
 
             if ($copiarDatos === true) {
                 foreach ($plantacione->getPlantacionesNuevas() as $key => $value) {
-                  $value->setActivo($activarNuevas);
-                  $value->setTitular($plantacione->getTitular());
-                  $value->setEspecie($plantacione->getEspecie());
-                  $value->setAnioPlantacion($plantacione->getAnioPlantacion());
-                  $value->setTipoPlantacion($plantacione->getTipoPlantacion());
-                  $value->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
-                  $value->setProvincia($plantacione->getProvincia());
-                  $value->setDepartamento($plantacione->getDepartamento());
-                  $value->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
-                  $value->setUsoForestal($plantacione->getUsoForestal());
-                  $value->setUsoAnterior($plantacione->getUsoAnterior());
-                  $value->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
+                    $value->setActivo($activarNuevas);
+                    $value->setTitular($plantacione->getTitular());
+                    $value->setEspecie($plantacione->getEspecie());
+                    $value->setAnioPlantacion($plantacione->getAnioPlantacion());
+                    $value->setTipoPlantacion($plantacione->getTipoPlantacion());
+                    $value->setNomenclaturaCatastral($plantacione->getNomenclaturaCatastral());
+                    $value->setProvincia($plantacione->getProvincia());
+                    $value->setDepartamento($plantacione->getDepartamento());
+                    $value->setEstratoDesarrollo($plantacione->getEstratoDesarrollo());
+                    $value->setUsoForestal($plantacione->getUsoForestal());
+                    $value->setUsoAnterior($plantacione->getUsoAnterior());
+                    $value->setObjetivoPlantacion($plantacione->getObjetivoPlantacion());
                 }
             }
             if ($activarNuevas === true) {
@@ -342,6 +396,7 @@ class PlantacionesController extends Controller
      */
     public function jsonAction($id)
     {
+        $this->get('session')->save();
         $em = $this->getDoctrine()->getManager();
         $dql_p   = "SELECT st_area(p.geom)/10000
                     FROM AppBundle:Plantaciones p
@@ -362,10 +417,11 @@ class PlantacionesController extends Controller
      * @Route("/area/{id}", name="area")
      * @Method("GET")
      */
-    function getAreaAction($id) {
-      $em    = $this->getDoctrine()->getManager();
-      $area = $em->getRepository('AppBundle:Plantaciones')->findArea($id);
-      return $this->render('default/area.html.twig', array(
+    public function getAreaAction($id)
+    {
+        $em    = $this->getDoctrine()->getManager();
+        $area = $em->getRepository('AppBundle:Plantaciones')->findArea($id);
+        return $this->render('default/area.html.twig', array(
           'area' => $area['area']));
     }
     /* Obtengo Plantacion*/
@@ -503,124 +559,124 @@ class PlantacionesController extends Controller
     */
     public function controlPlantacion(Plantaciones $plantacion)
     {
-      $errores=[];
+        $errores=[];
 
-      $em = $this->getDoctrine()->getManager();
-      $conn = $em->getConnection();
-      $sql =  "SELECT p.id, 'Plantacion fuera de faja' AS error
+        $em = $this->getDoctrine()->getManager();
+        $conn = $em->getConnection();
+        $sql =  "SELECT p.id, 'Plantacion fuera de faja' AS error
               FROM plantaciones p
               JOIN ign_fajas b ON st_within(ST_TRANSFORM(p.geom, 4326), ST_Buffer(b.geom,-0.11))
               WHERE p.activo = 't' AND p.created_at is null
               AND (b.id+22180) <> st_srid(p.geom)
               AND p.id =".$plantacion->getId();
-      $stmt = $conn->prepare($sql);
-      $stmt->execute();
-      $fueraFaja = $stmt->fetchAll();
-      foreach ($fueraFaja as $key => $value) {
-        $errores['mensaje']['fuera_faja']=$value['error'];
-      }
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $fueraFaja = $stmt->fetchAll();
+        foreach ($fueraFaja as $key => $value) {
+            $errores['mensaje']['fuera_faja']=$value['error'];
+        }
 
-      if (strpos(get_class($plantacion->getGeom()), 'LineString') && $plantacion->getTipoPlantacion()
+        if (strpos(get_class($plantacion->getGeom()), 'LineString') && $plantacion->getTipoPlantacion()
           && $plantacion->getTipoPlantacion()->getId() == 1
           && $plantacion->getId() > 141389
           ) {
-        $errores['mensaje']['geom']='El tipo de Plantación debe ser CORTINA';
-      }
+            $errores['mensaje']['geom']='El tipo de Plantación debe ser CORTINA';
+        }
 
-      if (strpos(get_class($plantacion->getGeom()), 'Polygon') && $plantacion->getTipoPlantacion()
+        if (strpos(get_class($plantacion->getGeom()), 'Polygon') && $plantacion->getTipoPlantacion()
           && $plantacion->getTipoPlantacion()->getId() == 2
           && $plantacion->getId() > 141389
           ) {
-        $errores['mensaje']['geom']='El tipo de Plantación debe ser MACIZO';
-      }
-
-      if ($plantacion->getTipoPlantacion() == null) {
-        $errores['mensaje']['geom']='No hay tipo de Plantación definida';
-      }
-
-      if ($plantacion->getActivo() === null && $plantacion->getTipoPlantacion() === null) {
-        $errores['mensaje']['activa_inactiva']='Plantacion deberia estar activa o inactiva';
-      }
-
-      if ($plantacion->getId() < 141389) {
-        foreach ($plantacion->getActividad() as $key => $actividad) {
-          if (date("Y-m-d H:i:s", strtotime('+0 hours', strtotime($actividad->getCreatedAt()->format('Y-m-d')))) >= '2015-03-10') {
-            $errores['mensaje']['migrada_redigitalizar']='Plantacion migrada se deberia redigitalizar';
-          }
-        }
-      }
-      if ($plantacion->getActivo() === null && $plantacion->getId() < 141389) {
-        $errores['mensaje']['nulo_campo_activo']='Plantacion con dato nulo en campo activo';
-      }
-
-      if ($plantacion->getFuenteInformacion() && $plantacion->getFuenteInformacion()->getId() <> 11 && $plantacion->getId() > 141389){
-        if (!$plantacion->getActividad()){
-            $errores['mensaje']['fuente_informacion']='Plantacion con fuente informacion equivocada';
+            $errores['mensaje']['geom']='El tipo de Plantación debe ser MACIZO';
         }
 
-        if ($plantacion->getHistorico()){
-          foreach ($plantacion->getHistorico() as $key => $value) {
-            if($value->getPlantacionNueva()->getId() == $plantacion->getId()){
-              $errores['mensaje']['plantacion_inactiva_sin_reemplazo']='Plantacion inactiva sin reemplazar';
+        if ($plantacion->getTipoPlantacion() == null) {
+            $errores['mensaje']['geom']='No hay tipo de Plantación definida';
+        }
+
+        if ($plantacion->getActivo() === null && $plantacion->getTipoPlantacion() === null) {
+            $errores['mensaje']['activa_inactiva']='Plantacion deberia estar activa o inactiva';
+        }
+
+        if ($plantacion->getId() < 141389) {
+            foreach ($plantacion->getActividad() as $key => $actividad) {
+                if (date("Y-m-d H:i:s", strtotime('+0 hours', strtotime($actividad->getCreatedAt()->format('Y-m-d')))) >= '2015-03-10') {
+                    $errores['mensaje']['migrada_redigitalizar']='Plantacion migrada se deberia redigitalizar';
+                }
             }
-          }
         }
-      }
+        if ($plantacion->getActivo() === null && $plantacion->getId() < 141389) {
+            $errores['mensaje']['nulo_campo_activo']='Plantacion con dato nulo en campo activo';
+        }
 
-      if (!$plantacion->getFuenteImagen() && $plantacion->getId() > 141389){
-        $errores['mensaje']['info_imagen']='Plantacion sin informacion imagen';
-      }
-
-      if (!$plantacion->getNomenclaturaCatastral() && $plantacion->getId() > 141389){
-        $errores['mensaje']['nomenclatura_catastral']='Plantacion sin nomenclatura catastral';
-      }
-
-      if ($plantacion->getId() > 141389 && $plantacion->getEspecie() && $plantacion->getEspecie()->isEmpty()){
-        $errores['mensaje']['especie']='Plantacion sin especie';
-      }
-
-      if ($plantacion->getId() > 141389 && !$plantacion->getTitular()){
-        $errores['mensaje']['titular']='Plantacion sin titular';
-      }
-
-      if ($plantacion->getId() > 141389 && (!$plantacion->getProvincia() || !$plantacion->getDepartamento() )){
-        $errores['mensaje']['departamento_provincia']='Plantacion sin dato departamento y/o provincia';
-      }
-
-      if ($plantacion->getActivo()){
-        if ($plantacion->getHistorico()){
-          foreach ($plantacion->getHistorico() as $key => $value) {
-            if(!$value->getPlantacionNueva()){
-              $errores['mensaje']['plantacion_inactiva_sin_reemplazo']='Plantacion inactiva sin reemplazar';
+        if ($plantacion->getFuenteInformacion() && $plantacion->getFuenteInformacion()->getId() <> 11 && $plantacion->getId() > 141389) {
+            if (!$plantacion->getActividad()) {
+                $errores['mensaje']['fuente_informacion']='Plantacion con fuente informacion equivocada';
             }
-          }
-        }
-      }
 
-      if ($plantacion->getActivo()){
-        if ($plantacion->getHistorico()){
-          foreach ($plantacion->getHistorico() as $key => $value) {
-            if($value->getPlantacionAnterior()->getId() === $plantacion->getId()){
-              $errores['mensaje']['plantacion_activa_reemplazada']='Plantacion activa reemplazada';
+            if ($plantacion->getHistorico()) {
+                foreach ($plantacion->getHistorico() as $key => $value) {
+                    if ($value->getPlantacionNueva()->getId() == $plantacion->getId()) {
+                        $errores['mensaje']['plantacion_inactiva_sin_reemplazo']='Plantacion inactiva sin reemplazar';
+                    }
+                }
             }
-          }
         }
-      }
 
-      if ($plantacion->getId() > 141389) {
-        foreach ($plantacion->getActividad() as $key => $actividadPlantacion) {
-          if($actividadPlantacion->getNumeroPlantas() == $plantacion->getDensidad()) {
-            if($actividadPlantacion->getActividad() && $actividadPlantacion->getActividad()->getTipoActividad()->getId() === 3) {
-              $errores['mensaje']['densidad_inconsistente']='Plantacion con densidad inconsistente';
+        if (!$plantacion->getFuenteImagen() && $plantacion->getId() > 141389) {
+            $errores['mensaje']['info_imagen']='Plantacion sin informacion imagen';
+        }
+
+        if (!$plantacion->getNomenclaturaCatastral() && $plantacion->getId() > 141389) {
+            $errores['mensaje']['nomenclatura_catastral']='Plantacion sin nomenclatura catastral';
+        }
+
+        if ($plantacion->getId() > 141389 && $plantacion->getEspecie() && $plantacion->getEspecie()->isEmpty()) {
+            $errores['mensaje']['especie']='Plantacion sin especie';
+        }
+
+        if ($plantacion->getId() > 141389 && !$plantacion->getTitular()) {
+            $errores['mensaje']['titular']='Plantacion sin titular';
+        }
+
+        if ($plantacion->getId() > 141389 && (!$plantacion->getProvincia() || !$plantacion->getDepartamento())) {
+            $errores['mensaje']['departamento_provincia']='Plantacion sin dato departamento y/o provincia';
+        }
+
+        if ($plantacion->getActivo()) {
+            if ($plantacion->getHistorico()) {
+                foreach ($plantacion->getHistorico() as $key => $value) {
+                    if (!$value->getPlantacionNueva()) {
+                        $errores['mensaje']['plantacion_inactiva_sin_reemplazo']='Plantacion inactiva sin reemplazar';
+                    }
+                }
             }
-          }
         }
-        if (!$plantacion->getDensidad()){
-          $errores['mensaje']['sin_densidad']='Plantacion sin densidad';
-        }
-      }
 
-      return $errores;
+        if ($plantacion->getActivo()) {
+            if ($plantacion->getHistorico()) {
+                foreach ($plantacion->getHistorico() as $key => $value) {
+                    if ($value->getPlantacionAnterior()->getId() === $plantacion->getId()) {
+                        $errores['mensaje']['plantacion_activa_reemplazada']='Plantacion activa reemplazada';
+                    }
+                }
+            }
+        }
+
+        if ($plantacion->getId() > 141389) {
+            foreach ($plantacion->getActividad() as $key => $actividadPlantacion) {
+                if ($actividadPlantacion->getNumeroPlantas() == $plantacion->getDensidad()) {
+                    if ($actividadPlantacion->getActividad() && $actividadPlantacion->getActividad()->getTipoActividad()->getId() === 3) {
+                        $errores['mensaje']['densidad_inconsistente']='Plantacion con densidad inconsistente';
+                    }
+                }
+            }
+            if (!$plantacion->getDensidad()) {
+                $errores['mensaje']['sin_densidad']='Plantacion sin densidad';
+            }
+        }
+
+        return $errores;
     }
     /**
      * Creates a form to delete a Plantaciones entity.
