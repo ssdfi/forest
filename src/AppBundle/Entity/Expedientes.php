@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Expedientes
  *
@@ -48,10 +49,10 @@ class Expedientes
      *
      * @ORM\Column(name="numero_expediente", type="string", length=255, nullable=true)
      * @Assert\Regex(
-     *     pattern     = "/EXP-S05:[0-9]{7}\/[0-9]{4}|EX-20[0-9]{2}\-[0-9]{8}/",
-     *     message     = "El formato debe ser EXP-S05:#######/#### o EX-20##-########"
+     *     pattern     = "/EXP-S05:[0-9]{7}\/[0-9]{4}|EXP-S01:[0-9]{7}\/[0-9]{4}|EX-20[0-9]{2}-?([0-9]{8}|[0-9]{9})?(- -APN-DDYME#MA|- -APN-DGD#MA|- -APN-DGDMA#MPYT)|EX-20[0-9]{2}-[0-9]{8}\b/",
+     *     message     = "El formato debe ser EXP-S05:#######/#### o EX-20##-######## o EX-2016-02633411- -APN-DDYME#MA o EX-2018-18448039- -APN-DGD#MA o EX-2019-36229281- -APN-DGDMA#MPYT"
      * )
-     * @Assert\Length(min = 16, max=20, exactMessage="El campo debe tener {{ limit }} digitos, EXP-S05:#######/####")
+     * @Assert\Length(min = 16, max=34, exactMessage="El campo debe tener {{ limit }} digitos, EXP-S05:#######/####")
      * @Assert\NotBlank(message="El campo no puede estar vacío")
      */
     private $numeroExpediente;
@@ -137,14 +138,14 @@ class Expedientes
         *      inverseJoinColumns={@ORM\JoinColumn(name="titular_id", referencedColumnName="id")}
         * )
         */
-     private $titulares;
+    private $titulares;
 
-     /**
-      * @var \Movimiento
-      *
-      * @ORM\OneToMany(targetEntity="Movimientos",mappedBy="expediente",orphanRemoval=true)
-      */
-     private $movimientos;
+    /**
+     * @var \Movimiento
+     *
+     * @ORM\OneToMany(targetEntity="Movimientos",mappedBy="expediente",orphanRemoval=true)
+     */
+    private $movimientos;
     /**
      * Get id
      *
@@ -328,10 +329,10 @@ class Expedientes
      */
     public function setCreatedAt($createdAt)
     {
-      if(!$this->createdAt){
-          $this->createdAt = new \DateTime();
-      }
-      //$this->createdAt = $createdAt;
+        if (!$this->createdAt) {
+            $this->createdAt = new \DateTime();
+        }
+        //$this->createdAt = $createdAt;
 
         return $this;
     }
@@ -486,25 +487,24 @@ class Expedientes
     /**
     * @param Titulares $titular
     */
-   public function addTitular($titular)
-   {
-       if (true === $this->titulares->contains($titular)) {
-           return;
-       }
-       $this->titulares[] = $titular;
+    public function addTitular($titular)
+    {
+        if (true === $this->titulares->contains($titular)) {
+            return;
+        }
+        $this->titulares[] = $titular;
+    }
 
-   }
-
-   public function removeTitular($titular)
-   {
-       foreach ($titular as $key => $value) {
-         $titu = $value;
-         if (false === $this->titulares->contains($titu)) {
-             return;
-         }
-         $this->titulares->removeElement($titu);
-       }
-   }
+    public function removeTitular($titular)
+    {
+        foreach ($titular as $key => $value) {
+            $titu = $value;
+            if (false === $this->titulares->contains($titu)) {
+                return;
+            }
+            $this->titulares->removeElement($titu);
+        }
+    }
 
     /**
      * Get zonaSplit
@@ -513,7 +513,7 @@ class Expedientes
      */
     public function getZonaSplit()
     {
-        return substr( $this->numeroInterno, 0, 2);
+        return substr($this->numeroInterno, 0, 2);
     }
 
     /**
@@ -523,7 +523,7 @@ class Expedientes
      */
     public function getZonaDeptoSplit()
     {
-        return substr( $this->numeroInterno, 3, 3);
+        return substr($this->numeroInterno, 3, 3);
     }
 
     /**
@@ -533,11 +533,11 @@ class Expedientes
      */
     public function getAnioSplit()
     {
-        $anio = (int)substr( $this->numeroInterno, 11, 2);
-        if ($anio < 80){
-          $anio = $anio + 2000;
-        }else{
-          $anio = $anio + 1900;
+        $anio = (int)substr($this->numeroInterno, 11, 2);
+        if ($anio < 80) {
+            $anio = $anio + 2000;
+        } else {
+            $anio = $anio + 1900;
         }
         return $anio;
     }
@@ -556,27 +556,30 @@ class Expedientes
         return null;
     }
 
-    public function getTitularesGroup(){
-      if($this->titulares){
-        $titularesGroup='';
-        foreach ($this->titulares as $key => $value) {
-          $titularesGroup = $titularesGroup . ' - ' . $value->getNombre();
+    public function getTitularesGroup()
+    {
+        if ($this->titulares) {
+            $titularesGroup='';
+            foreach ($this->titulares as $key => $value) {
+                $titularesGroup = $titularesGroup . ' - ' . $value->getNombre();
+            }
         }
-      }
-      return $titularesGroup;
+        return $titularesGroup;
     }
 
-    public function getResponsablesGroup(){
-      if($this->movimientos){
-        $responsablesGroup='';
-        foreach ($this->movimientos as $key => $value) {
-          $responsablesGroup = $responsablesGroup . ' - ' . $value->getResponsable();
+    public function getResponsablesGroup()
+    {
+        if ($this->movimientos) {
+            $responsablesGroup='';
+            foreach ($this->movimientos as $key => $value) {
+                $responsablesGroup = $responsablesGroup . ' - ' . $value->getResponsable();
+            }
         }
-      }
-      return $responsablesGroup;
+        return $responsablesGroup;
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->tecnico = new \Doctrine\Common\Collections\ArrayCollection();
         $this->titulares = new \Doctrine\Common\Collections\ArrayCollection();
         $this->zonaDepartamento = new \Doctrine\Common\Collections\ArrayCollection();

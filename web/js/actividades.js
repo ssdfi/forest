@@ -64,25 +64,34 @@ $(document).ready(function () {
 
   $('#plantaciones-modal-add').click(function() {
         var plantacion_id, tr, _i, _len, _ref;
-        _ref = $('#plantaciones-ids').val().split('\n');
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          plantacion_id = _ref[_i];
-          if ($.isNumeric($.trim(plantacion_id))) {
-            $("#add-plantacion").click();
-            tr = $('#plantaciones').find('tr').last();
-            tr.find('[id$=plantacion]').val($.trim(plantacion_id));
-            tr.find('[id$=fecha]').val($('#fecha').val());
-            tr.find('[id$=numeroPlantas]').val($('#numero_plantas').val());
-            if ($('#superficie_registrada').val()) {
-              tr.find('[id$=superficieRegistrada]').val($('#superficie_registrada').val());
-            } else {
-              tr.find('.hectareas').click();
+        _ref = $('#plantaciones-ids').val().replace(/\n/g,'&');
+        $('.wait').show();
+        $.ajax({
+          url: "/plantaciones/jsongroup/" + _ref
+        }).done(function(data) {
+          if (data) {
+            for (_i = 0, _len = data.length; _i < _len; _i++) {
+              $("#add-plantacion").click();
+              tr = $('#plantaciones').find('tr').last();
+              tr.find('[id$=plantacion]').val($.trim(data[_i]['id']));
+              tr.find('[id$=fecha]').val($('#fecha').val());
+              tr.find('[id$=numeroPlantas]').val($('#numero_plantas').val());
+              if ($('#superficie_registrada').val()) {
+                tr.find('[id$=superficieRegistrada]').val($('#superficie_registrada').val());
+              } else {
+                tr.find('[id$=superficieRegistrada]').val($.trim(data[_i]['area']));
+              }
+              tr.find('[id$=estadoAprobacion]').val($('#_estado_aprobacion_id').val());
+              tr.find('[id$=observaciones]').val($('#observaciones').val());
             }
-            tr.find('[id$=estadoAprobacion]').val($('#_estado_aprobacion_id').val());
-            tr.find('[id$=observaciones]').val($('#observaciones').val());
+            $("#plantaciones-modal").modal('hide');
+            $('.wait').hide();
+            return tr.find('[id$=plantacion]').parent().removeClass('has-error');
           }
-        }
-        $('#plantaciones-ids').val('');
-        return $("#plantaciones-modal").modal('hide');
+        }).fail(function(){
+          $("#plantaciones-modal").modal('hide');
+          $('.wait').hide();
+          return tr.find('[id$=plantacion]').parent().addClass('has-error');
+        })
       });
 });

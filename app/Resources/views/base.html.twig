@@ -1,75 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}" />
-    <title>{% block title %}ForestApp{% endblock %}</title>
-    {% block stylesheets %}{% endblock %}
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}"/>
+		<title>
+			{% block title %}ForestApp{% endblock %}
+		</title>
+		{% block stylesheets %}{% endblock %}
 
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/bootstrap-switch.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/body.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/application.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/leaflet.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/Control.MiniMap.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/L.Control.ZoomBox.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
-  </head>
+		<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/bootstrap-switch.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/body.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/application.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/leaflet.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/Control.MiniMap.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('css/L.Control.ZoomBox.css') }}"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+	</head>
 
-  <body>
-    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Ver navegador</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">
-            <i class="glyphicon glyphicon-tree-deciduous"></i>
-          </a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="/">Expedientes</a></li>
-            <li><a href="/titulares/">Titulares</a></li>
-            <li><a href="/tecnicos/">Técnicos</a></li>
-            <li><a href="/plantaciones/">Plantaciones</a></li>
-            <li><a href="/aportes/">Aportes</a></li>
-            <li><a href="/aportes/mapa">Mapa</a></li>
-            {% if is_granted('ROLE_TECNICO_REGIONAL') %}
-            {% endif %}
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            {{ include('navbar_right.html.twig') }}
-            <li class="navbar-danger">
-              <!--logout -->
-                <a id="nav-logout" href="/logout" data-confirm="¿Está seguro que desea cerrar la sesión?">
-                  <span class="glyphicon glyphicon glyphicon-log-out" aria-hidden="true"></span> Salir
-                </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+	<body>
+		<div class="wait"></div>
+		<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Ver navegador</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/">
+						<i class="glyphicon glyphicon-tree-deciduous"></i>
+					</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li>
+							<a href="/">Expedientes</a>
+						</li>
+						<li>
+							<a href="/titulares/">Titulares</a>
+						</li>
+						<li>
+							<a href="/tecnicos/">Técnicos</a>
+						</li>
+						<li>
+							<a href="/plantaciones/">Plantaciones</a>
+						</li>
+						<li>
+							<a href="/aportes/">Aportes</a>
+						</li>
+						<li>
+							<a href="/aportes/mapa">Mapa</a>
+						</li>
+						{% if is_granted('ROLE_TECNICO_REGIONAL') %}{% endif %}
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						{{ include('navbar_right.html.twig') }}
+						<li class="navbar-danger">
+							<!--logout -->
+							<a id="nav-logout" href="/logout" data-confirm="¿Está seguro que desea cerrar la sesión?">
+								<span class="glyphicon glyphicon glyphicon-log-out" aria-hidden="true"></span>
+								Salir
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                {% block body %} {% endblock %}
-            </div>
-        </div>
-    </div>
-      {% block javascripts %}
-          <script src="{{ asset('js/jquery-3.1.1.js') }}"></script>
-          <script src="{{ asset('js/bootstrap.js') }}"></script>
-          <script src="{{ asset('js/bootstrap-switch.js') }}"></script>
-          <script src="{{ asset('js/application.js') }}"></script>
-      {% endblock %}
-  </body>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					{% block body %}{% endblock %}
+				</div>
+			</div>
+		</div>
+		{% block javascripts %}
+			<script src="{{ asset('js/jquery-3.1.1.js') }}"></script>
+			<script src="{{ asset('js/bootstrap.js') }}"></script>
+			<script src="{{ asset('js/bootstrap-switch.js') }}"></script>
+			<script src="{{ asset('js/application.js') }}"></script>
+		{% endblock %}
+	</body>
 </html>

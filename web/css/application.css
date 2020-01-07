@@ -1,82 +1,109 @@
-#map{
+#map {
   min-height: 500px;
 }
-.map_edit{
+
+.map_edit {
   min-height: 1000px !important;
 }
+
 .panel-body {
-    overflow: scroll;
+  overflow: scroll;
 }
+
 .table-grid tr[data-link] {
-    cursor: pointer;
+  cursor: pointer;
 }
+
 input[type="date"], input[type="time"], input[type="datetime-local"], input[type="month"] {
-    line-height: 34px;
-    line-height: 1.428571429 \0;
+  line-height: 34px;
+  line-height: 1.428571429 \0;
 }
 
 td.icon-lg span {
   font-size: 200%;
 }
 
-.info { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
-.legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
+.info {
+  padding: 6px 8px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
 
-#was
-{
-    text-align:center;
-    border-radius:5px;
-    position:absolute;
-    top:3px;
-    left:calc(50% - 300px);
-    margin:auto;
-    z-index: 2000;
-    display: inline-block;
-    
+.info h4 {
+  margin: 0 0 5px;
+  color: #777;
+}
+
+.legend {
+  text-align: left;
+  line-height: 18px;
+  color: #555;
+}
+
+.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+#was {
+  text-align: center;
+  border-radius: 5px;
+  position: absolute;
+  top: 3px;
+  left: calc(50% - 300px);
+  margin: auto;
+  z-index: 2000;
+  display: inline-block;
 }
 
 #places {
-    float: left;
-    width: 500px;
-    border: 3px solid #d5eff6;
-    -webkit-border-radius: 6px;
-    border-radius: 6px;
-    background-color: #fff;
+  float: left;
+  width: 500px;
+  border: 3px solid #d5eff6;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  background-color: #fff;
 }
 
-#buscar
-{   
+#buscar {
   position: absolute;
   top: 3px;
   right: 200px;
   margin: auto;
   z-index: 2000;
   display: inline-block;
-    
 }
 
-#buscar div{
+#buscar div {
   float: left;
 }
 
-#buscar input{
+#buscar input {
   padding: 3px !important;
 }
 
 .left-inner-addon {
-    position: relative;
+  position: relative;
 }
+
 .left-inner-addon input {
-    padding-left: 30px;    
+  padding-left: 30px;
 }
+
 .left-inner-addon i {
-    position: absolute;
-    padding: 10px 12px;
-    pointer-events: none;
+  position: absolute;
+  padding: 10px 12px;
+  pointer-events: none;
 }
 
 .tt-query,
-{
+  {
   width: 396px;
   height: 30px;
   padding: 8px 12px;
@@ -84,17 +111,16 @@ td.icon-lg span {
   line-height: 30px;
   border: 2px solid #ccc;
   -webkit-border-radius: 8px;
-     -moz-border-radius: 8px;
-          border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
   outline: none;
 }
 
 .tt-query {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
-
 
 .tt-menu {
   width: 422px;
@@ -104,11 +130,11 @@ td.icon-lg span {
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
   -webkit-border-radius: 8px;
-     -moz-border-radius: 8px;
-          border-radius: 8px;
-  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
 }
 
 .tt-suggestion {
@@ -126,7 +152,6 @@ td.icon-lg span {
 .tt-suggestion.tt-cursor {
   color: #fff;
   background-color: #0097cf;
-
 }
 
 .tt-suggestion p {
@@ -134,67 +159,76 @@ td.icon-lg span {
 }
 
 /* Important part */
-.modalEditarDialog{
-    overflow-y: initial !important
+.modalEditarDialog {
+  overflow-y: initial !important
 }
-.modalEditarBody{
-    height: 750px;
-    overflow-y: auto;
+
+.modalEditarBody {
+  height: 750px;
+  overflow-y: auto;
 }
 
 .panel-primary {
-    border-color: #428bca!important;
+  border-color: #428bca !important;
 }
 
 .panel {
-    background-color: white;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    margin-bottom: 20px;
+  background-color: white;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
+
 *::before, *::after {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .well-sm {
-    border-radius: 3px;
-    padding: 9px;
+  border-radius: 3px;
+  padding: 9px;
 }
+
 .well {
-    background-color: whitesmoke;
-    border: 1px solid #e3e3e3;
-    border-radius: 4px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
-    margin-bottom: 20px;
-    min-height: 20px;
-    padding: 19px;
+  background-color: whitesmoke;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+  margin-bottom: 20px;
+  min-height: 20px;
+  padding: 19px;
 }
+
 .pull-left {
-    float: left !important;
+  float: left !important;
 }
+
 .pull-right {
-    float: right !important;
+  float: right !important;
 }
-.well .pagination{
+
+.well .pagination {
   margin: 0;
 }
+
 .pagination {
-    border-radius: 4px;
-    display: inline-block;
-    margin: 20px 0;
-    padding-left: 0;
+  border-radius: 4px;
+  display: inline-block;
+  margin: 20px 0;
+  padding-left: 0;
 }
+
 ul, ol {
-    margin-bottom: 10px;
-    margin-top: 0;
+  margin-bottom: 10px;
+  margin-top: 0;
 }
-.navbar-primary a{
-  color: white!important;
+
+.navbar-primary a {
+  color: white !important;
   font-weight: bold;
 }
 
@@ -204,5 +238,28 @@ ul, ol {
 }
 
 .errores {
-  color: red!important;
+  color: red !important;
+}
+
+.wait {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(255, 255, 255, .8) url('/assets/images/loading.gif') 50% 50% no-repeat;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading .wait {
+  overflow: hidden;
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .wait {
+  display: block;
 }
